@@ -1,0 +1,56 @@
+@import '../bootstrap/less/bootstrap.less';
+@import '../bootstrap/less/responsive.less';
+//@import 'rackspace.less';
+
+
+
+/*********************************************************
+GLOBAL RESETS
+*********************************************************/
+
+/*
+border-box reset
+http://www.paulirish.com/2012/box-sizing-border-box-ftw/
+*/
+
+* {
+    .box-sizing(border-box);
+}
+input, textarea {
+    .box-sizing(content-box);
+}
+
+
+
+
+/*
+Your custom styles go here
+*/
+
+
+ul.overviewList {
+	margin:0;
+	padding:0;
+	list-style:none;
+	* {
+		list-style:none;
+	}
+	table {
+		margin:0 0 10px;
+	}
+	ul {
+		margin-bottom:20px;
+		li {
+			margin-bottom:10px;
+		}
+	}
+}
+
+.sectionHeader {
+	position:relative;
+	.headerOptions {
+		position:absolute;
+		top:10px;
+		right:0;
+	}
+}
