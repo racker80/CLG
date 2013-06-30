@@ -2,7 +2,9 @@ App.directive('clgAddPage', function(SharedServices, PageModel, GuideModel){
 	function link(scope, element, attrs) {
 
 		scope.addPage = function() {
-			var page = scope.form;
+			var page = {
+				title:'new page'
+			};
 			var guide = SharedServices.guide();
 
 			PageModel.createNewPage(page).success(function(data){
@@ -11,7 +13,6 @@ App.directive('clgAddPage', function(SharedServices, PageModel, GuideModel){
 				//SAVE THE GUIDE
 				GuideModel.saveGuide(guide);
 
-				scope.form = {};		
 
 			});
 		}
@@ -116,9 +117,24 @@ App.directive('clgEditor', function(Utils, SharedServices, PageModel, GuideModel
 			}	
 			
 		}
+		scope.addCode = function() {
+			if(!scope.editorContent.code) {
+				scope.editorContent.code = [];
+			}
+			scope.editorContent.code.push(scope.addCodeForm);
+
+			scope.addCodeFrom = '';
+
+			PageModel.savePage(scope.editorContent);
+		}
 		scope.$watch('editorContent.content', function(editorContent) {
-			console.log(scope.editorType);
+			//GENERATE THE MARKDOWN
 			scope.previewContent = Utils.makeMarkdown(editorContent);
+
+			// //REPLACE THE CODE
+			// angular.forEach(editorContent.code, function(value, key) {
+			// 	scope.previewContent = scope.previewContent.replace('[code '+key+']', '<pre>'+value+'</pre>');
+			// });
 		});
 
 	}

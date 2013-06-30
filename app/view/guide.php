@@ -28,10 +28,11 @@
 				
 			</dd>
 			<dd>
-
+				
+<!-- 			<button type="submit" class="btn btn-primary btn-small" ng-click="addPage($parent.$index, $index)">Add Page</button>
+ -->
 			<clg-add-page book-index="$parent.$index" chapter-index="$index">
 				<form>
-					<input ng-model="form.title" type="text" class="input-xlarge" id="">
 					<button type="submit" class="btn btn-primary btn-small" ng-click="addPage()">Add Page</button>
 
 				</form>

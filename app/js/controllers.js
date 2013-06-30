@@ -132,10 +132,11 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 
 
 		PageModel.createNewPage(page).success(function(data){
-					guide.books[bookIndex].chapters[chpaterIndex].pages.push({id:data.$id.$id});
+			guide.books[bookIndex].chapters[chpaterIndex].pages.push({id:data.$id.$id});
 
-					//SAVE THE GUIDE
-					GuideModel.saveGuide(guide);		
+			//SAVE THE GUIDE
+			GuideModel.saveGuide(guide);
+					
 
 		});
 

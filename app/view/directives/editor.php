@@ -24,3 +24,13 @@
 		</form>
 
 		<button type="submit" class="btn btn-primary btn-small" ng-click="save()">Save</button>
+
+
+		<h4>Code</h4>
+		<div ng-repeat="item in editorContent.code">
+			<pre>{{item}}</pre>
+		</div>
+		<input type="text" ng-model="addCodeForm"> <button class="btn" ng-click="addCode()">Add Code</button>
+
+
+
