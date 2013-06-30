@@ -9,7 +9,7 @@ $collection = new MongoCollection($db, 'guides');
 if($_REQUEST['slug']) {
 	$output = $collection->findOne($_REQUEST);
 } else {
-	foreach($collection->find($_REQUEST) as $item) : 
+	foreach($collection->find() as $item) : 
 
 		$output[] = $item;
 
@@ -17,6 +17,5 @@ if($_REQUEST['slug']) {
 }
 
 echo json_encode($output);
-
 
 ?>

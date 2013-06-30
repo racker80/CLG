@@ -18,6 +18,7 @@
         <script src="app/js/directives.js"></script>
         <script src="app/js/services.js"></script>
         <script src="app/js/angular-resource.js"></script>
+        <script src="app/js/angular-sanatize.js"></script>
         <script src="app/js/filters.js"></script>
 
         <script src="app/js/vendor/showdown.js"></script>
