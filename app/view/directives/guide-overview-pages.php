@@ -1,7 +1,7 @@
 <ul>
 	<li ng-repeat="page in pages">
 		{{page.id}}
-		{{page.title}}
+		{{page.content.title}}
 
 	</li>
 </ul>

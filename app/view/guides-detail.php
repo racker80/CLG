@@ -4,7 +4,7 @@
 			<clg-side-nav />
 		</div>
 		<div class="span9">
-
+			
 			<div clg-guide-overview guide="guide"></div>
 
 

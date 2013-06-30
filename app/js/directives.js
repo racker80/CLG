@@ -23,6 +23,7 @@ App.directive('clgPageContent', function(UtilFactory) {
 
               });
 
+
       
   }
   return {
@@ -78,41 +79,38 @@ App.directive('clgFormatContent', function(UtilFactory) {
 App.directive('clgGuideOverview', function($rootScope, UtilFactory, sharedServices, GuideModel, PageModel) {
   function link(scope, element, attr) {
 
-    scope.$watch('guide', function(guide) {
-      if(guide) {
-        scope.books = guide.books
 
-        angular.forEach(guide.books, function(book) {
 
-              //loop each chapter
-               angular.forEach(book.chapters, function(chapter) {
+
+
+    // scope.$watch('guide', function(guide) {
+    //   if(guide) {
+    //     scope.books = guide.books
+
+    //     angular.forEach(guide.books, function(book) {
+
+    //           //loop each chapter
+    //            angular.forEach(book.chapters, function(chapter) {
                 
-                // loop each page
-                angular.forEach(chapter.pages, function(page) {
+    //             // loop each page
+    //             angular.forEach(chapter.pages, function(page) {
 
-                    //get the page content 
-                    PageModel.getPage({id:page.id, ref:'content'}).success(function(page) {
+                    
 
-                      //store page content in service
-                      //sharedServices.addPageContent(page);  
-                      console.log('stored content')
-                      
+    //             });
 
-                    }); 
+    //           });
 
-                });
-              });
-
-        });
+    //     });
 
 
 
 
-      }//if guide
+      // }//if guide
 
 
       
-    });
+    // });
     
   }
   function controller($scope, $element) {
@@ -137,12 +135,16 @@ App.directive('clgGuideOverview', function($rootScope, UtilFactory, sharedServic
 });
 
 //CHAPTER
-App.directive('clgGuideOverviewChapters', function(UtilFactory, sharedServices, GuideModel, PageModel) {
+App.directive('clgGuideOverviewChapters', function($rootScope, UtilFactory, sharedServices, GuideModel, PageModel) {
   function link(scope, element, attributes) {
-    scope.$watch('chapters', function(chapters) {
+
+    scope.$watch('guideReady', function() {
       
-      
+    
     });
+  }
+  function controller($scope, $element) {
+
   }
   return {
     restrict: 'A',
@@ -150,55 +152,33 @@ App.directive('clgGuideOverviewChapters', function(UtilFactory, sharedServices, 
     scope: {
       chapters:'='
     },
-    link:link
+    link:link,
+    controller:controller
   };
 });
 
 //PAGES
 App.directive('clgGuideOverviewPages', function(UtilFactory, sharedServices, GuideModel, PageModel, $rootScope) {
   function link(scope, element, attributes) {
-  
-    function getPageContent(pages) {
-        angular.forEach(pages, function(page) {
-            console.log(sharedServices.pageContent)
+
+
+ // angular.forEach(scope.pages, function(value, key) {
+          //   console.log($rootScope.pages[value]);
+          // });
+          // scope.content = $rootScope.pages[scope.page.id];
+        scope.$watch('pageReady', function() {
+          if(scope.pages) {
+            angular.forEach(scope.pages, function(value, key) {
+              console.log($rootScope.pages)
+              //value = $rootScope.pages[value];
+            });
+          }
+          
         });
-    }
 
-    scope.$watch('pages', function(pages) {
-      if(pages) {
-        // angular.forEach(pages, function(value, key) {
-        //   PageModel.getPage({id:value.id, ref:'content'}).success(function(data) {
-        //     sharedServices.addPageContent(data);           
-        //   }); 
-        // });
-        //scope.$emit('pagesReady');
+  }
+  function controller($scope) {
 
-// loop each page
-                angular.forEach(pages, function(value, key) {
-
-                    //get the page content 
-                    // PageModel.getPage({id:value.id, ref:'content'}).success(function(data) {
-                    //   pages[key] = data;
-                    //   //store page content in service
-                    //   //sharedServices.addPageContent(page);  
-                      
-                      
-
-                    // }); 
-
-                });   
-
-                
-
-      }
-      
-    });
-    scope.$on('addedPageContent', function() {
-
-      console.log('got page content')
-
-
-    });
   }
   return {
     restrict: 'A',
@@ -207,7 +187,8 @@ App.directive('clgGuideOverviewPages', function(UtilFactory, sharedServices, Gui
       pages:'=',
     },
     link:link,
-    isolate:true
+    isolate:true,
+    controller:controller
   };
 });
 

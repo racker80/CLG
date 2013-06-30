@@ -40,37 +40,67 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 		GuideModel.getGuides().success(function(data){
 			$rootScope.guides = data;
 
+			$rootScope.guide = $rootScope.guides[$routeParams.guideSlug];
 
-				GuideModel.getGuide($routeParams.guideSlug).success(function(data){
-					$rootScope.guide = data;
+			// 	GuideModel.getGuide(slug).success(function(data){
+			// 		sharedServices.currentGuide(data);
 
-					$rootScope.book = $routeParams.bookSlug;
-					$rootScope.chapter = $routeParams.chapterSlug;
+			// 		$rootScope.guide = data;
+			// 		$rootScope.book = $routeParams.bookSlug;
+			// 		$rootScope.chapter = $routeParams.chapterSlug;
 
 
 
-			// angular.forEach(l, function(value, key) {
-			// 	console.log(value)
-			// });
+			// // angular.forEach(l, function(value, key) {
+			// // 	console.log(value)
+			// // });
 					
-				});
+			// 	});
 			
 				if(!$scope.moreContent) {
 					$scope.moreContent = [];
 				}
 				PageModel.getContent().success(function(data){
 					$scope.moreContent = data;
-				});
-
-		
-			
+				});			
 			
 		});
+
+		    $scope.$watch('guide', function(guide) {
+		      if(guide) {
+		        angular.forEach(guide.books, function(book) {
+
+		            //loop each chapter
+		            angular.forEach(book.chapters, function(chapter) {
+		                
+		                // loop each page
+		                angular.forEach(chapter.pages, function(page) {
+		                	UtilFactory.getPageFromId(page.id, 'content').success(function(data){
+		                		if(!$rootScope.pages) {
+		                			$rootScope.pages = [];
+		                		}
+		                		var id = data._id.$id;
+
+		                		$rootScope.pages[id] = data;
+		                	page.contnet = data;
+
+		                	});
+							$rootScope.$broadcast('pageReady');
+
+
+		                });
+
+		            });
+
+		        });
+
+		      }//if guide
+
+		  });
 
 
 	}
 	update();
-
 
 	
 
@@ -151,6 +181,8 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 		console.log('you\'ve copied book:' + sharedServices.copiedItem.title)
 		
 	});
+
+
 
 	//+-----------------------------------------------------
 	//PAGE
