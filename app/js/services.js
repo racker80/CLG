@@ -250,13 +250,11 @@ App.factory('sharedServices', function($rootScope, $routeParams) {
 		}
 		$rootScope.guide.books.push(item);
 	}
-	sharedServices.pageContent = [];
-	sharedServices.addPageContent = function(page) {
 
-		if(!this.pageContent[page._id.$id]) {
-			this.pageContent[page._id.$id] = page;
-			$rootScope.$broadcast('addedPageContent');
-		}
+	sharedServices.guide = {};
+	sharedServices.currentGuide = function(item) {
+		this.guide = item;
+		$rootScope.$broadcast('guideReady');
 	}
 
 	return sharedServices;

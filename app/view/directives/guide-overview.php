@@ -2,12 +2,12 @@
 	<h1>{{guide.title}}</h1>
 
 	<div class="headerOptions">
-					<span class="label label-info" ng-click="addBookDialog()">+ Add Book</span>	
+		<span class="label label-info" ng-click="addBookDialog()">+ Add Book</span>	
 	</div>
 </div>
 
 <ul class="overviewList">
-	<li ng-repeat="book in books" data-index="{{$index}}">
+	<li ng-repeat="book in guide.books" data-index="{{$index}}">
 	<!-- parent -->
 
 		<div class="sectionHeader">
