@@ -27,8 +27,8 @@
     </head>
 
     <body>
-        <div class="container-fluid">
-            <div ng-view></div>
-        </div>
+
+        <ng-view></ng-view>
+
     </body>
 </html>

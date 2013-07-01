@@ -40,7 +40,8 @@ App.factory('SharedServices', function($rootScope, Utils){
 App.factory('GuideModel', function($resource, $http, $rootScope, $routeParams, $dialog, Utils){
 	return {
 		saveGuide: function(data) {
-			if(!data.id) {
+			if(angular.isDefined(data._id)) {
+				
 				data.id = data._id.$id;
 			}
 
@@ -49,6 +50,9 @@ App.factory('GuideModel', function($resource, $http, $rootScope, $routeParams, $
 					json:angular.toJson(data)
 				}
 			});
+		},
+		newGuide: function(data) {
+
 		}
 	}
 });

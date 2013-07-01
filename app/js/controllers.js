@@ -26,23 +26,21 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 	//SET THE LOCAL GUIDE
 	$scope.$on('guideSet', function(){
 		$scope.guide = SharedServices.guide();
+
 	});
 
 	
-	var guide = SharedServices.guide();
+	// var guide = SharedServices.guide();
 
-	$scope.$on('saveGuide', function(){
-		GuideModel.saveGuide(this.guide);
-	});
-	$scope.$on('copiedItem', function(){
-		// console.log('item copied:');
-		// console.log(SharedServices.copiedItem())
-	});
+	// $scope.$on('saveGuide', function(){
+	// 	GuideModel.saveGuide(this.guide);
+	// });
+
 
 	$scope.edit = function(item, type) {
 		SharedServices.linkItem(item);
 		$scope.editorContent = SharedServices.linkedItem();
-
+		console.log(item)
 		if(type == 'page') {		
 			$scope.editorType = 'page';
 		} else {
@@ -50,22 +48,36 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 		}
 	}
 
+	$scope.addGuide = function() {
+		var newguide = {
+			title:'new guide',
+			books:[]
+		}
+		GuideModel.saveGuide(newguide);
+
+		var index = $rootScope.guides.length;
+
+		$location.path('/'+index);
+
+
+	}
+
 
 	//+-----------------------------------------------------
 	//BOOK
 	//+-----------------------------------------------------
 	
-	$scope.addBook = function() {
-		$scope.form.chapters = [];
+	// $scope.addBook = function() {
+	// 	$scope.form.chapters = [];
 		
-		//ADD A BOOK
-		this.guide.books.push($scope.form);
+	// 	//ADD A BOOK
+	// 	this.guide.books.push($scope.form);
 		
-		//SAVE THE GUIDE
-		GuideModel.saveGuide(this.guide);
+	// 	//SAVE THE GUIDE
+	// 	GuideModel.saveGuide(this.guide);
 
-		$scope.bookForm = {};
-	}	
+	// 	$scope.bookForm = {};
+	// }	
 	$scope.deleteBook = function(index) {
 		var guide = this.guide;
 
@@ -81,22 +93,22 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 	//CHPATER
 	//+-----------------------------------------------------
 	
-	$scope.addChapter = function(index) {
-		var guide = this.guide;
+	// $scope.addChapter = function(index) {
+	// 	var guide = this.guide;
 		
-		var chapter = {
-			title:'new chapter',
-			pages:[]
-		}
+	// 	var chapter = {
+	// 		title:'new chapter',
+	// 		pages:[]
+	// 	}
 
-		//ADD A CHAPTER
-		guide.books[index].chapters.push(chapter);
+	// 	//ADD A CHAPTER
+	// 	guide.books[index].chapters.push(chapter);
 
-		//SAVE THE GUIDE
-		GuideModel.saveGuide(guide);
+	// 	//SAVE THE GUIDE
+	// 	GuideModel.saveGuide(guide);
 
 
-	}	
+	// }	
 	$scope.deleteChapter = function(index, parentIndex) {
 		var guide = this.guide;
 

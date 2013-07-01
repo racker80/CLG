@@ -37,10 +37,14 @@ App.directive('clgAddChapter', function(SharedServices, PageModel, GuideModel){
 	function link(scope, element, attrs) {
 
 		scope.addChapter = function() {
-			scope.form.pages = [];
-			var chapter = scope.form;
+			// scope.form.pages = [];
+			// var chapter = scope.form;
 			var guide = SharedServices.guide();
 
+			var chapter = {
+				title:"new chapter",
+				pages:[]
+			}
 			guide.books[scope.bookIndex].chapters.push(chapter);
 
 			//SAVE THE GUIDE
@@ -68,10 +72,14 @@ App.directive('clgAddBook', function(SharedServices, PageModel, GuideModel){
 	function link(scope, element, attrs) {
 
 		scope.addBook = function() {
-			scope.form.chapters = [];
-			var book = scope.form;
+			// scope.form.chapters = [];
+			// var book = scope.form;
 			var guide = SharedServices.guide();
 
+			var book = {
+				title:'new book',
+				chapters:[]
+			}
 			guide.books.push(book);
 
 			//SAVE THE GUIDE
@@ -107,35 +115,55 @@ App.directive('clgEditor', function(Utils, SharedServices, PageModel, GuideModel
 
 		scope.save = function() {
 			if(scope.editorType == 'page') {
-								console.log(scope.editorContent)
-
 				PageModel.savePage(scope.editorContent);
 			} else {
 				GuideModel.saveGuide(SharedServices.guide());
-								console.log('saved guidemodel')
-
 			}	
 			
 		}
-		scope.addCode = function() {
+		scope.addCode = function(item) {
 			if(!scope.editorContent.code) {
 				scope.editorContent.code = [];
 			}
-			scope.editorContent.code.push(scope.addCodeForm);
-
-			scope.addCodeFrom = '';
+			scope.editorContent.code.push(item);
+			scope.addCodeFrom = null;
 
 			PageModel.savePage(scope.editorContent);
 		}
-		scope.$watch('editorContent.content', function(editorContent) {
-			//GENERATE THE MARKDOWN
-			scope.previewContent = Utils.makeMarkdown(editorContent);
+		scope.addMetaTag = function(item) {
+			if(!scope.editorContent.tags) {
+				scope.editorContent.tags = [];
+			}
+			scope.editorContent.tags.push(item);
 
-			// //REPLACE THE CODE
-			// angular.forEach(editorContent.code, function(value, key) {
-			// 	scope.previewContent = scope.previewContent.replace('[code '+key+']', '<pre>'+value+'</pre>');
-			// });
+
+			PageModel.savePage(scope.editorContent);
+		}
+
+		scope.addMetaOther = function(item) {
+			if(!scope.editorContent.other) {
+				scope.editorContent.other = [];
+			}
+			scope.editorContent.other.push(item);
+
+
+			PageModel.savePage(scope.editorContent);
+		}
+		
+		scope.$watch('editorContent.content', function(editorContent) {
+			//BROADCAST THE CHANGE
+			scope.$broadcast('editorContentUpdated');
+
 		});
+		scope.$on('editorContentUpdated', function() {
+			//GENERATE THE MARKDOWN
+			scope.previewContent = Utils.makeMarkdown(scope.editorContent.content);
+
+			//REPLACE THE CODE
+			angular.forEach(scope.editorContent.code, function(value, key) {
+				scope.previewContent = scope.previewContent.replace('[code '+key+']', '<pre>'+value+'</pre>');
+			});
+		})
 
 	}
 

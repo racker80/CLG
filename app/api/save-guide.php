@@ -8,13 +8,18 @@ $collection = new MongoCollection($db, 'guides');
 //decode the json
 $json = json_decode(stripslashes($_REQUEST['json']), true);
 
-//get the guide based on the id
-$guide = $collection->findOne(array("_id"=>new MongoId($json['id'])));
+if(!$json['id']) {
+	$output = $collection->save($json);
+} else {
+	//get the guide based on the id
+	$guide = $collection->findOne(array("_id"=>new MongoId($json['id'])));
 
 //get the _id in the json
-$json['_id'] = $guide['_id'];
+	$json['_id'] = $guide['_id'];
 
-$output = $collection->save($json);
+	$output = $collection->save($json);
+}
+
 
 echo json_encode($output);
 
