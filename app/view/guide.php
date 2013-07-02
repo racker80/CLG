@@ -1,4 +1,4 @@
-        
+
 <div class="navbar">
 	<div class="navbar-inner">
 		<div class="container" style="width: auto;">
@@ -58,15 +58,16 @@
 			</dt>
 			
 			<dd ng-repeat="page in chapter.pages" ng-init="pageIndex=$index;">
-				<div ng-controller="PageController">
+				<span ng-controller="PageController">
 
 					<a ng-click="pageUp($parent.$parent.$parent.$index, $parent.$parent.$index)">up</a> 
 					<a ng-click="pageDown($parent.$parent.$parent.$index, $parent.$parent.$index)">Down</a> 
 					{{page.title}}
 					<a ng-click="deletePageRef($parent.$parent.$parent.$index, $parent.$parent.$index, $index)">delete</a>
-					<a ng-click="edit(page, 'page')">edit</a>
 					<!-- <div ng-bind-html-unsafe="page.content"></div> -->
-				</div>
+				</span>
+				<a ng-click="edit(page, 'page')">edit</a>
+
 				
 			</dd>
 			<dd>

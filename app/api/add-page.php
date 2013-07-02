@@ -9,8 +9,7 @@ $contentCollection = new MongoCollection($db, 'content');
 
 
 
-$content = $_REQUEST;
-
+$content = json_decode(stripslashes($_REQUEST['json']));
 $contentCollection->save($content);
 
 

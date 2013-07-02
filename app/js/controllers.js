@@ -39,13 +39,13 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 
 	$scope.edit = function(item, type) {
 		SharedServices.linkItem(item);
-		$scope.editorContent = SharedServices.linkedItem();
-		console.log(item)
-		if(type == 'page') {		
-			$scope.editorType = 'page';
-		} else {
-			$scope.editorType = null;
-		}
+		//$scope.editorContent = SharedServices.linkedItem();
+
+		// if(type == 'page') {		
+		// 	$scope.editorType = 'page';
+		// } else {
+		// 	$scope.editorType = null;
+		// }
 	}
 
 	$scope.addGuide = function() {
@@ -135,24 +135,24 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 	//CHPATER
 	//+-----------------------------------------------------
 	
-	$scope.addPage = function(chpaterIndex, bookIndex) {
-		var guide = this.guide;
+	// $scope.addPage = function(chpaterIndex, bookIndex) {
+	// 	var guide = this.guide;
 		
-		var page = {
-			title:'new page'
-		}
+	// 	var page = {
+	// 		title:'new page'
+	// 	}
 
 
-		PageModel.createNewPage(page).success(function(data){
-			guide.books[bookIndex].chapters[chpaterIndex].pages.push({id:data.$id.$id});
+	// 	PageModel.createNewPage(page).success(function(data){
+	// 		guide.books[bookIndex].chapters[chpaterIndex].pages.push({id:data.$id.$id, type:'page'});
 
-			//SAVE THE GUIDE
-			GuideModel.saveGuide(guide);
+	// 		//SAVE THE GUIDE
+	// 		GuideModel.saveGuide(guide);
 					
 
-		});
+	// 	});
 
-	}	
+	// }	
 
 	$scope.deletePageRef = function(bookIndex, chapterIndex, pageIndex) {
 		var guide = this.guide;

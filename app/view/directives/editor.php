@@ -1,4 +1,4 @@
-
+<a ng-click="versionPage()">Version Page</a>
 <form class="form-inline">
 			<div class="control-group">
 				<label class="control-label" for="inputEmail">Title</label>

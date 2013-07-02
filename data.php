@@ -78,20 +78,29 @@ $guideContent = array(
 				'title'=>'Server',
 				'slug'=>'server',
 				'description'=>'some lorem ipsum for the book description',
+				'type'=>'book',
 				'chapters'=>array(
 					array(
 						'title'=>'Prepare the OS',
 						'slug'=>'prepare-the-os',
 						'description'=>'some lorem ipsum for chapter description',
+						'type'=>'chapter',
 						'pages'=>array(
-							array('id'=>$content1['_id'].$id),
-							array('id'=>$content2['_id'].$id)							
+							array(
+								'id'=>$content1['_id'].$id,
+								'type'=>'page'
+							),
+							array(
+								'id'=>$content2['_id'].$id,
+								'type'=>'page'
+							)							
 						)
 					),
 					array(
 						'title'=>'Install Wordpress',
 						'slug'=>'install-wordpress',
 						'description'=>'some lorem ipsum for chapter description',
+						'type'=>'chapter',
 						'pages'=>array(
 							
 						)
@@ -100,6 +109,7 @@ $guideContent = array(
 						'title'=>'Create Server Image',
 						'slug'=>'create-server-image',
 						'description'=>'some lorem ipsum for chapter description',
+						'type'=>'chapter',
 						'pages'=>array(
 							
 						)
@@ -110,6 +120,7 @@ $guideContent = array(
 				'title'=>'Database',
 				'slug'=>'database',
 				'description'=>'some lorem ipsum for the book description',
+				'type'=>'book',
 				'chapters'=>array(
 									
 				)

@@ -3,12 +3,12 @@ App.directive('clgAddPage', function(SharedServices, PageModel, GuideModel){
 
 		scope.addPage = function() {
 			var page = {
-				title:'new page'
+				title:'new page test'
 			};
 			var guide = SharedServices.guide();
-
-			PageModel.createNewPage(page).success(function(data){
-				guide.books[scope.bookIndex].chapters[scope.chapterIndex].pages.push({id:data.$id.$id});
+			
+			PageModel.createNewPage(angular.toJson(page)).success(function(data){
+				guide.books[scope.bookIndex].chapters[scope.chapterIndex].pages.push({id:data.$id.$id, type:'page'});
 
 				//SAVE THE GUIDE
 				GuideModel.saveGuide(guide);
@@ -43,6 +43,7 @@ App.directive('clgAddChapter', function(SharedServices, PageModel, GuideModel){
 
 			var chapter = {
 				title:"new chapter",
+				type:'chapter',
 				pages:[]
 			}
 			guide.books[scope.bookIndex].chapters.push(chapter);
@@ -78,6 +79,7 @@ App.directive('clgAddBook', function(SharedServices, PageModel, GuideModel){
 
 			var book = {
 				title:'new book',
+				type:'book',
 				chapters:[]
 			}
 			guide.books.push(book);
@@ -108,14 +110,56 @@ App.directive('clgAddBook', function(SharedServices, PageModel, GuideModel){
 
 
 
+//51d332ab4d29764c2360bd4d
 
-
-App.directive('clgEditor', function(Utils, SharedServices, PageModel, GuideModel){
+App.directive('clgEditor', function($http, Utils, SharedServices, PageModel, GuideModel){
 	function link(scope, element, attrs) {
 
+		scope.$on('linkedItem', function(){
+			var content = SharedServices.linkedItem();
+			
+			if(content.type == "page") {
+				scope.editorType = content.type;
+				var ref = {
+					ref:'content',
+					id: content.id
+				}  
+				$http.get('app/api/get-page.php', {params:ref}).success(function(data){
+					scope.editorContent = data;
+					//$scope.page.content = Utils.makeMarkdown($scope.page.content);
+				});
+
+			} else {
+				scope.editorType = content.type;
+
+				scope.editorContent = content;
+
+			}
+			// console.log(SharedServices.linkedItem());
+		});
+
+		scope.versionPage = function() {
+			var page = angular.copy(scope.editorContent);
+			page.title = 'versioned page test';
+			page.versionedFrom = page.id;
+			page.test = 'test';
+			delete page._id;
+
+			PageModel.createNewPage(angular.toJson(page)).success(function(data){
+
+				console.log(data)
+				var content = SharedServices.linkedItem();
+				content.id = data.$id.$id;
+				scope.$emit('linkedItem');
+			});
+
+		}
 		scope.save = function() {
+			console.log(scope)
 			if(scope.editorType == 'page') {
 				PageModel.savePage(scope.editorContent);
+				GuideModel.saveGuide(SharedServices.guide());
+
 			} else {
 				GuideModel.saveGuide(SharedServices.guide());
 			}	
@@ -167,6 +211,14 @@ App.directive('clgEditor', function(Utils, SharedServices, PageModel, GuideModel
 
 	}
 
+	function controller($scope) {
+		// $scope.a = SharedServices.linkedItem();
+
+		// $scope.$on('linkedItem', function(){
+		// 	console.log($scope.a);
+		// });
+	}
+
 	return {
 		restrict: 'E',
 		scope: {
@@ -174,7 +226,7 @@ App.directive('clgEditor', function(Utils, SharedServices, PageModel, GuideModel
 			editorType:'=',
 		},
 		link:link,
-		isolate:true,
+		controller:controller,
 		templateUrl:'app/view/directives/editor.php'
 	};
 });
