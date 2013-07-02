@@ -215,5 +215,19 @@ App.controller('PageController', function($scope, $rootScope, $routeParams, $loc
 });
 
 
+App.controller('ContentController', function($scope, $rootScope, $routeParams, $location, $http, Utils, SharedServices, GuideModel){
+		$http.get('app/api/get-content.php', {}).success(function(data){
+			$scope.contents = data;
+			//$scope.page.content = Utils.makeMarkdown($scope.page.content);
+
+			angular.forEach($scope.contents, function(content) {
+				content.versions = [];
+				$http.get('app/api/get-content.php', {params:{versionedFrom:content._id.$id}}).success(function(data){
+					content.versions.push(data);
+				});
+			});
+		});
+});
+
 
 

@@ -104,6 +104,12 @@ App.directive('clgAddBook', function(SharedServices, PageModel, GuideModel){
 });
 
 
+App.directive('clgNav', function(SharedServices, PageModel, GuideModel){
+	return {
+		restrict: 'E',
+		templateUrl:'app/view/includes/globalnav.php'
+	};
+});
 
 
 
@@ -141,8 +147,7 @@ App.directive('clgEditor', function($http, Utils, SharedServices, PageModel, Gui
 		scope.versionPage = function() {
 			var page = angular.copy(scope.editorContent);
 			page.title = 'versioned page test';
-			page.versionedFrom = page.id;
-			page.test = 'test';
+			page.versionedFrom = page._id.$id;
 			delete page._id;
 
 			PageModel.createNewPage(angular.toJson(page)).success(function(data){

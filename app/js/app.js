@@ -17,6 +17,10 @@ var appConfig = function($routeProvider) {
 		controller: 'GuidesController',
 		templateUrl: 'app/view/guides.php'
 	})
+	.when('/content', {
+		controller: 'ContentController',
+		templateUrl: 'app/view/content.php'
+	})
 	.when('/reset', {
 		controller: '',
 		templateUrl: './data.php'
