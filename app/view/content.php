@@ -3,8 +3,8 @@
 <div class="container-fluid">
 	<div class="row-fluid">
                 
-
-		<div ng-repeat="content in contents">
+		<input type="text" ng-model="filterText">
+		<div ng-repeat="content in contents | filter: filterText">
 			<li>
 				{{content.title}}
 <!-- 				<dl>

@@ -12,7 +12,7 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 	
 	$scope.editorContent = {};
 
-
+	$scope.showEditor = false;
 
 
 	$http.get('app/api/get-guides.php').success(function(data){
@@ -39,6 +39,8 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 
 	$scope.edit = function(item, type) {
 		SharedServices.linkItem(item);
+			$scope.showEditor = true;
+
 		//$scope.editorContent = SharedServices.linkedItem();
 
 		// if(type == 'page') {		

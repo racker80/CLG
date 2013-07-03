@@ -107,7 +107,8 @@ App.directive('clgAddBook', function(SharedServices, PageModel, GuideModel){
 App.directive('clgNav', function(SharedServices, PageModel, GuideModel){
 	return {
 		restrict: 'E',
-		templateUrl:'app/view/includes/globalnav.php'
+		templateUrl:'app/view/includes/globalnav.php',
+		controller:"GuidesController"
 	};
 });
 
