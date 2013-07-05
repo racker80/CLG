@@ -2,13 +2,6 @@
 
 App.controller('GuidesController', function($scope, $rootScope, $routeParams, $location, $http, GuideModel, PageModel, SharedServices) {
 	$rootScope.guides = {};
-	$scope.template = {
-		edit:'false',
-		mainClassSmall:'span5',
-		mainClassFull:'span12',
-		editorClass:'span7',
-		mainClass:'span5',
-	};
 	
 	$scope.editorContent = {};
 
@@ -17,7 +10,6 @@ App.controller('GuidesController', function($scope, $rootScope, $routeParams, $l
 
 	$http.get('app/api/get-guides.php').success(function(data){
 		$rootScope.guides = data;
-		//$scope.guide = $rootScope.guides[$routeParams.guideIndex];
 
 		SharedServices.setGuide($rootScope.guides[$routeParams.guideIndex]);
 

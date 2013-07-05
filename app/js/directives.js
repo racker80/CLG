@@ -121,7 +121,7 @@ App.directive('clgNav', function(SharedServices, PageModel, GuideModel){
 
 App.directive('clgEditor', function($http, Utils, SharedServices, PageModel, GuideModel){
 	function link(scope, element, attrs) {
-
+		console.log(scope)
 		scope.$on('linkedItem', function(){
 			var content = SharedServices.linkedItem();
 			
@@ -232,7 +232,6 @@ App.directive('clgEditor', function($http, Utils, SharedServices, PageModel, Gui
 			editorType:'=',
 		},
 		link:link,
-		controller:controller,
 		templateUrl:'app/view/directives/editor.php'
 	};
 });
