@@ -6,14 +6,14 @@ $db = $m->selectDB('clg');
 //content collection
 $collection = new MongoCollection($db, 'content');
 
-if($_REQUEST['versionedFrom']) {
-	$cursor = $collection->find(array("versionedFrom" => $_REQUEST['versionedFrom']));
+// if($_REQUEST['versionedFrom']) {
+// 	$cursor = $collection->find(array("versionedFrom" => $_REQUEST['versionedFrom']));
 
-} else {
+// } else {
 
 $cursor = $collection->find(array("versionedFrom" => array('$exists' => false)));
 
-}
+// }
 
 foreach ($cursor as $item) {
 	$output[] = $item;

@@ -7,7 +7,7 @@
 
 
 
-<div class="span4">
+<div class="span4" ng-controller="GuidesController">
 	<h2>{{guide.title}}</h2>
 
 	<clg-add-book>
@@ -33,6 +33,7 @@
 			<dl ng-repeat="chapter in book.chapters">
 				<dt>{{chapter.title}} - <a ng-click="deleteChapter($index, $parent.$index)">Delete</a> | 
 					<a ng-click="copyChapter($parent.$index, $index)">copy</a> |
+					<a ng-click="pastePage($parent.$index, $index)">paste page</a> |
 					<a ng-click="edit(chapter)">edit</a>
 				</dt>
 				
@@ -66,7 +67,7 @@
 
 
 
-<div class="span8" ng-show="showEditor">
+<div class="span8" ng-show="show" ng-controller="EditorController">
 	<h4>Edit</h4>
 	
 	<clg-editor editor-content="editorContent" editor-type="editorType"></clg-editor>

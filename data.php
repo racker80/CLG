@@ -44,7 +44,6 @@ Once finished let’s reboot the server to ensure you’re running the latest, g
 			'sudo reboot'
 			),
 		'images'=>array(
-			'image_id'
 			),
 		'tags'=>array(
 			'ubuntu',

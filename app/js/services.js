@@ -2,6 +2,7 @@ App.factory('SharedServices', function($rootScope, Utils){
 	var currentGuide = {};
 	var clipboard = {};
 	var linkboard = 'test';
+	var showEditor = false;
 	return {
 		setGuide: function(guide) {
 			this.currentGuide = guide;
@@ -10,6 +11,7 @@ App.factory('SharedServices', function($rootScope, Utils){
 		guide: function() {
 			return this.currentGuide;
 		},
+		
 		copyItem: function(item) {
 			var toClipboard = {}
 
@@ -26,36 +28,29 @@ App.factory('SharedServices', function($rootScope, Utils){
 			return this.clipboard;
 
 		},
+		
 		linkItem: function(item) {
 			this.linkboard = item;
 			$rootScope.$broadcast('linkedItem');
 		},
 		linkedItem: function() {
 			return this.linkboard;
-		}
-	}
-});
-
-
-App.factory('GuideModel', function($resource, $http, $rootScope, $routeParams, $dialog, Utils){
-	return {
-		saveGuide: function(data) {
-			if(angular.isDefined(data._id)) {
-				
-				data.id = data._id.$id;
-			}
-
-			return $http.get('app/api/save-guide.php', {
-				params:{
-					json:angular.toJson(data)
-				}
-			});
 		},
-		newGuide: function(data) {
 
+		setEditor: function(state) {
+			this.showEditor = state;
+			$rootScope.$broadcast('editorState');
+		},
+		editorStatus: function() {
+			return this.showEditor;
 		}
+
+
 	}
 });
+
+
+
 
 App.factory('PageModel', function($resource, $http, $rootScope, $routeParams, $dialog, Utils){
 

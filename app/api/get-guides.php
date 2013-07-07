@@ -6,15 +6,12 @@ $db = $m->selectDB('clg');
 //content collection
 $collection = new MongoCollection($db, 'guides');
 
-if($_REQUEST['slug']) {
-	$output = $collection->findOne($_REQUEST);
-} else {
+
 	foreach($collection->find() as $item) : 
 
 		$output[] = $item;
 
 	endforeach;
-}
 
 echo json_encode($output);
 

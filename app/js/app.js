@@ -26,12 +26,12 @@ var appConfig = function($routeProvider) {
 		templateUrl: './data.php'
 	})
 	.when('/:guideIndex', {
-		controller: 'GuidesController',
+		controller: 'MainController',
 		templateUrl: 'app/view/guide.php'
 	})
 
 };
-var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize']).config(appConfig);
+var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
 // App.run(function($rootScope) {
 //         $rootScope.changeIndex = function(array, index) {

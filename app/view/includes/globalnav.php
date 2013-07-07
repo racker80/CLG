@@ -10,7 +10,7 @@
 			<a class="brand" href="#">Cloud Launch Guide</a>
 			<div class="nav-collapse">
 				<ul class="nav pull-right">
-					<li class="dropdown active">
+					<li class="dropdown active" ng-controller="GuidesController">
 						<a href="#" class="dropdown-toggle">Guides  <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a ng-click="addGuide()">New Guide</a></li>
