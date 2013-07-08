@@ -329,3 +329,142 @@ App.directive('clgCopyItem', function(SharedServices){
 
 
 
+
+
+
+
+
+
+
+
+
+
+angular.module('clg.index', [])
+
+.constant('clgIndexConfig', {
+
+})
+
+.controller('clgIndexController', function ($scope, $rootScope, $routeParams, $location, $http, clgIndexConfig, GuideModel, PageModel, SharedServices) {
+	//SET THE LOCAL GUIDE
+	$scope.$on('guideSet', function(){
+		$scope.guide = SharedServices.guide();
+
+	});
+})
+
+.directive('guideContainer', function () {
+	var link = function(scope) {
+	}
+  return {
+    restrict:'EA',
+    controller:'clgIndexController',
+    scope: {},
+    link:link
+  };
+})
+.directive('guideGroup', function () {
+	var link = function(scope) {
+	}
+  return {
+    restrict:'EA',
+    controller:'clgIndexController',
+    scope: {
+    	location:'='
+    },
+    link:link
+  };
+})
+.directive('guideActions', function (SharedServices) {
+	var link = function(scope) {
+		scope.addGroup = function() {
+			scope.location.push({
+				title:'new book'
+			});
+		}
+		scope.deleteGroup = function() {
+			scope.parent.splice(scope.location, 1);
+		}
+		scope.copyGroup = function() {
+			SharedServices.copyItem(scope.location);
+			console.log(SharedServices.copiedItem())
+		}	
+		scope.pasteGroup = function() {
+			scope.location.push(SharedServices.copiedItem())
+		}
+		scope.editGroup = function() {
+			//Pass the item to shared services
+			SharedServices.linkItem(scope.location);
+			//make sure the editor is vible
+			SharedServices.setEditor(true);
+		}				
+	}
+  return {
+  	restrict:'EA',
+  	link:link,
+    controller:'clgIndexController',
+  	scope: {
+  		location:'=',
+  		parent:'='
+  	}
+  };
+})
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

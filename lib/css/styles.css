@@ -7944,3 +7944,15 @@ ul.overviewList ul li {
   top: 10px;
   right: 0;
 }
+.accordian-heading-container {
+  position: relative;
+}
+.accordian-heading-container .dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.accordian-heading-container .dropdown .dropdown-menu {
+  top: 0;
+  left: 110%;
+}
