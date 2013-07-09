@@ -56,7 +56,7 @@ App.factory('PageModel', function($resource, $http, $rootScope, $routeParams, $d
 
 	return {
 		createNewPage: function(data) {
-			return $http.get('app/api/add-page.php', {params:{json:data}});
+			return $http.get('app/api/add-page.php', {params:{json:angular.toJson(data)}});
 		},
 		savePage: function(data) {
 			if(!data.id) {

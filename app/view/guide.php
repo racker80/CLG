@@ -30,7 +30,7 @@
 	<clg-add-book>
 		<!-- <button type="submit" class="btn btn-primary btn-small" ng-click="addBook()">Add Book</button> -->
 	</clg-add-book>
-				<guide-actions ng-click="addGroup()" location="guide.books">add book</guide-actions>
+				<guide-actions ng-click="addGroup()" location="guide.books" type="book" edit="true">add book</guide-actions>
 				<guide-actions ng-click="pasteGroup()" location="guide.books">paste book</guide-actions>
 
 			<a ng-click="edit(guide)">edit</a>
@@ -40,19 +40,20 @@
 
 	<accordion close-others="false">
 
-	    <accordion-group ng-repeat="book in guide.books">
+	    <accordion-group ng-class="{true:'active', false:''}[isOpen]" ng-repeat="book in guide.books">
 			<accordion-heading>
-				<div class="accordian-heading-container">
+				<div class="index-heading">
 					<h4>{{book.title}}</h4>
 
 					<div class="dropdown">
-						<a class="dropdown-toggle">Options</a>
+						<a guide-actions ng-click="editGroup()" location="book">&#63490;</a>
+
+						<a class="dropdown-toggle">&#9881;</a>
 						<ul class="dropdown-menu">
-							<li><a guide-actions ng-click="editGroup()" location="book">edit book</a></li>
 							<li><a guide-actions ng-click="copyGroup()" location="book">copy book</a></li>
 							<li class="divider"></li>
 
-							<li><a guide-actions ng-click="addGroup()" location="book.chapters">new chapter</a></li>
+							<li><a guide-actions ng-click="addGroup()" location="book.chapters" type="chapter" edit="true">new chapter</a></li>
 							<li><a guide-actions ng-click="pasteGroup()" location="book.chapters">paste chapter</a></li>
 
 							<li class="divider"></li>
@@ -74,9 +75,25 @@
 			</div> -->
 
 			<dl ng-repeat="chapter in book.chapters">
-				<dt>{{chapter.title}} - 
-					<a guide-actions ng-click="editGroup()" location="chapter">edit chapter</a> |
-					<a guide-actions ng-click="addGroup()" location="book.chapters">add page</a>
+				<dt class="index-heading">
+					<a guide-actions ng-click="indexUp()" location="$index" parent="book.chapters">&#11014;</a>
+					<a guide-actions ng-click="indexDown()" location="$index" parent="book.chapters">&#11015;</a>
+					{{chapter.title}}
+						<div class="dropdown">
+							<a guide-actions ng-click="editGroup()" location="chapter">&#63490;</a> 
+							<a class="dropdown-toggle">&#9881;</a>
+							<ul class="dropdown-menu">
+								<li><a guide-actions ng-click="copyGroup()" location="chapter">copy chapter</a></li>
+								<li><a guide-actions ng-click="deleteGroup()" location="$index" parent="book.chapters">delete chapter</a></li>
+								<li class="divider"></li>
+
+								<li><a guide-actions ng-click="addGroup()" location="chapter.pages" type="page">add page</a></li>
+								<li><a guide-actions ng-click="pasteGroup()" location="book.chapters">paste page</a></li>
+
+
+
+							</ul>
+						</div>
 
 
 <!-- 					<a ng-click="deleteChapter($index, $parent.$index)">Delete</a> | 
@@ -86,20 +103,28 @@
 				</dt>
 				
 				<dd ng-repeat="page in chapter.pages" ng-init="pageIndex=$index;">
-					<span ng-controller="PageController">
-<!-- 						<a ng-click="pageUp($parent.$parent.$parent.$index, $parent.$parent.$index)">up</a> 
-						<a ng-click="pageDown($parent.$parent.$parent.$index, $parent.$parent.$index)">Down</a>  -->
-						{{page.title}}
-<!-- 						<a ng-click="deletePageRef($parent.$parent.$parent.$index, $parent.$parent.$index, $index)">delete</a> -->
-						<!-- <div ng-bind-html-unsafe="page.content"></div> -->
-					</span>
-					<a guide-actions ng-click="editGroup()" location="page">edit page</a>
+					<div class="index-heading">
+					<span ng-controller="PageController">{{page.title}}</span>
+						<div class="dropdown">
+							<a guide-actions ng-click="editGroup()" location="page">&#63490;</a>
+							<a class="dropdown-toggle">&#9881;</a>
+							<ul class="dropdown-menu">
+								<li><a guide-actions ng-click="copyGroup()" location="page">copy page</a></li>
+								<li><a guide-actions ng-click="deleteGroup()" location="$index" parent="book.chapters">delete page</a></li>
+
+
+
+
+							</ul>
+						</div>					
+					
+					</div>
 				</dd>
-				<dd>				
+<!-- 				<dd>				
 					<clg-add-page book-index="$parent.$index" chapter-index="$index">
 						<span class="label label-info" ng-click="addPage()">+ Add Page</span>			
 					</clg-add-page>				
-				</dd>
+				</dd> -->
 			</dl>
 
 			<hr>
