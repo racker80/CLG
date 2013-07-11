@@ -1,3 +1,123 @@
+angular.module('clg.editor', [])
+
+.constant('clgEditorConfig', {
+
+})
+
+.controller('clgEditorController', function ($scope, $rootScope, $routeParams, $location, $http, clgEditorConfig, GuideModel, PageModel, SharedServices) {
+		$scope.templates = {
+				none:"",
+				page:"app/view/directives/page.php",
+				chapter:"app/view/directives/chapter.php",
+				book:"app/view/directives/book.php",
+				guide:"app/view/directives/guide.php",
+			};
+
+		$scope.editorContent = {
+			type:'none'
+		};
+
+		//$scope.editorContent = SharedServices.linkedItem();
+
+		// var updateEditorContent = function(content) {
+		// 	//var content = SharedServices.linkedItem();
+
+		// 	if(content.type == "page") {
+		// 		var ref = {
+		// 			ref:'content',
+		// 			id: content.id
+		// 		}  
+
+
+		// 		$http.get('app/api/get-page.php', {params:ref}).success(function(data){
+		// 			$scope.editorContent = data;
+		// 			//scope.previewContent = Utils.makeMarkdown(scope.editorContent.content);
+
+		// 		});
+
+		// 	} else {
+
+		// 		$scope.editorContent = content;
+		// 		setTimeout(function(){
+		// 			$scope.$apply($scope.editorContent);
+
+		// 		},100);
+
+		// 	}
+		// }
+		// $scope.$on('linkedItem', function(){
+		// 	var content = SharedServices.linkedItem();
+		// 	$scope.editorTemplateUrl = templates[content.type];
+		// 	updateEditorContent(content);
+		// });
+
+		// // $scope.$watch('editorContent.type', function(type){
+		// // 	setTimeout(function(){
+		// // 		$scope.editorTemplateUrl = templates[type];
+
+		// // 	},100);
+		// // });
+
+		// $scope.templateUrl = function() {
+		// 	var templates = {
+		// 		none:"",
+		// 		page:"app/view/directives/page.php",
+		// 		chapter:"app/view/directives/chapter.php",
+		// 		book:"app/view/directives/book.php",
+		// 		guide:"app/view/directives/guide.php",
+		// 	};
+		// 	if(!$scope.editorContent.type) {
+		// 		$scope.editorContent.type="page";
+		// 	}
+		// 	return templates[$scope.editorContent.type];
+		// }
+})
+.directive('editorContainer', function(SharedServices, $templateCache){
+	function link(scope, element, attrs) {
+		$(element).observe(attrs.src, function(){
+			console.log(attrs.src);
+		})
+		console.log(attrs.src)
+
+	}
+
+	return {
+		restrict:'EA',
+		compile:function(tElement, tAttrs, transclude) {
+			console.log(tElement)
+            var html = 'test';
+            tElement.html(html);
+        },
+ 		controller:'clgEditorController',
+ 		transclude:true,
+ 		replace:true
+	};
+})
+.directive('editorActions', function (GuideModel, PageModel, SharedServices) {
+	var link = function(scope) {
+		scope.save = function() {
+			console.log(scope)
+			if(scope.editorContent.type == 'page') {
+				PageModel.savePage(scope.editorContent);
+				GuideModel.saveGuide(SharedServices.guide());
+
+			} else {
+				GuideModel.saveGuide(SharedServices.guide());
+			}	
+			
+		}		
+	}
+  return {
+    restrict:'EA',
+    controller:'clgEditorController',
+    link:link
+  };
+});
+
+
+
+
+
 //+-------------------------------------------------------------------------------------------
 //+-------------------------------------------------------------------------------------------
 //CONTROLLER

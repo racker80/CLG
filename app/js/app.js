@@ -31,7 +31,7 @@ var appConfig = function($routeProvider) {
 	})
 
 };
-var App = angular.module('App', ['clg.index', 'ui.bootstrap', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
+var App = angular.module('App', ['clg.index', 'clg.editor', 'ui.bootstrap', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
 // App.run(function($rootScope) {
 //         $rootScope.changeIndex = function(array, index) {
