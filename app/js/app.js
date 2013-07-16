@@ -14,30 +14,46 @@
 var appConfig = function($routeProvider) {
 	$routeProvider
 	.when('/', {
-		controller: 'GuidesController',
+		controller: 'AppCtrl',
 		templateUrl: 'app/view/guides.php'
 	})
-	.when('/content', {
-		controller: 'ContentController',
-		templateUrl: 'app/view/content.php'
-	})
-	.when('/reset', {
-		controller: '',
-		templateUrl: './data.php'
-	})
 	.when('/:guideIndex', {
-		controller: 'GuidesController',
-		templateUrl: 'app/view/guide.php'
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/guide.php',
+		resolve: {
+			guides: appCtrl.loadData
+		}
 	})
 
 };
 var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize']).config(appConfig);
 
-// App.run(function($rootScope) {
-//         $rootScope.changeIndex = function(array, index) {
-            
-//         	array.splice(index, 0, array.splice(index, 1)[0]);
-        	
-        	
-//         };
-//     });
+
+
+var appCtrl = App.controller('AppCtrl', function($scope, $route, $routeParams, $q, Catalogue){
+	// console.log($route);
+	Catalogue.guides;
+})
+
+appCtrl.loadData = function($q, $http) {
+	var defer = $q.defer();
+	$http.get('app/api/get-guides.php').success(function(data){
+		defer.resolve(data);
+	})
+	return defer.promise;
+}
+
+App.factory('Catalogue', function($route, $routeParams){
+	 var guides = $route.current.locals.guides;
+	 var guide = guides[$routeParams.guideIndex];
+	return {
+		guides: function() {
+			console.log('test')
+			 return this.guides;
+		},
+		guide: function() {
+			return this.guide;
+		}
+	}
+
+});
