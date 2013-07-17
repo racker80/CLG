@@ -233,7 +233,6 @@ App.directive('ImageBrowser', function(){
 })
 App.directive('clgUploadContainer', function($rootScope, $http, Catalogue){
 	function link(scope, element, attrs) {
-		console.log('scope')
 
 		scope.$watch('image', function(image){
 			if(angular.isDefined(image)) {
