@@ -21,6 +21,7 @@ This has updated the package listing for the operating system to interact with. 
 			'ubuntu',
 			'update'
 			),
+		'type'=>'page',
 
 		),
 
@@ -50,6 +51,7 @@ Once finished let’s reboot the server to ensure you’re running the latest, g
 			'ubuntu',
 			'upgrade'
 			),
+		'type'=>'page',
 
 		)
 );

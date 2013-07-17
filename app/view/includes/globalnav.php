@@ -13,10 +13,10 @@
 					<li class="dropdown active">
 						<a href="#" class="dropdown-toggle">Guides  <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a ng-click="addGuide()">New Guide</a></li>
+							<li><a ng-click="catalogue.newGuide()">New Guide</a></li>
 							<li class="divider"></li>
 							<li class="nav-header">All Guides</li>
-							<li ng-repeat="g in guides"><a href="#/{{$index}}">{{g.title}}</a></li>
+							<li ng-repeat="guide in catalogue.guides"><a href="#/{{$index}}">{{guide.title}}</a></li>
 						</ul>
 					</li>
 					<li><a href="#/content">Content</a></li>

@@ -7919,6 +7919,10 @@ textarea {
 /*
 Your custom styles go here
 */
+.controls textarea {
+  width: 80%;
+  height: 280px;
+}
 ul.overviewList {
   margin: 0;
   padding: 0;

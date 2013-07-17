@@ -23,7 +23,14 @@ var appConfig = function($routeProvider) {
 		resolve: {
 			guides: appCtrl.loadData,
 			templates: appCtrl.loadTemplates
-
+		}
+	})
+	.when('/reset', {
+		resolve: {
+			reset: function($http){
+				$http.get('data.php');
+				return true;
+			},
 		}
 	})
 
@@ -32,8 +39,9 @@ var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize']).co
 
 
 
-var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue){
+var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route){
 	$scope.catalogue = Catalogue;
+
 })
 
 appCtrl.loadData = function($q, $http, $route, Catalogue) {
@@ -41,13 +49,14 @@ appCtrl.loadData = function($q, $http, $route, Catalogue) {
 	$http.get('app/api/get-guides.php').success(function(data){
 		Catalogue.guides = data;
 		Catalogue.guide = Catalogue.guides[$route.current.params.guideIndex];
-		defer.resolve(data);
+		defer.resolve();
 	})
 	return defer.promise;
 }
 
 appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 	var chapter = $q.defer();
+
 	$http.get('app/view/templates/chapter.html').success(function(data){
 		Catalogue.templates['chapter'] = data;
 		chapter.resolve(data);
@@ -59,18 +68,32 @@ appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 		chapter.resolve(data);
 	});
 	
+	var page = $q.defer();
+	$http.get('app/view/templates/page.html').success(function(data){
+		Catalogue.templates['page'] = data;
+		page.resolve(data);
+	});	
+	
 	return {
+		none:'',
+		page: page.promise,
 		chapter: chapter.promise,
 		book: book.promise
 	}
 }
 
-App.factory('Catalogue', function($http, $route, $routeParams){
+
+
+
+
+
+
+
+App.factory('Catalogue', function($http, $route, $routeParams, $q){
 	return {
 		guides: [],
 		guide: {},
 		saveGuide: function(){
-			console.log(angular.toJson(this.guide))
 			this.guide.id = this.guide._id.$id;
 			$http.get('app/api/save-guide.php', {
 				params:{
@@ -79,17 +102,86 @@ App.factory('Catalogue', function($http, $route, $routeParams){
 			});
 		},
 		newGuide: function(){
-			
+			var newGuide = $q.defer();
+
+			$http.get('app/api/add-guide.php', {
+				params:this.structure.guide
+			}).success(function(data){
+				data.id = data._id.$id;
+				newGuide.resolve(data);
+			});
+
+			this.guides.push(newGuide.promise)
+			console.log(this.guides);
+
 		},
 		deleteGuide: function(){
 
 		},
 		edit: {},
 		copy:{},
-		templates:{}
+		templates:{},
+		savePage: function() {
+			if(this.edit.type ==  'page') {
+				$http.get('app/api/save-page.php', {
+					params:{
+						json:angular.toJson(this.edit)
+					}
+				}).success(function(data){
+					console.log(data)
+				});
+			}
+		},
+		structure: {
+			guide: {
+				title:"New Guide",
+				type: "guide",
+				id:{},
+				books: {}
+			},
+			book: {
+				title:"New Book",
+				type:"book",
+				chapters:{}
+			},
+			chapter: {
+				title:"New Chapter",
+				type:"chapter",
+				pages:{}
+			},
+			page: {
+				title:"New Page",
+				type:"page",
+				code:{},
+				images:{},
+				meta:{}
+			}
+
+		}
 	}
 });
 
+
+App.directive('pageContent', function($http, $q){
+	return {
+		restrict:"AE",
+		scope: {
+			pageContent:"="
+		},
+		link: function(scope, element, attrs) {
+			var content = $q.defer();
+			$http.get('app/api/get-page.php', {params:{
+				ref:'content',
+				id:scope.pageContent.id
+			}}).success(function(data){
+				data.id = data._id.$id;
+				content.resolve(data);
+			});
+
+			scope.page = content.promise;
+		}
+	}
+});
 
 
 App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
@@ -101,36 +193,44 @@ App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 		},
 		link: function($scope, $element, $attrs, controller) {
 			
+			//RECOMPLE THE TEMPLATE ON NEW EDIT ITEM
+			
 			$scope.$on('editItem', function(){
+
 				var type = $scope.catalogue.edit.type;
-				$element.html($scope.catalogue.templates[type]);
 
-				console.log($scope.catalogue.templates[type])
-
-				// $element.html('<editor-content></editor-content>');
-
+				var templates = $scope.catalogue.templates;
+				$element.html(templates[type]);
 
 				$compile($element.contents())($scope);
 				$scope.$apply();
+
+				console.log($scope)
 			});
 
 		}
 	}
 });
-App.directive('editorContent', function(Catalogue, $templateCache){
+App.directive('codeBrowser', function(){
 	return {
-		scope:{},
-		restrict:'E',
-		require:"^clgEditor",
-		// template:'<input type="text" ng-model="catalogue.edit.title"> <button class="btn btn-primary btn-small" ng-click="catalogue.saveGuide()">save</button>',
-		// template:$templateCache.get('test'),
-		link: function(scope, element, attrs, editorCtrl) {
-			scope.catalogue = Catalogue;
-			console.log($templateCache.get('test'));
-
+		scope:{
+			codeBrowser:"="
+		},
+		template:'<pre ng-repeat="code in codeBrowser">{{code}}</pre>',
+		link:function(scope, element, attrs) {
 		}
 	}
-});
+})
+App.directive('ImageBrowser', function(){
+	return {
+		scope:{
+			imageBrowser:"="
+		},
+		template:'<div class="imagePreview" ng-repeat="image in imageBrowser"><img src="{{image.url}}"></div>',
+		link:function(scope, element, attrs) {
+		}
+	}
+})
 
 
 App.directive('editItem', function(Catalogue, $rootScope){
@@ -140,7 +240,10 @@ App.directive('editItem', function(Catalogue, $rootScope){
 		},
 		link: function(scope, element, attrs, clgEditorCtrl){
 			element.bind('click', function(){
+				Catalogue.saveGuide();
+				Catalogue.savePage();
 				Catalogue.edit = scope.item;
+
 				$rootScope.$broadcast('editItem');
 			});
 		}
@@ -148,6 +251,17 @@ App.directive('editItem', function(Catalogue, $rootScope){
 });
 
 
+
+App.directive('globalNav', function(Catalogue){
+	return {
+		restrict:"AE",
+		scope: {},
+		templateUrl:'app/view/includes/globalnav.php',
+		link: function(scope) {
+			scope.catalogue = Catalogue;
+		}
+	}
+})
 
 
 
