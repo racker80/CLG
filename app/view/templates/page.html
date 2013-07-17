@@ -30,6 +30,22 @@
 			<label class="control-label" for="select01">Images</label>
 			<div class="controls">
 				<div image-browser="catalogue.edit.images"></div>
+
+						<div clg-upload-container>
+
+							<input id="inputImage" 
+							type="file" 
+							accept="image/*" 
+							image="image" 
+							resize-max-height="50"
+							resize-max-width="50"
+							resize-quality="0.7" />
+
+							<p>Original</p>
+							<img ng-show="image" ng-src="{{image.url}}" type="{{image.file.type}}"/>
+							<p>Resized</p>
+							<img ng-show="image" ng-src="{{image.resized.dataURL}}"/>
+		      		  </div>
 			</div>
 		</div>
 		<div class="control-group">

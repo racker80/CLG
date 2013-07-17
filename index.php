@@ -22,6 +22,8 @@
         <script src="app/js/filters.js"></script>
 
         <script src="app/js/vendor/showdown.js"></script>
+        <script src="app/js/vendor/imageupload.js"></script>
+        <script src="app/js/vendor/uploader.js"></script>
 
  
     </head>
