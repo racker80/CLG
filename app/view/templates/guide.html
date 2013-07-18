@@ -1,1 +1,12 @@
-what?
+Guide: <input type="text" ng-model="catalogue.edit.title"> <button class="btn btn-primary btn-small" ng-click="catalogue.saveGuide()">save</button>
+
+<br>
+<textarea ng-model="catalogue.edit.content"></textarea>
+<br>
+
+		<div class="control-group">
+			<label class="control-label" for="textarea">Preview</label>
+			<div class="controls">
+				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
+			</div>
+		</div>	

@@ -6,7 +6,8 @@ $db = $m->selectDB('clg');
 //content collection
 $collection = new MongoCollection($db, 'guides');
 
-$guide = $_REQUEST;
+
+$guide = json_decode( stripslashes( urldecode($_REQUEST['json']) ) );
 
 $collection->insert($guide, array("safe" => true));
 

@@ -7919,9 +7919,104 @@ textarea {
 /*
 Your custom styles go here
 */
-.controls textarea {
+.sidebar table {
+  margin: 0;
+}
+.sidebar table tbody tr td:first-child {
+  cursor: pointer;
+  width: 100%;
+}
+.sidebar table tbody tr td:last-child {
+  position: relative;
+}
+.sidebar table tbody tr td:last-child span {
+  font-size: 1.5em;
+  position: relative;
+  cursor: pointer;
+}
+.sidebar table tbody tr td:last-child ul.dropdown-menu {
+  top: 0;
+  left: 100%;
+}
+.sidebar table tbody tr td:last-child div.options {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border: 1px solid black;
+}
+.sidebar ul.indexContainer {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /*Book*/
+
+}
+.sidebar ul.indexContainer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sidebar ul.indexContainer > li {
+  margin-bottom: 40px;
+}
+.sidebar ul.indexContainer > li > table {
+  background: #999;
+}
+.sidebar ul.indexContainer > li > ul {
+  /*chapter*/
+
+  /*margin-top:10px;*/
+
+}
+.sidebar ul.indexContainer > li > ul > li > table {
+  background: #d2d2d2;
+}
+.sidebar ul.indexContainer > li > ul > li > table td:first-child {
+  padding-left: 20px;
+}
+.sidebar ul.indexContainer > li > ul > li > ul {
+  /*Page*/
+
+  /*margin-bottom:10px;*/
+
+}
+.sidebar ul.indexContainer > li > ul > li > ul > li > table {
+  background: #eaeaea;
+}
+.sidebar ul.indexContainer > li > ul > li > ul > li > table td:first-child {
+  padding-left: 40px;
+}
+.controls textarea.content-textarea {
   width: 80%;
   height: 280px;
+}
+.imageContainer {
+  *zoom: 1;
+}
+.imageContainer:before,
+.imageContainer:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.imageContainer:after {
+  clear: both;
+}
+.imageContainer:before,
+.imageContainer:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.imageContainer:after {
+  clear: both;
+}
+.imageContainer .imagePreview {
+  overflow: hidden;
+  width: 150px;
+  height: 100px;
+  float: left;
+  margin: 10px;
 }
 ul.overviewList {
   margin: 0;

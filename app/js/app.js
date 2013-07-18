@@ -15,7 +15,11 @@ var appConfig = function($routeProvider) {
 	$routeProvider
 	.when('/', {
 		controller: 'AppCtrl',
-		templateUrl: 'app/view/guides.php'
+		templateUrl: 'app/view/index.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates
+		}
 	})
 	.when('/:guideIndex', {
 		controller: 'AppCtrl',
@@ -35,14 +39,22 @@ var appConfig = function($routeProvider) {
 	})
 
 };
-var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize']).config(appConfig);
+var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
 
 
-var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route){
+var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, $routeParams){
 	$scope.catalogue = Catalogue;
-
+	$scope.routeParams = $routeParams;
+	console.log($scope)
 })
+
+/************************************************************************
+************************************************************************
+DATA LOADING
+************************************************************************
+************************************************************************/
+
 
 appCtrl.loadData = function($q, $http, $route, Catalogue) {
 	var defer = $q.defer();
@@ -73,12 +85,19 @@ appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 		Catalogue.templates['page'] = data;
 		page.resolve(data);
 	});	
+
+	var guide = $q.defer();
+	$http.get('app/view/templates/guide.html').success(function(data){
+		Catalogue.templates['guide'] = data;
+		page.resolve(data);
+	});		
 	
 	return {
 		none:'',
 		page: page.promise,
 		chapter: chapter.promise,
-		book: book.promise
+		book: book.promise,
+		guide: guide.promise
 	}
 }
 
@@ -88,8 +107,13 @@ appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 
 
 
+/************************************************************************
+************************************************************************
+THE CATALOGUE
+************************************************************************
+************************************************************************/
 
-App.factory('Catalogue', function($http, $route, $routeParams, $q){
+App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $location, $q){
 	return {
 		guides: [],
 		guide: {},
@@ -101,11 +125,12 @@ App.factory('Catalogue', function($http, $route, $routeParams, $q){
 				}
 			});
 		},
-		newGuide: function(){
+		newGuide: function(edit){
 			var newGuide = $q.defer();
-
 			$http.get('app/api/add-guide.php', {
-				params:this.structure.guide
+				params:{
+					json:angular.toJson(this.structure.guide)
+				}
 			}).success(function(data){
 				data.id = data._id.$id;
 				newGuide.resolve(data);
@@ -113,6 +138,15 @@ App.factory('Catalogue', function($http, $route, $routeParams, $q){
 
 			this.guides.push(newGuide.promise)
 			console.log(this.guides);
+			
+			if(edit == false) {
+				return
+			}
+
+			var index = this.guides.length-1;
+			$location.path('/'+index);
+	
+
 
 		},
 		deleteGuide: function(){
@@ -120,6 +154,10 @@ App.factory('Catalogue', function($http, $route, $routeParams, $q){
 		},
 		edit: {},
 		copy:{},
+		copyItem: function(item){
+			this.copy = item;
+			$rootScope.$broadcast('itemCopied');
+		},
 		templates:{},
 		savePage: function() {
 			if(this.edit.type ==  'page') {
@@ -128,7 +166,6 @@ App.factory('Catalogue', function($http, $route, $routeParams, $q){
 						json:angular.toJson(this.edit)
 					}
 				}).success(function(data){
-					console.log(data)
 				});
 			}
 		},
@@ -137,30 +174,98 @@ App.factory('Catalogue', function($http, $route, $routeParams, $q){
 				title:"New Guide",
 				type: "guide",
 				id:{},
-				books: {}
+				books:[]
 			},
 			book: {
 				title:"New Book",
 				type:"book",
-				chapters:{}
+				chapters:[]
 			},
 			chapter: {
 				title:"New Chapter",
 				type:"chapter",
-				pages:{}
+				pages:[]
 			},
 			page: {
 				title:"New Page",
 				type:"page",
-				code:{},
-				images:{},
-				meta:{}
+				code:[],
+				images:[],
+				meta:[]
 			}
 
 		}
 	}
 });
 
+
+/************************************************************************
+************************************************************************
+THE INDEX
+************************************************************************
+************************************************************************/
+App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compile){
+	return {
+		restrict:"A",
+		scope: {
+			type:'@',
+			edit:"=",
+			location:"=",
+			target:"=",
+		},
+		link: function(scope, element, attrs){
+			scope.catalogue = Catalogue;
+			scope.addGroupTo = function() {
+				if(scope.type == 'paste') {
+					scope.location.push(Catalogue.copy);
+				} else {
+					scope.location.push(Catalogue.structure[scope.type]);
+				}
+				Catalogue.saveGuide();
+
+				//TODO DELETE GUIDE!
+
+			}
+			scope.removeFromGroup = function() {
+				scope.location.splice(scope.target, 1);
+				Catalogue.saveGuide();
+			}
+			scope.addNewPage = function() {
+				$http.get('app/api/add-page.php', {params:{
+					json:angular.toJson(Catalogue.structure.page)
+				}}).success(function(data){
+					data.id = data.$id.$id;
+					data.type = 'page';
+					scope.location.push(data);
+					Catalogue.saveGuide();
+
+				});				
+			}
+			scope.copy = function() {
+				Catalogue.copy = scope.target;
+				console.log(Catalogue.copy)
+			}
+
+		}
+	}
+})
+App.directive('indexContainer', function($compile){
+	return {
+		restrict:"A",
+		link:function(scope, element, attrs) {
+
+			scope.$on('updateIndex', function(){
+				// $compile(element.contents())(scope)
+			})
+		}
+	}
+});
+
+/************************************************************************
+************************************************************************
+PAGE STUFF
+************************************************************************
+************************************************************************/
 
 App.directive('pageContent', function($http, $q){
 	return {
@@ -184,6 +289,12 @@ App.directive('pageContent', function($http, $q){
 });
 
 
+
+/************************************************************************
+************************************************************************
+EDITOR STUFF
+************************************************************************
+************************************************************************/
 App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 	return {
 		scope: {},
@@ -205,7 +316,6 @@ App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 				$compile($element.contents())($scope);
 				$scope.$apply();
 
-				console.log($scope)
 			});
 
 		}
@@ -221,13 +331,93 @@ App.directive('codeBrowser', function(){
 		}
 	}
 })
-App.directive('ImageBrowser', function(){
+App.directive('codeAdder', function(Catalogue){
 	return {
+		restrict:"A",
+		scope:{},
+		template:'<textarea ng-model="newCode"></textarea><button ng-click="add()" class="btn">add</button>',
+		link:function(scope, element, attrs) {
+			scope.add = function() {
+				Catalogue.edit.code.push(scope.newCode);
+				Catalogue.saveGuide();
+				Catalogue.savePage();
+			}
+
+		}
+	}
+})
+
+App.directive('contentPreview', function(Catalogue){
+	var converter = new Showdown.converter();
+
+	return {
+		restrict:"A",
+		scope:{
+			contentPreview:"="
+		},
+		link:function(scope, element, attrs){
+			//GENERATE MARKDOWN AND CODE
+			
+			console.log(scope)
+			var previewContent = function(){
+				if(!angular.isDefined(scope.contentPreview)) {
+					return;
+				}
+				scope.content = converter.makeHtml(scope.contentPreview);
+
+				//REPLACE THE CODE
+				angular.forEach(Catalogue.edit.code, function(value, key) {
+					scope.content = scope.content.replace('[code '+key+']', '<pre>'+value+'</pre>');
+				});
+                //REPLACE THE IMAGES
+                angular.forEach(Catalogue.edit.images, function(value, key) {
+                	scope.content = scope.content.replace('[image '+key+']', '<img src="'+value.url+'">');
+                });  				
+			}
+
+			scope.$watch('contentPreview', function(){
+				previewContent();
+			});
+
+		}
+	}
+})
+
+App.directive('editItem', function(Catalogue, $rootScope){
+	return {
+		scope: {
+			item:'='
+		},
+		transclude:true,
+		template:'<span ng-transclude></span>',
+		link: function(scope, element, attrs, clgEditorCtrl){
+			element.bind('click', function(){
+				Catalogue.saveGuide();
+				Catalogue.savePage();
+				Catalogue.edit = scope.item;
+				$rootScope.$broadcast('editItem');
+			});
+		}
+	}
+});
+
+/************************************************************************
+************************************************************************
+UPLOADER STUFF
+************************************************************************
+************************************************************************/
+App.directive('imageBrowser', function($compile){
+	return {
+		restrict:"A",
 		scope:{
 			imageBrowser:"="
 		},
-		template:'<div class="imagePreview" ng-repeat="image in imageBrowser"><img src="{{image.url}}"></div>',
 		link:function(scope, element, attrs) {
+			if(scope.imageBrowser.length > 0) {
+				element.html('<div class="imageContainer"><div class="imagePreview" ng-repeat="image in imageBrowser"><img src="{{image.url}}"></div></div>');
+				$compile(element.contents())(scope);
+				scope.$apply();
+			}
 		}
 	}
 })
@@ -252,11 +442,13 @@ App.directive('clgUploadContainer', function($rootScope, $http, Catalogue){
 
 						var data = angular.fromJson(data);
 
-						console.log(data);
+						console.log(Catalogue);
 
 
 						Catalogue.edit.images.push(data);
-
+						scope.$apply();
+						Catalogue.savePage();
+						Catalogue.saveGuide();
 					}
 				});
 
@@ -273,25 +465,14 @@ App.directive('clgUploadContainer', function($rootScope, $http, Catalogue){
 });
 
 
-App.directive('editItem', function(Catalogue, $rootScope){
-	return {
-		scope: {
-			item:'='
-		},
-		link: function(scope, element, attrs, clgEditorCtrl){
-			element.bind('click', function(){
-				Catalogue.saveGuide();
-				Catalogue.savePage();
-				Catalogue.edit = scope.item;
-
-				$rootScope.$broadcast('editItem');
-			});
-		}
-	}
-});
 
 
 
+/************************************************************************
+************************************************************************
+GLOBAL NAV
+************************************************************************
+************************************************************************/
 App.directive('globalNav', function(Catalogue){
 	return {
 		restrict:"AE",

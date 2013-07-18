@@ -28,10 +28,122 @@ Your custom styles go here
 */
 
 
-.controls textarea {
+.sidebar {
+	table {
+		margin:0;
+		tbody {
+			tr {
+				td:first-child {
+					cursor:pointer;
+					width:100%;
+				}	
+				td:last-child {
+					position:relative;
+					span {
+						font-size:1.5em;
+						position:relative;
+						cursor:pointer;
+					}
+					ul.dropdown-menu {
+						top:0;
+						left:100%;
+					}
+					div.options {
+						position:absolute;
+						top:0;
+						left:100%;
+						border:1px solid black;
+					}
+				}
+			}
+		}
+	}
+
+
+	ul.indexContainer {
+		margin:0;
+		padding:0;
+		list-style:none;
+
+
+		ul {
+			margin:0;
+			padding:0;
+			list-style:none;
+		}
+
+		/*Book*/
+		>li {
+			margin-bottom:40px;
+			>table {
+				background:#999;		
+
+				td:first-child {
+
+				}
+			}
+			>ul {
+				/*chapter*/
+				/*margin-top:10px;*/
+
+				>li {
+
+					>table {
+						background:#d2d2d2;
+
+						td:first-child {
+							padding-left:20px;
+						}
+					}
+					
+					>ul {
+						/*Page*/
+						/*margin-bottom:10px;*/
+
+						>li {
+
+							>table {
+								background:#eaeaea;
+
+								td:first-child {
+									padding-left:40px;
+								}
+							}
+							&:last-child {
+							}						
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+}
+
+
+
+
+
+
+.controls textarea.content-textarea {
 	width:80%;
 	height:280px;
 }
+
+.imageContainer {
+	.clearfix();
+	.imagePreview {
+		overflow:hidden;
+		width:150px;
+		height:100px;
+		float:left;
+		margin:10px;
+	}
+}
+
 
 ul.overviewList {
 	margin:0;

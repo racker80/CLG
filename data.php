@@ -22,6 +22,7 @@ This has updated the package listing for the operating system to interact with. 
 			'update'
 			),
 		'type'=>'page',
+		'images'=>array(),
 
 		),
 
@@ -44,9 +45,7 @@ Once finished let’s reboot the server to ensure you’re running the latest, g
 			'sudo apt-get upgrade',
 			'sudo reboot'
 			),
-		'images'=>array(
-			'image_id'
-			),
+		'images'=>array(),
 		'tags'=>array(
 			'ubuntu',
 			'upgrade'
@@ -75,6 +74,7 @@ $guideContent = array(
 		'title'=>'Wordpress Guide',
 		'description'=>'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, officiis, labore, suscipit, veniam qui aliquid error quidem eius illo rerum earum corporis nisi adipisci eum quam est sed pariatur accusamus.',
 		'slug'=>'wordpress-guide',
+		'type'=>'guide',
 		'books'=>array(
 			array(
 				'title'=>'Server',

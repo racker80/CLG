@@ -16,14 +16,21 @@
 		<div class="control-group">
 			<label class="control-label" for="textarea">Content</label>
 			<div class="controls">
-				<textarea class="input-xlarge" ng-model="catalogue.edit.content"></textarea>
+				<textarea class="input-xlarge content-textarea" ng-model="catalogue.edit.content"></textarea>
 			</div>
-		</div>		
+		</div>	
+		<div class="control-group">
+			<label class="control-label" for="textarea">Preview</label>
+			<div class="controls">
+				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
+			</div>
+		</div>				
 		<div class="control-group">
 			<label class="control-label" for="optionsCheckbox">Code</label>
 			<div class="controls">
-				<!-- <pre ng-repeat="code in catalogue.edit.code">{{code}}</pre> -->
 				<div code-browser="catalogue.edit.code"></div>
+				<div code-adder></div>
+
 			</div>
 		</div>
 		<div class="control-group">
@@ -41,31 +48,10 @@
 							resize-max-width="50"
 							resize-quality="0.7" />
 
-							<p>Original</p>
-							<img ng-show="image" ng-src="{{image.url}}" type="{{image.file.type}}"/>
-							<p>Resized</p>
-							<img ng-show="image" ng-src="{{image.resized.dataURL}}"/>
 		      		  </div>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="multiSelect">Multicon-select</label>
-			<div class="controls">
-				<select multiple="multiple" id="multiSelect">
-					<option>1</option>
-					<option>2</option>
-					<option>3</option>
-					<option>4</option>
-					<option>5</option>
-				</select>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="fileInput">File input</label>
-			<div class="controls">
-				<input class="input-file" id="fileInput" type="file">
-			</div>
-		</div>
+
 
 		<div class="form-actions">
 
