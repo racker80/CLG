@@ -28,8 +28,8 @@ switch ($_REQUEST['action']) {
 //+-----------------------------------------------------------------------------------
 	case 'addGuide':
 
-		$output = $collection->insert($json, array("safe" => true));
-
+		$collection->insert($json, array("safe" => true));
+		$output = $json;
 	break;	
 //+------------------------------------------------------------------------------------
 // SAVE Guides
