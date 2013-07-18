@@ -11,9 +11,11 @@
         
         <!-- CSS files -->
         <link rel="stylesheet" href="lib/css/styles.css">
+        <script src="app/js/vendor/jquery-1.9.1.js"></script>
+        <script src="app/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
+
      	<script src="app/js/angular.js"></script>
         <script src="app/js/app.js"></script>
-        <script src="app/js/bootstrap-gh-pages/ui-bootstrap-tpls-0.4.0.js"></script>
         <script src="app/js/controllers.js"></script>
         <script src="app/js/directives.js"></script>
         <script src="app/js/services.js"></script>
@@ -21,10 +23,15 @@
         <script src="app/js/angular-sanatize.js"></script>
         <script src="app/js/filters.js"></script>
 
+
+        <script src="app/js/bootstrap-gh-pages/ui-bootstrap-tpls-0.4.0.js"></script>
+        <script src="app/js/vendor/sortable.js"></script>
+      
         <script src="app/js/vendor/showdown.js"></script>
-        <script src="app/js/vendor/jquery.min.js"></script>
         <script src="app/js/vendor/imageupload.js"></script>
         <script src="app/js/vendor/uploader.js"></script>
+
+
 
  
     </head>

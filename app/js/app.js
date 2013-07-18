@@ -39,14 +39,29 @@ var appConfig = function($routeProvider) {
 	})
 
 };
-var App = angular.module('App', ['ui.bootstrap', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
+var App = angular.module('App', ['ui.bootstrap', 'ui.sortable', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
 
 
 var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, $routeParams){
 	$scope.catalogue = Catalogue;
 	$scope.routeParams = $routeParams;
-	console.log($scope)
+
+	$scope.sortableOptions = {
+		start: function(e, ui) {
+	    	// console.log(ui.item)
+
+		},
+		stop: function(e, ui) {
+			// console.log()
+	    	$scope.catalogue.saveGuide();
+
+		},
+	    update: function(e, ui) {
+	    },
+	    
+	};
+	console.log($scope);
 })
 
 /************************************************************************

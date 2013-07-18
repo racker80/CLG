@@ -8,6 +8,8 @@
 
 
 <div index-container class="sidebar span3">
+
+
 	<table class="table">
 				<tbody>
 					<tr>
@@ -32,7 +34,7 @@
 				</tbody>
 			</table>
 	
-	<ul class="indexContainer">
+	<ul class="indexContainer"  ui-sortable="sortableOptions" ng-model="catalogue.guide.books">
 		<li ng-repeat="book in catalogue.guide.books">
 			<table class="table">
 				<tbody>
@@ -61,7 +63,7 @@
 				</tbody>
 			</table>
 
-			<ul>
+			<ul ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
 					<table class="table">
 						<tbody>
@@ -91,7 +93,7 @@
 					</table>
 
 					
-					<ul>
+					<ul ui-sortable="sortableOptions" ng-model="chapter.pages">
 					<li ng-repeat="page in chapter.pages" page-content="page">
 						<table class="table">
 							<tbody>
