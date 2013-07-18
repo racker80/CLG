@@ -257,7 +257,7 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				});				
 			}
 			scope.copy = function() {
-				Catalogue.copy = scope.target;
+				Catalogue.copy = angular.copy(scope.target);
 				console.log(Catalogue.copy)
 			}
 
