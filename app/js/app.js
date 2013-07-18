@@ -61,7 +61,6 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, 
 	    },
 	    
 	};
-	console.log($scope);
 })
 
 /************************************************************************
@@ -134,17 +133,23 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		guide: {},
 		saveGuide: function(){
 			this.guide.id = this.guide._id.$id;
-			$http.get('app/api/save-guide.php', {
+			$http.get('app/api/index.php', {
 				params:{
+					collection:'guides',
+					action:'saveGuide',
 					json:angular.toJson(this.guide)
 				}
+			}).success(function(data){
+				
 			});
 		},
 		newGuide: function(edit){
 			var newGuide = $q.defer();
 			$http.get('app/api/add-guide.php', {
 				params:{
-					json:angular.toJson(this.structure.guide)
+					collection:'guides',
+					action:'addGuide',
+					json:angular.toJson(this.structure.guide)					
 				}
 			}).success(function(data){
 				data.id = data._id.$id;
@@ -176,11 +181,14 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		templates:{},
 		savePage: function() {
 			if(this.edit.type ==  'page') {
-				$http.get('app/api/save-page.php', {
+				$http.get('app/api/index.php', {
 					params:{
+						collection:'content',
+						action:'savePage',
 						json:angular.toJson(this.edit)
 					}
 				}).success(function(data){
+					// console.log(data)
 				});
 			}
 		},
@@ -209,6 +217,10 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				meta:[]
 			}
 
+		},
+		pages:[],
+		getPage: function(id) {
+			return this.pages[id];
 		}
 	}
 });
@@ -246,15 +258,29 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				Catalogue.saveGuide();
 			}
 			scope.addNewPage = function() {
-				$http.get('app/api/add-page.php', {params:{
-					json:angular.toJson(Catalogue.structure.page)
-				}}).success(function(data){
-					data.id = data.$id.$id;
+				$http.get('app/api/index.php', {
+					params:{
+						collection:'content',
+						action:'addPage',
+						json:angular.toJson(Catalogue.structure.page)
+					}
+				}).success(function(data){
+					console.log(data)
+					data.id = data._id.$id;
 					data.type = 'page';
 					scope.location.push(data);
-					Catalogue.saveGuide();
+					Catalogue.saveGuide();				
+				});
 
-				});				
+				// $http.get('app/api/add-page.php', {params:{
+				// 	json:angular.toJson(Catalogue.structure.page)
+				// }}).success(function(data){
+				// 	data.id = data.$id.$id;
+				// 	data.type = 'page';
+				// 	scope.location.push(data);
+				// 	Catalogue.saveGuide();
+
+				// });				
 			}
 			scope.copy = function() {
 				Catalogue.copy = angular.copy(scope.target);
@@ -282,23 +308,67 @@ PAGE STUFF
 ************************************************************************
 ************************************************************************/
 
-App.directive('pageContent', function($http, $q){
+App.directive('pageContent', function($http, $q, Catalogue){
 	return {
 		restrict:"AE",
 		scope: {
 			pageContent:"="
 		},
-		link: function(scope, element, attrs) {
-			var content = $q.defer();
-			$http.get('app/api/get-page.php', {params:{
-				ref:'content',
-				id:scope.pageContent.id
-			}}).success(function(data){
-				data.id = data._id.$id;
-				content.resolve(data);
-			});
+		link: function($scope, element, attrs) {
+			if(!Catalogue.pages[$scope.pageContent.id]) {
+				Catalogue.pages[$scope.pageContent.id] = [];
+			} else {
+				$scope.page = Catalogue.pages[$scope.pageContent.id];
+				return;
+			}
 
-			scope.page = content.promise;
+				var content = $q.defer();
+				$http.get('app/api/get-page.php', {params:{
+					ref:'content',
+					id:$scope.pageContent.id
+				}}).success(function(data){
+					data.id = data._id.$id;					
+					content.resolve(data);
+				}).then(function(data){
+					return content.promise;
+				});
+
+				Catalogue.pages[$scope.pageContent.id] = content.promise;
+				$scope.page = Catalogue.pages[$scope.pageContent.id];
+
+				// console.log(Catalogue.getPage($scope.pageContent.id))
+
+			// if(Catalogue.pages[scope.pageContent.id]) {
+			// 	//if it exists, link to it
+			// 	console.log('it exists')
+			// 	scope.page = Catalogue.pages[scope.pageContent.id]
+			// } else {
+
+			// 	var content = $q.defer();
+			// 	$http.get('app/api/get-page.php', {params:{
+			// 		ref:'content',
+			// 		id:scope.pageContent.id
+			// 	}}).success(function(data){
+			// 		data.id = data._id.$id;
+			// 		content.resolve(data);
+			// 	});
+			// 	Catalogue.pages[content.promise.id] = content.promise;
+
+			// 	scope.page = Catalogue.pages[content.promise.id];
+			// 	console.log(Catalogue.pages)
+
+			// }
+
+			// var content = $q.defer();
+			// $http.get('app/api/get-page.php', {params:{
+			// 	ref:'content',
+			// 	id:scope.pageContent.id
+			// }}).success(function(data){
+			// 	data.id = data._id.$id;
+			// 	content.resolve(data);
+			// });
+
+			// scope.page = content.promise;
 		}
 	}
 });
@@ -373,7 +443,6 @@ App.directive('contentPreview', function(Catalogue){
 		link:function(scope, element, attrs){
 			//GENERATE MARKDOWN AND CODE
 			
-			console.log(scope)
 			var previewContent = function(){
 				if(!angular.isDefined(scope.contentPreview)) {
 					return;
