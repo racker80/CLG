@@ -1,2 +1,85 @@
-Book: <input type="text" ng-model="catalogue.edit.title"> <button class="btn btn-primary btn-small" ng-click="catalogue.saveGuide()">save</button>
+<form class="form-horizontal">
+	<fieldset>
+		<legend>Edit Book: {{catalogue.edit.title}}</legend>
+		<div class="control-group">
+			<label class="control-label" for="input01">Page Title</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" ng-model="catalogue.edit.title">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="textarea">Description</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
+			</div>
+		</div>	
+		<div class="control-group">
+			<label class="control-label" for="textarea">Intro Content</label>
+			<div class="controls">
+				<textarea class="input-xlarge content-textarea" ng-model="catalogue.edit.content"></textarea>
+			</div>
+		</div>
 
+		<div class="control-group">
+			<label class="control-label" for="textarea">Additional Content</label>
+			<div class="controls">
+				<div>
+					<table class="table codeTable">
+						<tbody>
+							<tr ng-repeat="content in catalogue.edit.additionalContent" >
+								<td><textarea ng-model="content.text" class="input-xlarge content-textarea" style="height:80px;"></textarea></td>
+								<td><a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.additionalContent" thing-index="$index">X</a></td>
+							</tr>
+						</tbody>
+					</table>
+					
+				</div>
+
+				<a class="btn" add-thing-to add-to-where="catalogue.edit" add-what="additionalContent">+ Add Content</a>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="textarea">Preview</label>
+			<div class="controls">
+				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
+			</div>
+			<div class="controls">
+				<div ng-repeat="content in catalogue.edit.additionalContent" content-preview="content.text" ng-bind-html-unsafe="content">{{content}}</div>
+			</div>
+		</div>				
+		<div class="control-group">
+			<label class="control-label" for="optionsCheckbox">Code</label>
+			<div class="controls">
+				<div code-browser="catalogue.edit.code"></div>
+				<div code-adder></div>
+
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="select01">Images</label>
+			<div class="controls">
+				<div image-browser="catalogue.edit.images"></div>
+
+						<div clg-upload-container>
+
+							<input id="inputImage" 
+							type="file" 
+							accept="image/*" 
+							image="image" 
+							resize-max-height="50"
+							resize-max-width="50"
+							resize-quality="0.7" />
+
+		      		  </div>
+			</div>
+		</div>
+
+
+		<div class="form-actions">
+
+			<button type="submit" class="btn btn-primary" ng-click="catalogue.savePage()">Save changes</button>
+			<button class="btn">Cancel</button>
+		</div>
+	</fieldset>
+</form>

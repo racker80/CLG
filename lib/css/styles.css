@@ -7919,6 +7919,9 @@ textarea {
 /*
 Your custom styles go here
 */
+.codeTable td {
+  border: 0;
+}
 .sidebar table {
   margin: 0;
 }
@@ -7984,7 +7987,7 @@ Your custom styles go here
   background: #eaeaea;
 }
 .sidebar ul.indexContainer > li > ul > li > ul > li > table td:first-child {
-  padding-left: 40px;
+  padding-left: 30px;
 }
 .controls textarea.content-textarea {
   width: 80%;
