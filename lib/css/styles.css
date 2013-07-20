@@ -7942,6 +7942,10 @@ Your custom styles go here
 }
 .codeTable td.itemOptions {
   width: 100px;
+  text-align: center;
+}
+.codeTable pre {
+  margin: 10px 0;
 }
 .imagePreview {
   overflow: hidden;

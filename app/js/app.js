@@ -62,6 +62,8 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, 
 	    
 	};
 
+	Catalogue.updateImages();
+
 	// $scope.updateImages = function(){
 	// 	var c = Catalogue;
 	// 	var images = c.imageBrowser;
@@ -301,47 +303,23 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		},
 		updateImages: function() {
 			var images = this.imageBrowser;
-
+			var ths = this;
 			angular.forEach(this.guides, function(guide){
-				if(angular.isDefined(guide.images)) {
-					angular.forEach(guide.images, function(image){
-						for(i=0;i<images.length;i++) {
-							if(images[i].url == image.url){
-								return false;
-							};
-						}
-						images.push(image)
+				ths.updateImage(guide);
 
-					})
-				}
 				angular.forEach(guide.books, function(book){
-					if(angular.isDefined(book.images)) {
-						angular.forEach(book.images, function(image){
-							for(i=0;i<images.length;i++) {
-								if(images[i].url == image.url){
-									return false;
-								};
-							}
-							images.push(image)
+					ths.updateImage(book);
 
-						})
-					}
 					angular.forEach(book.chapters, function(chapter){
-						if(angular.isDefined(chapter.images)) {
-							angular.forEach(chapter.images, function(image){
-								for(i=0;i<images.length;i++) {
-									if(images[i].url == image.url) {
-										return false;
-									}
-								}
-								images.push(image)
-
-							})
-						}
+						ths.updateImage(chapter);
 
 					});
 
 				});
+			});
+			angular.forEach(this.pages, function(page){
+				ths.updateImage(page);
+
 			});
 
 		},
@@ -474,19 +452,7 @@ App.directive('pageContent', function($http, $q, Catalogue){
 				}}).success(function(data){
 					data.id = data._id.$id;	
 
-
-						// if(angular.isDefined(data.images)) {
-						// 	angular.forEach(data.images, function(image){
-						// 		for(i=0;i<Catalogue.imageBrowser.length;i++) {
-						// 			if(Catalogue.imageBrowser[i].url == image.url){
-						// 				return false;
-						// 			};
-						// 		}
-						// 		Catalogue.imageBrowser.push(image)
-
-						// 	})
-						// }
-
+					Catalogue.updateImage(data);
 
 					content.resolve(data);
 				}).then(function(data){
@@ -628,30 +594,30 @@ App.directive('removeThing', function(Catalogue){
 		}
 	}
 });
-App.directive('codeBrowser', function(Catalogue){
-	return {
-		scope:{
-			codeBrowser:"="
-		},
-		// template:'',
-		link:function(scope, element, attrs) {
-			scope.catalogue = Catalogue;
-			scope.sortableOptions = {
-				start: function(e, ui) {
-			    	// console.log(ui.item)
+// App.directive('codeBrowser', function(Catalogue){
+// 	return {
+// 		scope:{
+// 			codeBrowser:"="
+// 		},
+// 		// template:'',
+// 		link:function(scope, element, attrs) {
+// 			scope.catalogue = Catalogue;
+// 			scope.sortableOptions = {
+// 				start: function(e, ui) {
+// 			    	// console.log(ui.item)
 
-			    },
-			    stop: function(e, ui) {
-					// console.log()
-					Catalogue.saveGuide();
-					Catalogue.savePage();
-				},
-				update: function(e, ui) {
-				},
-			}
-		}
-	}
-})
+// 			    },
+// 			    stop: function(e, ui) {
+// 					// console.log()
+// 					Catalogue.saveGuide();
+// 					Catalogue.savePage();
+// 				},
+// 				update: function(e, ui) {
+// 				},
+// 			}
+// 		}
+// 	}
+// })
 App.directive('codeAdder', function(Catalogue){
 	return {
 		restrict:"A",
@@ -700,6 +666,10 @@ App.directive('contentPreview', function(Catalogue){
 			scope.$watch('contentPreview', function(){
 				previewContent();
 			});
+			scope.$on('contentPreview', function(){
+								previewContent();
+
+			})
 
 		}
 	}
@@ -728,7 +698,7 @@ App.directive('editItem', function(Catalogue, $rootScope){
 UPLOADER STUFF
 ************************************************************************
 ************************************************************************/
-App.directive('clgItemBrowser', function($compile, $q, $http, Catalogue){
+App.directive('clgItemBrowser', function($rootScope, $compile, $q, $http, Catalogue){
 	return {
 			restrict:"A",
 			// templateUrl:"app/view/directives/code-browser.html",
@@ -748,6 +718,7 @@ App.directive('clgItemBrowser', function($compile, $q, $http, Catalogue){
 						// console.log()
 						Catalogue.saveGuide();
 						scope.$apply();
+						$rootScope.$broadcast('contentPreview')
 
 					},
 					update: function(e, ui) {
@@ -793,13 +764,15 @@ App.directive('imageBrowser', function($compile, Catalogue){
 				scope.imageBrowser = [];
 			}
 			if(scope.imageBrowser.length > 0) {
-				element.html('<div class="imageContainer"><div class="imagePreview" ng-repeat="image in imageBrowser"><img src="{{image.url}}"></div></div>');
-				$compile(element.contents())(scope);
-				scope.$apply();
+
 			}
+			element.html('<div class="imageContainer"><div class="imagePreview" ng-repeat="image in imageBrowser"><img src="{{image.url}}"></div></div>');
+			$compile(element.contents())(scope);
+			scope.$apply();
+
 			scope.$on('fileUploaded', function() {
 				Catalogue.updateImage(Catalogue.edit)
-				// console.log('file uploaded')
+				console.log('file uploaded')
 				scope.$apply();
 			})
 		}
@@ -830,6 +803,7 @@ App.directive('clgUploadContainer', function($rootScope, $http, Catalogue){
 
 
 						Catalogue.edit.images.push(data);
+						Catalogue.updateImage(Catalogue.edit)
 						scope.$apply();
 						Catalogue.savePage();
 						Catalogue.saveGuide();
