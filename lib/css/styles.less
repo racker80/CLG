@@ -28,10 +28,56 @@ Your custom styles go here
 */
 
 .codeTable {
-	td {
-		border:0;
+	border:1px solid #d2d2d2;
+	border-bottom:0;
+	background:#fff;
+	&:last-child {
+		border-bottom:1px solid #d2d2d2;
 	}
+	margin-bottom:0;
+	td {
+		vertical-align: middle;
+		border:0;
+		padding:0;
+		&.itemIndex {
+			width:100px;
+			text-align:center;
+		}
+		&.itemThumbnail {
+			width:200px;
+		}
+		&.itemTitle {
+		}
+		&.itemOptions {
+			width:100px;
+		}				
+	}
+
 }
+
+.imagePreview {
+		overflow:hidden;
+		width:100px;
+		height:80px;
+		float:left;
+		margin:10px;
+		position:relative;
+		img {
+			height:100%;
+			width:200px;
+			position:relative;
+			top:0px;
+		}
+		span.delete {
+			position:absolute;
+			top:0;
+			right:0;
+			cursor:pointer;
+			&:hover {
+				color:@red;
+			}
+		}
+	}
 
 .sidebar {
 	table {
@@ -146,6 +192,16 @@ Your custom styles go here
 		height:100px;
 		float:left;
 		margin:10px;
+		position:relative;
+		span.delete {
+			position:absolute;
+			top:0;
+			right:0;
+			cursor:pointer;
+			&:hover {
+				color:@red;
+			}
+		}
 	}
 }
 

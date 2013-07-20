@@ -7919,8 +7919,52 @@ textarea {
 /*
 Your custom styles go here
 */
+.codeTable {
+  border: 1px solid #d2d2d2;
+  border-bottom: 0;
+  background: #fff;
+  margin-bottom: 0;
+}
+.codeTable:last-child {
+  border-bottom: 1px solid #d2d2d2;
+}
 .codeTable td {
+  vertical-align: middle;
   border: 0;
+  padding: 0;
+}
+.codeTable td.itemIndex {
+  width: 100px;
+  text-align: center;
+}
+.codeTable td.itemThumbnail {
+  width: 200px;
+}
+.codeTable td.itemOptions {
+  width: 100px;
+}
+.imagePreview {
+  overflow: hidden;
+  width: 100px;
+  height: 80px;
+  float: left;
+  margin: 10px;
+  position: relative;
+}
+.imagePreview img {
+  height: 100%;
+  width: 200px;
+  position: relative;
+  top: 0px;
+}
+.imagePreview span.delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+.imagePreview span.delete:hover {
+  color: #9d261d;
 }
 .sidebar table {
   margin: 0;
@@ -8020,6 +8064,16 @@ Your custom styles go here
   height: 100px;
   float: left;
   margin: 10px;
+  position: relative;
+}
+.imageContainer .imagePreview span.delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+.imageContainer .imagePreview span.delete:hover {
+  color: #9d261d;
 }
 ul.overviewList {
   margin: 0;

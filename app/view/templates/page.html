@@ -24,19 +24,50 @@
 			<div class="controls">
 				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
 			</div>
-		</div>				
-		<div class="control-group">
-			<label class="control-label" for="optionsCheckbox">Code</label>
-			<div class="controls">
-				<div code-browser="catalogue.edit.code"></div>
-				<div code-adder></div>
+		</div>
 
+
+		<div class="control-group">
+			<label class="control-label" for="select01">Code</label>
+			<div class="controls">
+				<div clg-item-browser="code-browser" items="catalogue.edit.code" ui-sortable="sortableOptions" ng-model="items" ></div>
+				<div code-adder>
+					<textarea ng-model="newcode"></textarea>
+					<button ng-click="add()" class="btn">add</button>
+				</div>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="select01">Images</label>
+
+
+<!-- 		<div class="control-group">
+			<label class="control-label" for="optionsCheckbox">Code</label>
 			<div class="controls">
-				<div image-browser="catalogue.edit.images"></div>
+				<div code-browser="catalogue.edit.code">
+					<div ui-sortable="sortableOptions" ng-model="codeBrowser">
+							<table ng-repeat="code in codeBrowser" class="table codeTable">
+								<tbody>
+									<tr>
+										<td style="width:100%"><pre>{{code}}</pre></td>
+										<td><a class="btn btn-small btn-warning" remove-thing remove-from="codeBrowser" thing-index="$index">X</a></td>
+									</tr>
+								</body>
+							</table>
+					</div>
+
+				</div>
+				<div code-adder>
+					<textarea ng-model="newcode"></textarea>
+					<button ng-click="add()" class="btn">add</button>
+				</div>
+
+			</div>
+		</div> -->
+
+
+
+		<div class="control-group">
+			<label class="control-label" for="select01">Upload Image</label>
+			<div class="controls">
 
 						<div clg-upload-container>
 
@@ -51,6 +82,22 @@
 		      		  </div>
 			</div>
 		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="select01">Images</label>
+			<div class="controls">
+				<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="images"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="select01">All Images</label>
+			<div class="controls">
+				<div clg-item-browser="image-browser" items="catalogue.imageBrowser" target="catalogue.edit.images"></div>
+			</div>
+		</div>
+
+
 
 
 		<div class="form-actions">

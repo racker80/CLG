@@ -23,10 +23,11 @@
 		<div class="control-group">
 			<label class="control-label" for="textarea">Additional Content</label>
 			<div class="controls">
-				<div>
-					<table class="table codeTable">
+				<div ui-sortable="sortableOptions" ng-model="catalogue.edit.additionalContent">
+
+					<table class="table codeTable" ng-repeat="content in catalogue.edit.additionalContent" >
 						<tbody>
-							<tr ng-repeat="content in catalogue.edit.additionalContent" >
+							<tr>
 								<td><textarea ng-model="content.text" class="input-xlarge content-textarea" style="height:80px;"></textarea></td>
 								<td><a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.additionalContent" thing-index="$index">X</a></td>
 							</tr>
@@ -48,18 +49,12 @@
 				<div ng-repeat="content in catalogue.edit.additionalContent" content-preview="content.text" ng-bind-html-unsafe="content">{{content}}</div>
 			</div>
 		</div>				
-		<div class="control-group">
-			<label class="control-label" for="optionsCheckbox">Code</label>
-			<div class="controls">
-				<div code-browser="catalogue.edit.code"></div>
-				<div code-adder></div>
 
-			</div>
-		</div>
+
+
 		<div class="control-group">
-			<label class="control-label" for="select01">Images</label>
+			<label class="control-label" for="select01">Upload Image</label>
 			<div class="controls">
-				<div image-browser="catalogue.edit.images"></div>
 
 						<div clg-upload-container>
 
@@ -74,6 +69,23 @@
 		      		  </div>
 			</div>
 		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="select01">Images</label>
+			<div class="controls">
+				<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="images"></div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label" for="select01">All Images</label>
+			<div class="controls">
+				<div clg-item-browser="image-browser" items="catalogue.imageBrowser" target="catalogue.edit.images"></div>
+			</div>
+		</div>
+
+
+
 
 
 		<div class="form-actions">

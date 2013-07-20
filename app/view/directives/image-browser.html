@@ -1,0 +1,21 @@
+<table ng-repeat="image in items" class="codeTable table">
+	<body>
+		<tr>
+			<td class="itemIndex">[image {{$index}}]</td>
+			<td class="itemThumbnail">
+				<div class="imagePreview">
+					<img src="{{image.url}}">
+				</div>
+			</td>
+			<td class="itemTitle">{{image.title}}</td>
+			<td class="itemOptions" ng-switch on="options">
+				<div ng-switch-when="copy">
+					<a class="btn btn-small btn-warning" ng-click="addItem(image)">+</a>
+				</div>
+				<div ng-switch-default>
+					<a class="btn btn-small btn-warning" remove-thing remove-from="items" thing-index="$index">X</a>
+				</div>
+			</td>
+		</tr>
+	</body>
+</table>

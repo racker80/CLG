@@ -61,6 +61,67 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, 
 	    },
 	    
 	};
+
+	// $scope.updateImages = function(){
+	// 	var c = Catalogue;
+	// 	var images = c.imageBrowser;
+
+
+	// 	angular.forEach(c.guides, function(guide){
+	// 		if(angular.isDefined(guide.images)) {
+	// 			angular.forEach(guide.images, function(image){
+	// 				for(i=0;i<images.length;i++) {
+	// 					if(images[i].url == image.url){
+	// 						return false;
+	// 					};
+	// 				}
+	// 				images.push(image)
+
+	// 			})
+	// 		}
+	// 		angular.forEach(guide.books, function(book){
+	// 			if(angular.isDefined(book.images)) {
+	// 				angular.forEach(book.images, function(image){
+	// 					for(i=0;i<images.length;i++) {
+	// 						if(images[i].url == image.url){
+	// 							return false;
+	// 						};
+	// 					}
+	// 					images.push(image)
+
+	// 				})
+	// 			}
+	// 			angular.forEach(book.chapters, function(chapter){
+	// 				if(angular.isDefined(chapter.images)) {
+	// 					angular.forEach(chapter.images, function(image){
+	// 						for(i=0;i<images.length;i++) {
+	// 							if(images[i].url == image.url) {
+	// 								return false;
+	// 							}
+	// 						}
+	// 						images.push(image)
+
+	// 					})
+	// 				}
+
+	// 			});
+
+	// 		});
+	// 	});
+	// 	console.log(images)
+
+	// }
+
+	// $scope.updateImages();
+
+	// $scope.$on('fileUploaded', function(){
+	// 	console.log('file uploaded')
+	// 	$scope.updateImages();
+	// })
+
+	// Catalogue.updateImages();
+
+
 })
 
 /************************************************************************
@@ -86,7 +147,6 @@ appCtrl.loadData = function($q, $http, $route, Catalogue) {
 
 appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 	var chapter = $q.defer();
-
 	$http.get('app/view/templates/chapter.html').success(function(data){
 		Catalogue.templates['chapter'] = data;
 		chapter.resolve(data);
@@ -133,7 +193,10 @@ appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 }
 
 
+App.run(function(Catalogue){
 
+
+})
 
 
 
@@ -152,6 +215,8 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		copy:[],
 		templates:[],		
 		pages:[],
+		codeBrowser:[],
+		imageBrowser:[],
 		structure: {
 			guide: {
 				title:"New Guide",
@@ -187,7 +252,7 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 					json:angular.toJson(this.guide)
 				}
 			}).success(function(data){
-				console.log(data);
+				// console.log(data);
 			});
 		},
 		newGuide: function(edit){
@@ -234,6 +299,69 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				});
 			}
 		},
+		updateImages: function() {
+			var images = this.imageBrowser;
+
+			angular.forEach(this.guides, function(guide){
+				if(angular.isDefined(guide.images)) {
+					angular.forEach(guide.images, function(image){
+						for(i=0;i<images.length;i++) {
+							if(images[i].url == image.url){
+								return false;
+							};
+						}
+						images.push(image)
+
+					})
+				}
+				angular.forEach(guide.books, function(book){
+					if(angular.isDefined(book.images)) {
+						angular.forEach(book.images, function(image){
+							for(i=0;i<images.length;i++) {
+								if(images[i].url == image.url){
+									return false;
+								};
+							}
+							images.push(image)
+
+						})
+					}
+					angular.forEach(book.chapters, function(chapter){
+						if(angular.isDefined(chapter.images)) {
+							angular.forEach(chapter.images, function(image){
+								for(i=0;i<images.length;i++) {
+									if(images[i].url == image.url) {
+										return false;
+									}
+								}
+								images.push(image)
+
+							})
+						}
+
+					});
+
+				});
+			});
+
+		},
+		updateImage: function(data){
+			var images = this.imageBrowser;
+
+			if(angular.isDefined(data.images)) {
+				angular.forEach(data.images, function(image){
+					for(i=0;i<images.length;i++) {
+						if(images[i].url == image.url){
+							return false;
+						};
+					}
+					images.push(image)
+
+				})
+			}
+
+		},
+
 	}
 });
 
@@ -344,7 +472,22 @@ App.directive('pageContent', function($http, $q, Catalogue){
 					}),
 
 				}}).success(function(data){
-					data.id = data._id.$id;					
+					data.id = data._id.$id;	
+
+
+						// if(angular.isDefined(data.images)) {
+						// 	angular.forEach(data.images, function(image){
+						// 		for(i=0;i<Catalogue.imageBrowser.length;i++) {
+						// 			if(Catalogue.imageBrowser[i].url == image.url){
+						// 				return false;
+						// 			};
+						// 		}
+						// 		Catalogue.imageBrowser.push(image)
+
+						// 	})
+						// }
+
+
 					content.resolve(data);
 				}).then(function(data){
 					return content.promise;
@@ -389,6 +532,54 @@ App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 		}
 	}
 });
+// App.directive('allImages', function(Catalogue) {
+// 	return {
+// 		scope: {
+// 			local:'=',
+// 			remote:'='
+// 		},
+// 		controller:function($scope){
+// 			this.local = $scope.local;
+// 			this.remote = $scope.remote;
+// 		},
+// 		restrict:"A",
+// 		link: function(scope, element, attrs) {
+// 			scope.catalogue=Catalogue;
+// 			scope.$watch('remote', function(){
+// 				// scope.$apply();
+// 			})
+
+// 		}
+// 	}
+// })
+// App.directive('copyImage', function(Catalogue) {
+// 	return {
+// 		require:"^allImages",
+// 		restrict:"A",
+// 		link: function(scope, element, attrs, controller) {
+// 			element.bind('click', function(){
+// 				controller.local.push(scope.image)
+// 				scope.$apply();
+// 				Catalogue.saveGuide();
+// 				Catalogue.savePage();
+// 			})
+// 		}
+// 	}
+// })
+// App.directive('deleteImage', function(Catalogue) {
+// 	return {
+// 		require:"^allImages",
+// 		restrict:"A",
+// 		link: function(scope, element, attrs, controller) {
+// 			element.bind('click', function(){
+// 				controller.local.splice(scope.image.$index, 1)
+// 				scope.$apply();
+// 				Catalogue.saveGuide();
+// 				Catalogue.savePage();
+// 			})
+// 		}
+// 	}
+// })
 App.directive('thingContainer', function(){
 	return {
 		restrict:"A",		
@@ -437,24 +628,40 @@ App.directive('removeThing', function(Catalogue){
 		}
 	}
 });
-App.directive('codeBrowser', function(){
+App.directive('codeBrowser', function(Catalogue){
 	return {
 		scope:{
 			codeBrowser:"="
 		},
-		template:'<div><table class="table codeTable"><tbody><tr ng-repeat="code in codeBrowser"><td style="width:100%"><pre>{{code}}</pre></td><td><a class="btn btn-small btn-warning" remove-thing remove-from="codeBrowser" thing-index="$index">X</a></td></tr></body></table></div>',
+		// template:'',
 		link:function(scope, element, attrs) {
+			scope.catalogue = Catalogue;
+			scope.sortableOptions = {
+				start: function(e, ui) {
+			    	// console.log(ui.item)
+
+			    },
+			    stop: function(e, ui) {
+					// console.log()
+					Catalogue.saveGuide();
+					Catalogue.savePage();
+				},
+				update: function(e, ui) {
+				},
+			}
 		}
 	}
 })
 App.directive('codeAdder', function(Catalogue){
 	return {
 		restrict:"A",
-		scope:{},
-		template:'<textarea ng-model="newCode"></textarea><button ng-click="add()" class="btn">add</button>',
+		scope:{
+		},
+		// transclude:true,
+		// template:'',
 		link:function(scope, element, attrs) {
 			scope.add = function() {
-				Catalogue.edit.code.push(scope.newCode);
+				Catalogue.edit.code.push(scope.newcode);
 				Catalogue.saveGuide();
 				Catalogue.savePage();
 			}
@@ -521,7 +728,61 @@ App.directive('editItem', function(Catalogue, $rootScope){
 UPLOADER STUFF
 ************************************************************************
 ************************************************************************/
-App.directive('imageBrowser', function($compile){
+App.directive('clgItemBrowser', function($compile, $q, $http, Catalogue){
+	return {
+			restrict:"A",
+			// templateUrl:"app/view/directives/code-browser.html",
+			scope:{
+				items:"=",
+				target:"=",
+				test:"@",
+				clgItemBrowser:"@"
+			},
+			link:function(scope, element, attrs) {
+				scope.sortableOptions = {
+					start: function(e, ui) {
+				    	// console.log(ui.item)
+
+				    },
+				    stop: function(e, ui) {
+						// console.log()
+						Catalogue.saveGuide();
+						scope.$apply();
+
+					},
+					update: function(e, ui) {
+					},
+				}
+
+				if(angular.isDefined(scope.target)) {
+					scope.options="copy";
+				}
+				
+				scope.addItem = function(item){
+					scope.target.push(item)
+					Catalogue.saveGuide();
+					Catalogue.savePage();
+				}
+
+				if(Catalogue.templates[attrs.clgItemBrowser]) {
+					element.html(Catalogue.templates[attrs.clgItemBrowser]);
+					$compile(element.contents())(scope);
+				} else {
+					// var template = $q.defer();
+					$http.get('app/view/directives/'+attrs.clgItemBrowser+'.html').success(function(data){
+						element.html(data);
+						$compile(element.contents())(scope);
+						Catalogue.templates[attrs.clgItemBrowser] = data;
+
+					});	
+				}
+
+
+					
+			}
+		}
+})
+App.directive('imageBrowser', function($compile, Catalogue){
 	return {
 		restrict:"A",
 		scope:{
@@ -537,6 +798,8 @@ App.directive('imageBrowser', function($compile){
 				scope.$apply();
 			}
 			scope.$on('fileUploaded', function() {
+				Catalogue.updateImage(Catalogue.edit)
+				// console.log('file uploaded')
 				scope.$apply();
 			})
 		}
@@ -563,7 +826,7 @@ App.directive('clgUploadContainer', function($rootScope, $http, Catalogue){
 
 						var data = angular.fromJson(data);
 
-						console.log(Catalogue);
+						// console.log(Catalogue);
 
 
 						Catalogue.edit.images.push(data);
