@@ -4,14 +4,36 @@ header('Content-Type: application/json');
 $m = new MongoClient();
 $db = $m->selectDB('clg');
 
-$c = $_REQUEST['collection'];
-$json = json_decode( stripslashes( urldecode($_REQUEST['json']) ) );
-
+if($_REQUEST['collection']) {
+	$c = $_REQUEST['collection'];
+	$json = json_decode( stripslashes( urldecode($_REQUEST['json']) ) );
 
 //content collection
-$collection = new MongoCollection($db, $c);
+	$collection = new MongoCollection($db, $c);
+}
+
 
 switch ($_REQUEST['action']) {
+//+------------------------------------------------------------------------------------
+// GET EVERYTHING
+//+------------------------------------------------------------------------------------
+	case 'getAll':
+		$c = 'guides';
+		$collection = new MongoCollection($db, $c);
+
+		foreach($collection->find() as $item) : 
+			$output['guides'][] = $item;
+		endforeach;
+
+		$c = 'content';
+		$collection = new MongoCollection($db, $c);
+
+		foreach($collection->find() as $item) : 
+			$output['pages'][$item['id']] = (array)$item;
+		endforeach;		
+
+	break;
+
 
 //+------------------------------------------------------------------------------------
 // GET Guides

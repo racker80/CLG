@@ -1,0 +1,27 @@
+<h3>Content</h3>
+<ul class="unstyled">
+	<li ng-repeat="page in catalogue.pages">
+
+		<table class="table">
+			<tbody>
+				<tr>
+					<td edit-item item="page">{{page.title}}</td>
+					<td class="dropdown">
+						<span class="dropdown-toggle">
+							&#9881;
+						</span>
+						<ul class="dropdown-menu">
+							<li>
+								<a index-actions ng-click="copy()" target="page">Copy</a>
+							</li>
+							<li>
+								<a index-actions location="$parent.chapter.pages" target="$parent.$index" ng-click="removeFromGroup()">Delete</a>
+							</li>											
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</li>
+</ul>

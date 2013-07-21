@@ -64,64 +64,6 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, Catalogue, $route, 
 
 	Catalogue.updateImages();
 
-	// $scope.updateImages = function(){
-	// 	var c = Catalogue;
-	// 	var images = c.imageBrowser;
-
-
-	// 	angular.forEach(c.guides, function(guide){
-	// 		if(angular.isDefined(guide.images)) {
-	// 			angular.forEach(guide.images, function(image){
-	// 				for(i=0;i<images.length;i++) {
-	// 					if(images[i].url == image.url){
-	// 						return false;
-	// 					};
-	// 				}
-	// 				images.push(image)
-
-	// 			})
-	// 		}
-	// 		angular.forEach(guide.books, function(book){
-	// 			if(angular.isDefined(book.images)) {
-	// 				angular.forEach(book.images, function(image){
-	// 					for(i=0;i<images.length;i++) {
-	// 						if(images[i].url == image.url){
-	// 							return false;
-	// 						};
-	// 					}
-	// 					images.push(image)
-
-	// 				})
-	// 			}
-	// 			angular.forEach(book.chapters, function(chapter){
-	// 				if(angular.isDefined(chapter.images)) {
-	// 					angular.forEach(chapter.images, function(image){
-	// 						for(i=0;i<images.length;i++) {
-	// 							if(images[i].url == image.url) {
-	// 								return false;
-	// 							}
-	// 						}
-	// 						images.push(image)
-
-	// 					})
-	// 				}
-
-	// 			});
-
-	// 		});
-	// 	});
-	// 	console.log(images)
-
-	// }
-
-	// $scope.updateImages();
-
-	// $scope.$on('fileUploaded', function(){
-	// 	console.log('file uploaded')
-	// 	$scope.updateImages();
-	// })
-
-	// Catalogue.updateImages();
 
 
 })
@@ -135,13 +77,23 @@ DATA LOADING
 
 appCtrl.loadData = function($q, $http, $route, Catalogue) {
 	var defer = $q.defer();
+	// $http.get('app/api/index.php', {params:{
+	// 	action:'getGuides',
+	// 	collection:'guides',
+	// 	json:''
+	// }}).success(function(data){
+	// 	Catalogue.guides = data;
+	// 	Catalogue.guide = Catalogue.guides[$route.current.params.guideIndex];
+	// 	defer.resolve();
+	// })
+
 	$http.get('app/api/index.php', {params:{
-		action:'getGuides',
-		collection:'guides',
-		json:''
+		action:'getAll',
 	}}).success(function(data){
-		Catalogue.guides = data;
+		Catalogue.guides = data.guides;
 		Catalogue.guide = Catalogue.guides[$route.current.params.guideIndex];
+		Catalogue.pages = data.pages;
+		console.log(Catalogue)
 		defer.resolve();
 	})
 	return defer.promise;
@@ -218,7 +170,6 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		templates:[],		
 		pages:[],
 		codeBrowser:[],
-		imageBrowser:[],
 		structure: {
 			guide: {
 				title:"New Guide",
@@ -301,6 +252,10 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				});
 			}
 		},
+		//************************************************************************
+		//IMAGES
+		//************************************************************************
+		imageBrowser:[],
 		updateImages: function() {
 			var images = this.imageBrowser;
 			var ths = this;
@@ -346,9 +301,40 @@ App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 
 /************************************************************************
 ************************************************************************
+THE CONTENT
+************************************************************************
+************************************************************************/
+App.directive('contentContainer', function(Catalogue, $q, $http) {
+	return {
+		restrict:"A",
+		scope:{},
+		templateUrl:'app/view/templates/content.html',
+		link: function(scope, element, attrs) {
+			scope.catalogue = Catalogue;
+		}
+	}
+});
+
+/************************************************************************
+************************************************************************
 THE INDEX
 ************************************************************************
 ************************************************************************/
+App.directive('sidebar', function($window){
+	return {
+		restrict:"C",
+		link:function(scope, element, attrs){
+			var h = function(){
+				element.height($window.innerHeight - angular.element('.navbar').height() - 20);
+			}
+			h();
+			angular.element($window).bind('resize', function(){
+				h();
+				
+			});
+		}
+	}
+})
 App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compile){
 	return {
 		restrict:"A",
@@ -498,54 +484,7 @@ App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 		}
 	}
 });
-// App.directive('allImages', function(Catalogue) {
-// 	return {
-// 		scope: {
-// 			local:'=',
-// 			remote:'='
-// 		},
-// 		controller:function($scope){
-// 			this.local = $scope.local;
-// 			this.remote = $scope.remote;
-// 		},
-// 		restrict:"A",
-// 		link: function(scope, element, attrs) {
-// 			scope.catalogue=Catalogue;
-// 			scope.$watch('remote', function(){
-// 				// scope.$apply();
-// 			})
 
-// 		}
-// 	}
-// })
-// App.directive('copyImage', function(Catalogue) {
-// 	return {
-// 		require:"^allImages",
-// 		restrict:"A",
-// 		link: function(scope, element, attrs, controller) {
-// 			element.bind('click', function(){
-// 				controller.local.push(scope.image)
-// 				scope.$apply();
-// 				Catalogue.saveGuide();
-// 				Catalogue.savePage();
-// 			})
-// 		}
-// 	}
-// })
-// App.directive('deleteImage', function(Catalogue) {
-// 	return {
-// 		require:"^allImages",
-// 		restrict:"A",
-// 		link: function(scope, element, attrs, controller) {
-// 			element.bind('click', function(){
-// 				controller.local.splice(scope.image.$index, 1)
-// 				scope.$apply();
-// 				Catalogue.saveGuide();
-// 				Catalogue.savePage();
-// 			})
-// 		}
-// 	}
-// })
 App.directive('thingContainer', function(){
 	return {
 		restrict:"A",		
@@ -594,30 +533,7 @@ App.directive('removeThing', function(Catalogue){
 		}
 	}
 });
-// App.directive('codeBrowser', function(Catalogue){
-// 	return {
-// 		scope:{
-// 			codeBrowser:"="
-// 		},
-// 		// template:'',
-// 		link:function(scope, element, attrs) {
-// 			scope.catalogue = Catalogue;
-// 			scope.sortableOptions = {
-// 				start: function(e, ui) {
-// 			    	// console.log(ui.item)
 
-// 			    },
-// 			    stop: function(e, ui) {
-// 					// console.log()
-// 					Catalogue.saveGuide();
-// 					Catalogue.savePage();
-// 				},
-// 				update: function(e, ui) {
-// 				},
-// 			}
-// 		}
-// 	}
-// })
 App.directive('codeAdder', function(Catalogue){
 	return {
 		restrict:"A",

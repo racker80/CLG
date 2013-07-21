@@ -7970,6 +7970,19 @@ Your custom styles go here
 .imagePreview span.delete:hover {
   color: #9d261d;
 }
+.sidebar {
+  overflow: auto;
+  position: relative;
+}
+.sidebar .btn-group {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.sidebar .btn-group button {
+  width: 33%;
+}
 .sidebar table {
   margin: 0;
 }
