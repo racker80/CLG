@@ -101,25 +101,25 @@ appCtrl.loadData = function($q, $http, $route, Catalogue) {
 
 appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
 	var chapter = $q.defer();
-	$http.get('app/view/templates/chapter.html').success(function(data){
+	$http.get('app/view/templates/editor/chapter-edit.html').success(function(data){
 		Catalogue.templates['chapter'] = data;
 		chapter.resolve(data);
 	});
 
 	var book = $q.defer();
-	$http.get('app/view/templates/book.html').success(function(data){
+	$http.get('app/view/templates/editor/book-edit.html').success(function(data){
 		Catalogue.templates['book'] = data;
 		chapter.resolve(data);
 	});
 	
 	var page = $q.defer();
-	$http.get('app/view/templates/page.html').success(function(data){
+	$http.get('app/view/templates/editor/page-edit.html').success(function(data){
 		Catalogue.templates['page'] = data;
 		page.resolve(data);
 	});	
 
 	var guide = $q.defer();
-	$http.get('app/view/templates/guide.html').success(function(data){
+	$http.get('app/view/templates/editor/guide-edit.html').success(function(data){
 		Catalogue.templates['guide'] = data;
 		page.resolve(data);
 	});		
@@ -308,7 +308,7 @@ App.directive('contentContainer', function(Catalogue, $q, $http) {
 	return {
 		restrict:"A",
 		scope:{},
-		templateUrl:'app/view/templates/content.html',
+		templateUrl:'app/view/templates/index/content-index.html',
 		link: function(scope, element, attrs) {
 			scope.catalogue = Catalogue;
 		}
@@ -656,7 +656,7 @@ App.directive('clgItemBrowser', function($rootScope, $compile, $q, $http, Catalo
 					$compile(element.contents())(scope);
 				} else {
 					// var template = $q.defer();
-					$http.get('app/view/directives/'+attrs.clgItemBrowser+'.html').success(function(data){
+					$http.get('app/view/templates/directives/clgItemBrowser/'+attrs.clgItemBrowser+'.html').success(function(data){
 						element.html(data);
 						$compile(element.contents())(scope);
 						Catalogue.templates[attrs.clgItemBrowser] = data;
@@ -752,7 +752,7 @@ App.directive('globalNav', function(Catalogue){
 	return {
 		restrict:"AE",
 		scope: {},
-		templateUrl:'app/view/includes/globalnav.php',
+		templateUrl:'app/view/templates/directives/globalNav/globalNav.html',
 		link: function(scope) {
 			scope.catalogue = Catalogue;
 		}

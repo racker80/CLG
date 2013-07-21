@@ -10,7 +10,7 @@
         <link rel="shortcut icon" href="favicon.png">
         
         <!-- CSS files -->
-        <link rel="stylesheet" href="lib/css/styles.css">
+        <link rel="stylesheet" href="app/view/lib/css/styles.css">
         <script src="app/js/vendor/jquery-1.9.1.js"></script>
         <script src="app/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
 
@@ -24,7 +24,7 @@
         <script src="app/js/filters.js"></script>
 
 
-        <script src="app/js/bootstrap-gh-pages/ui-bootstrap-tpls-0.4.0.js"></script>
+        <script src="app/js/vendor/bootstrap-gh-pages/ui-bootstrap-tpls-0.4.0.js"></script>
         <script src="app/js/vendor/sortable.js"></script>
       
         <script src="app/js/vendor/showdown.js"></script>
