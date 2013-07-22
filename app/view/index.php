@@ -6,11 +6,17 @@
         
         <h2>Guides</h2>
         <table class="table table-striped table-bordered">
+            <thead>
+                
+            </thead>
         	<tbody>
         		<tr ng-repeat="guide in catalogue.guides">
         			<td>
-        				<a href="#/{{$index}}">{{guide.title}}</a>
+        				<h3><a href="#/{{$index}}">{{guide.title}}</a></h3>
         			</td>
+                    <td class="options">
+                        <button class="btn btn-small">delete</button>
+                    </td>
         		</tr>
         	</tbody>
         </table>

@@ -57,7 +57,7 @@ Once finished let’s reboot the server to ensure you’re running the latest, g
 
 //batch insert
 $contentCollection->drop();
-$contentCollection->batchInsert($clgContent);
+// $contentCollection->batchInsert($clgContent);
 
 
 
@@ -81,21 +81,23 @@ $guideContent = array(
 				'slug'=>'server',
 				'description'=>'some lorem ipsum for the book description',
 				'type'=>'book',
+				'images'=>array(),
 				'chapters'=>array(
 					array(
 						'title'=>'Prepare the OS',
 						'slug'=>'prepare-the-os',
 						'description'=>'some lorem ipsum for chapter description',
 						'type'=>'chapter',
+						'images'=>array(),
 						'pages'=>array(
-							array(
-								'id'=>$content1['_id'].$id,
-								'type'=>'page'
-							),
-							array(
-								'id'=>$content2['_id'].$id,
-								'type'=>'page'
-							)							
+							// array(
+							// 	'id'=>$content1['_id'].$id,
+							// 	'type'=>'page'
+							// ),
+							// array(
+							// 	'id'=>$content2['_id'].$id,
+							// 	'type'=>'page'
+							// )							
 						)
 					),
 					array(
@@ -123,6 +125,7 @@ $guideContent = array(
 				'slug'=>'database',
 				'description'=>'some lorem ipsum for the book description',
 				'type'=>'book',
+				'images'=>array(),
 				'chapters'=>array(
 									
 				)
@@ -141,9 +144,9 @@ $guideCollection->batchInsert($guideContent);
 
 
 //Dupe a doc
-$content1['_id'] = new MongoId();
-$content1['content'] = "New content for a dupe doc";
-$contentCollection->insert($content1, array("safe" => true));
+// $content1['_id'] = new MongoId();
+// $content1['content'] = "New content for a dupe doc";
+// $contentCollection->insert($content1, array("safe" => true));
 
 
 

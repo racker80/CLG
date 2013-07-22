@@ -7971,7 +7971,6 @@ Your custom styles go here
   color: #9d261d;
 }
 .sidebar {
-  overflow: auto;
   position: relative;
 }
 .sidebar .btn-group {

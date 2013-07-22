@@ -51,13 +51,18 @@
 				</tbody>
 			</table>
 
-			<ul ui-sortable="sortableOptions" ng-model="book.chapters">
+			<ul index-section ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
 					<table class="table">
 						<tbody>
 							<tr>
 								<td edit-item item="chapter">{{chapter.title}}</td>
-								<td class="dropdown">
+								<td class="options dropdown">
+									<span ng-click='toggleChildren()'>
+										&#9660;
+									</span>
+								</td>
+								<td class="options dropdown">
 									<span class="dropdown-toggle">
 										&#9881;
 									</span>
@@ -79,15 +84,28 @@
 							</tr>
 						</tbody>
 					</table>
+					<ul index-child ng-show="showOptions" class="">
+						<li>
+							<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>
+						</li>
+						<li>
+							<a index-actions location="book.chapters" target="$index" ng-click="removeFromGroup()">Delete Chapter</a>
+						</li>
+						<li>
+							<a index-actions type="page" location="chapter.pages" ng-click="addNewPage()">New Page</a>
+						</li>
+						<li>
+							<a index-actions type="paste" location="chapter.pages" ng-click="addGroupTo()">Paste Page</a>
+						</li>										
+					</ul>					
 
 					
-					<ul ui-sortable="sortableOptions" ng-model="chapter.pages">
-					<li ng-repeat="page in chapter.pages" page-content="page">
-
+					<ul index-child  ui-sortable="sortableOptions" ng-model="chapter.pages">
+						<li ng-repeat="page in chapter.pages">
 						<table class="table">
 							<tbody>
 								<tr>
-									<td edit-item item="page">{{$parent.$parent.$index+1}}) {{page.title}}</td>
+									<td edit-item item="page">{{$index+1}}) {{page.title}}</td>
 									<td class="dropdown">
 										<span class="dropdown-toggle">
 											&#9881;
@@ -97,7 +115,7 @@
 												<a index-actions ng-click="copy()" target="page">Copy</a>
 											</li>
 											<li>
-												<a index-actions location="$parent.chapter.pages" target="$parent.$index" ng-click="removeFromGroup()">Delete</a>
+												<a index-actions location="chapter.pages" target="$index" ng-click="removeFromGroup()">Delete</a>
 											</li>											
 										</ul>
 									</td>

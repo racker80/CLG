@@ -18,6 +18,16 @@ switch ($_REQUEST['action']) {
 // GET EVERYTHING
 //+------------------------------------------------------------------------------------
 	case 'getAll':
+
+			$c = 'content';
+		$collection = new MongoCollection($db, $c);
+
+		foreach($collection->find() as $item) : 
+			$item['id'] = $item['_id'].$id;
+			$item['type'] = "page";
+			$output['pages'][$item['_id'].$id] = (array)$item;
+		endforeach;	
+
 		$c = 'guides';
 		$collection = new MongoCollection($db, $c);
 
@@ -25,12 +35,7 @@ switch ($_REQUEST['action']) {
 			$output['guides'][] = $item;
 		endforeach;
 
-		$c = 'content';
-		$collection = new MongoCollection($db, $c);
-
-		foreach($collection->find() as $item) : 
-			$output['pages'][$item['id']] = (array)$item;
-		endforeach;		
+	
 
 	break;
 
