@@ -138,89 +138,6 @@ App.factory('walkData', function(Catalogue, $q, $http) {
 			});
 
 
-					// for(i=0;i<Catalogue.guide.books.length;i++) {
-					// 	var book = Catalogue.guide.books[i];
-
-					// 		for(i=0;i<book.chapters.length;i++) {
-					// 		var chapter = book.chapters[i];
-					// 			if(chapter.pages.length > 0) {
-					// 			for(i=0;i<chapter.pages.length;i++) {
-					// 				// var page = chapter.pages[i];
-					// 				console.log(chapter.pages[i])
-									
-					// 			}
-					// 			}
-
-					// 		}
-					// }
-
-
-				// var w = function() {
-
-				// }
-				// 	for(i=0;i<Catalogue.guide.books.length;i++) {
-				// 		console.log(Catalogue.guide.books[i].hasOwnProperty(key))
-				// 	}
-				// w(Catalogue.guide);
-
-				// while(i=0;i<Catalogue.guide.books.length;i++) {
-
-				// 	while(i=0;i<Catalogue.guide.books[i].chapters.length;i++) {
-
-
-				// 	}
-
-
-				// }
-
-
-			// 	angular.forEach(Catalogue.guide.books, function(book){
-			// 		angular.forEach(book.chapters, function(chapter){
-			// 			angular.forEach(chapter.pages, function(page){
-			// 				console.log(page)
-			// 				if(Catalogue.pages[page.id]) {
-			// 				} else {
-			// 					Catalogue.pages[page.id] = []
-			// 				}
-
-			// 				page = Catalogue.pages[page.id];				
-
-			// 				Catalogue.guide.books[0].chapters[0].pages[0] = Catalogue.pages[page.id];
-			// 				console.log(Catalogue.guide.books[0].chapters[0].pages[0])
-
-
-			// 				// var content = $q.defer();
-			// 				// $http.get('app/api/index.php', {params:{
-			// 				// 	collection: 'content',
-			// 				// 	action:'getPage',
-			// 				// 	json: angular.toJson({
-			// 				// 		ref:'content',
-			// 				// 		id:page.id
-			// 				// 	}),
-
-			// 				// }}).success(function(data){
-			// 				// 	data.id = data._id.$id;	
-
-			// 				// 	Catalogue.updateImage(data);
-
-			// 				// 	content.resolve(data);
-			// 				// }).then(function(data){
-			// 				// 	return content.promise;
-			// 				// });
-
-			// 				// Catalogue.pages[page.id] = content.promise;
-			// 				// page.content = Catalogue.pages[page.id];
-
-
-			// 				// console.log(page.content)
-
-			// 			//page
-			// 			});
-			// 		//chapter
-			// 		});
-			// 	//book
-			// 	});
-			// //guide
 		}
 	}
 })
@@ -606,7 +523,7 @@ App.directive('indexContainer', function($compile, Catalogue){
 EDITOR STUFF
 ************************************************************************
 ************************************************************************/
-App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
+App.directive('clgEditor', function($templateCache, $compile, $routeParams, Catalogue) {
 	return {
 		scope: {},
 		controller: function($scope, $element, $attrs, $http) {
@@ -625,7 +542,7 @@ App.directive('clgEditor', function($templateCache, $compile, Catalogue) {
 				$element.html(templates[type]);
 
 				$compile($element.contents())($scope);
-				$scope.$apply();
+				// $scope.$apply();
 
 			});
 
