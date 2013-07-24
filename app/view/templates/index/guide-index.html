@@ -2,7 +2,7 @@
 				<tbody>
 					<tr>
 						<td edit-item item="catalogue.guide">{{catalogue.guide.title}}</td>
-						<td class="dropdown">
+						<!-- <td class="dropdown">
 							<span class="dropdown-toggle">
 								&#9881;
 							</span>
@@ -17,14 +17,15 @@
 									<a index-actions type="paste" location="catalogue.guide.books" ng-click="addGroupTo()">Paste Book</a>
 								</li>										
 							</ul>
-						</td>
+						</td> -->
 					</tr>
 				</tbody>
 			</table>
 	
 	<ul class="indexContainer"  ui-sortable="sortableOptions" ng-model="catalogue.guide.books">
 		<li ng-repeat="book in catalogue.guide.books">
-			<table class="table">
+			<span class="indexTitle" edit-item item="book">{{book.title}}</span>
+<!-- 			<table class="table">
 				<tbody>
 					<tr>
 						<td edit-item item="book">{{book.title}}</td>
@@ -49,11 +50,13 @@
 						</td>
 					</tr>
 				</tbody>
-			</table>
+			</table> -->
 
-			<ul index-section ui-sortable="sortableOptions" ng-model="book.chapters">
+			<ul class="indexChild" index-section ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
-					<table class="table">
+					<span class="indexTitle" edit-item item="chapter">{{chapter.title}}</span>
+
+<!-- 					<table class="table">
 						<tbody>
 							<tr>
 								<td edit-item item="chapter">{{chapter.title}}</td>
@@ -83,7 +86,7 @@
 								</td>
 							</tr>
 						</tbody>
-					</table>
+					</table> -->
 					<ul index-child ng-show="showOptions" class="">
 						<li>
 							<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>
@@ -100,7 +103,7 @@
 					</ul>					
 
 					
-					<ul index-child style="display:none;" ui-sortable="sortableOptions" ng-model="chapter.pages">
+					<ul index-child  ui-sortable="sortableOptions" ng-model="chapter.pages">
 						<li ng-repeat="page in chapter.pages">
 						<table class="table">
 							<tbody>

@@ -27,6 +27,11 @@ input, textarea {
 Your custom styles go here
 */
 
+.modal {
+	width:70%;
+	left:30%;
+}
+
 .codeTable {
 	border:1px solid #d2d2d2;
 	border-bottom:0;
@@ -102,7 +107,7 @@ Your custom styles go here
 					cursor:pointer;
 					width:100%;
 				}	
-				td:last-child {
+				/*td:last-child {
 					position:relative;
 					span {
 						font-size:1.5em;
@@ -120,13 +125,57 @@ Your custom styles go here
 						border:1px solid black;
 
 					}
-				}
+				}*/
 			}
 		}
 	}
 
 
-	ul.indexContainer {
+.unstyled {
+	margin:0;
+	padding:0;
+	list-style:none;
+	li {
+		margin:0;
+		padding:0;
+	}
+}
+ul.indexContainer {
+	.unstyled;
+	ul {
+		.unstyled;
+	}
+	span.indexTitle {
+			display:block;
+			padding:10px 5px;
+			cursor:pointer;
+		}
+
+	>li {
+		background:#fff;
+		>span.indexTitle{
+			font-weight:800;
+		}
+
+	}
+
+	ul.indexChild {
+		border-top:1px solid @grayLighter;
+		li {
+			background:#fff;
+
+			span.indexTitle {
+				padding:10px 20px;
+
+			}
+
+		}
+	}
+
+}
+
+
+/*	ul.indexContainer {
 		margin:0;
 		padding:0;
 		list-style:none;
@@ -138,7 +187,6 @@ Your custom styles go here
 			list-style:none;
 		}
 
-		/*Book*/
 		>li {
 			margin-bottom:40px;
 			>table {
@@ -149,8 +197,7 @@ Your custom styles go here
 				}
 			}
 			>ul {
-				/*chapter*/
-				/*margin-top:10px;*/
+
 
 				>li {
 
@@ -167,8 +214,7 @@ Your custom styles go here
 					}
 					
 					>ul {
-						/*Page*/
-						/*margin-bottom:10px;*/
+
 
 						>li {
 
@@ -187,7 +233,7 @@ Your custom styles go here
 			}
 		}
 	}
-
+*/
 
 
 
