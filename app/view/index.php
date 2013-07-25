@@ -12,7 +12,7 @@
         	<tbody>
         		<tr ng-repeat="guide in catalogue.guides">
         			<td>
-        				<h3><a href="#/{{$index}}">{{guide.title}}</a></h3>
+        				<h3><a href="#/guide/{{$index}}">{{guide.title}}</a></h3>
         			</td>
                     <td class="options">
                         <button class="btn btn-small">delete</button>
