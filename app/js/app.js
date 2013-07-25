@@ -691,7 +691,7 @@ App.directive('clgEditor', function($templateCache, $compile, $routeParams, Cata
 					return;
 				}
 				if(route.guideIndex) {
-					$scope.catalogue.edit = $scope.catalogue.guide;
+					$scope.catalogue.edit = $scope.catalogue.guides[route.guideIndex];
 					$scope.$broadcast('editItem');
 					console.log('guide')
 					return;
