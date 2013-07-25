@@ -722,6 +722,22 @@ App.directive('clgEditor', function($templateCache, $compile, $routeParams, Cata
 		}
 	}
 });
+App.directive('editorSidebar', function(){
+	return {
+		restrict:"AE",
+		require:'^clgEditor',
+		scope: {
+			items:'=',
+			sortableTarget:'=',
+			urlBase:'@'
+
+		},
+		templateUrl:'app/view/templates/directives/clgItemBrowser/page-browser.html',
+		link: function(){
+
+		}
+	}
+})
 
 // App.directive('thingContainer', function(){
 // 	return {

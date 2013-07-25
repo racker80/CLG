@@ -107,28 +107,7 @@
 <div class="span4 ">
 		<div class="well">
 			<h5>In {{catalogue.edit.title}}</h5>
-			<div sortable-options ui-sortable="sortableOptions" ng-model="catalogue.edit.books">
-			<table ng-repeat="chapter in catalogue.edit.chapters" class="codeTable table">
-				<body>
-					<tr>
-						<td class="itemTitle"><a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{$index}}">{{chapter.title}}</td>
-						<td class="itemOptions" ng-switch on="options">
-							<div ng-switch-when="copy">
-								<a class="btn btn-small btn-warning" ng-click="addItem(chapter)">+</a>
-							</div>
-							<div ng-switch-default>
-								<a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.chapters" thing-index="$index">X</a>
-								<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="chapter">copy</a>
-
-							</div>
-						</td>
-					</tr>
-				</body>
-			</table>
-			</div>
-			<a index-actions type="chapter" location="catalogue.edit.chapters" ng-click="addGroupTo()">New chapter</a>
-			<br>
-			<a index-actions type="paste" location="catalogue.edit.chapters" ng-click="addGroupTo()">Paste chapter</a>
+			<div editor-sidebar items="catalogue.edit.chapters" url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter"></div>
 		</div>
 
 		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy {{catalogue.edit.type}}</button>

@@ -104,25 +104,7 @@
 	<div class="span4 ">
 		<div class="well">
 			<h5>Pages in {{catalogue.edit.title}}</h5>
-			<div sortable-options ui-sortable="sortableOptions" ng-model="catalogue.edit.pages">
-			<table ng-repeat="page in catalogue.edit.pages" class="codeTable table">
-				<body>
-					<tr>
-						<td class="itemTitle"><a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page/{{$index}}">{{page.title}}</td>
-						<td class="itemOptions" ng-switch on="options">
-							<div ng-switch-when="copy">
-								<a class="btn btn-small btn-warning" ng-click="addItem(page)">+</a>
-							</div>
-							<div ng-switch-default>
-								<a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.pages" thing-index="$index">X</a>
-							</div>
-						</td>
-					</tr>
-				</body>
-			</table>
-			</div>
-			<a index-actions type="page" location="catalogue.edit.pages" ng-click="addNewPage()">New Page</a>
-			<a index-actions ng-click="openDialog('page')">Dialogue</a>
+			<div editor-sidebar items="catalogue.edit.pages" url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page"></div>
 		</div>
 
 		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy Chapter</button>

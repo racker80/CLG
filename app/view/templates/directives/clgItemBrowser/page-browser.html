@@ -1,4 +1,4 @@
-<table ng-repeat="page in items" class="codeTable table">
+<!-- <table ng-repeat="page in items" class="codeTable table">
 	<body>
 		<tr>
 			<td class="itemTitle" index-actions ng-click="editItem()" target="page">{{page.title}}</td>
@@ -13,3 +13,30 @@
 		</tr>
 	</body>
 </table>
+ -->
+
+
+ <div sortable-options ui-sortable="sortableOptions" ng-model="items">
+ 	<table ng-repeat="item in items" class="codeTable table">
+ 		<body>
+ 			<tr>
+ 				<td class="itemTitle"><a href="{{urlBase}}/{{$index}}">{{item.title}}</td>
+ 				<td class="itemOptions" ng-switch on="options">
+ 					<div ng-switch-when="copy">
+ 						<a class="btn btn-small btn-warning" ng-click="addItem(item.type)">+</a>
+ 					</div>
+ 					<div ng-switch-default>
+ 						<a class="btn btn-small btn-warning" remove-thing remove-from="items" thing-index="$index">X</a>
+ 						<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="item">copy</a>
+
+ 					</div>
+ 				</td>
+ 			</tr>
+ 		</body>
+ 	</table>
+ </div>
+ <a index-actions type="{{items[0].type}}" location="items" ng-click="addGroupTo()">New {{items[0].type}}</a>
+			<br>
+			<a index-actions type="paste" location="items" ng-click="addGroupTo()">Paste {{items[0].type}}</a>
+			<br>
+			<a index-actions ng-click="openDialog(items[0].type)">Dialogue</a>
