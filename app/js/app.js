@@ -29,6 +29,31 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates
 		}
 	})
+	.when('/guide/:guideIndex/book/:bookIndex', {
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/guide.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates,
+			edit: appCtrl.edit
+		}
+	})
+	.when('/guide/:guideIndex/book/:bookIndex/chapter/:chapterIndex', {
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/guide.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates
+		}
+	})
+	.when('/guide/:guideIndex/book/:bookIndex/chapter/:chapterIndex/page/:pageIndex', {
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/guide.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates
+		}
+	})	
 	.when('/content', {
 		controller: 'AppCtrl',
 		templateUrl: 'app/view/content.php',
@@ -70,7 +95,8 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	    
 	};
 
-	console.log($scope.catalogue.pages)
+
+
 
 
 })
@@ -156,11 +182,16 @@ App.factory('walkData', function(Catalogue, $q, $http) {
 DATA LOADING
 ************************************************************************
 ************************************************************************/
-
+appCtrl.edit = function($q, $http, $route, Catalogue) {
+	return true;
+}
 
 appCtrl.loadData = function($q, $http, $route, Catalogue) {
 	var defer = $q.defer();
 
+	if(Catalogue.guides.length > 0) {
+		return true;
+	}
 	$http.get('app/api/index.php', {params:{
 		action:'getAll',
 	}}).success(function(data){
@@ -178,6 +209,10 @@ appCtrl.loadData = function($q, $http, $route, Catalogue) {
 }
 
 appCtrl.loadTemplates = function($q, $http, $route, Catalogue) {
+	if(Catalogue.templates.length > 0) {
+		return true;
+	}
+
 	var chapter = $q.defer();
 	$http.get('app/view/templates/editor/chapter-edit.html').success(function(data){
 		Catalogue.templates['chapter'] = data;
@@ -633,7 +668,35 @@ App.directive('clgEditor', function($templateCache, $compile, $routeParams, Cata
 		scope: {},
 		controller: function($scope, $element, $attrs, $http) {
 			$scope.catalogue = Catalogue;
+			$scope.routeParams = $routeParams;
 
+			$scope.$watch($scope.routeParams, function(){
+				var route = $scope.routeParams;
+				if(route.pageIndex) {
+					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex].pages[route.pageIndex];
+					$scope.$broadcast('editItem');
+					console.log('page')
+					return;
+				}
+				if(route.chapterIndex) {
+					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex];
+					$scope.$broadcast('editItem');
+					console.log('chapeter')
+					return;
+				}
+				if(route.bookIndex) {
+					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex];
+					$scope.$broadcast('editItem');
+					console.log('book')
+					return;
+				}
+				if(route.guideIndex) {
+					$scope.catalogue.edit = $scope.catalogue.guide;
+					$scope.$broadcast('editItem');
+					console.log('guide')
+					return;
+				}
+			}) 
 		},
 		link: function($scope, $element, $attrs, controller) {
 			
@@ -803,7 +866,6 @@ App.directive('clgItemBrowser', function($rootScope, $compile, $q, $http, Catalo
 					}
 				}
 
-				console.log(scope)
 				scope.addItem = function(item){
 					scope.target.push(item)
 					Catalogue.saveGuide();

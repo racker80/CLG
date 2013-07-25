@@ -108,7 +108,7 @@
 			<table ng-repeat="page in catalogue.edit.pages" class="codeTable table">
 				<body>
 					<tr>
-						<td class="itemTitle" edit-item item="page">{{page.title}}</td>
+						<td class="itemTitle"><a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page/{{$index}}">{{page.title}}</td>
 						<td class="itemOptions" ng-switch on="options">
 							<div ng-switch-when="copy">
 								<a class="btn btn-small btn-warning" ng-click="addItem(page)">+</a>

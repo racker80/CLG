@@ -1,7 +1,7 @@
 	<table class="table">
 				<tbody>
 					<tr>
-						<td edit-item item="catalogue.guide">{{catalogue.guide.title}}</td>
+						<td><a href="#/guide/{{routeParams.guideIndex}}">{{catalogue.guide.title}}</a></td>
 						<!-- <td class="dropdown">
 							<span class="dropdown-toggle">
 								&#9881;
@@ -24,7 +24,8 @@
 	
 	<ul class="indexContainer"  ui-sortable="sortableOptions" ng-model="catalogue.guide.books">
 		<li ng-repeat="book in catalogue.guide.books">
-			<span class="indexTitle" edit-item item="book">{{book.title}}</span>
+			<!-- <span class="indexTitle" index-actions ng-click="editItem()" target="book">{{book.title}}</span> -->
+			<a href="#/guide/{{routeParams.guideIndex}}/book/{{$index}}" class="indexTitle"><span class="indexTitle">{{book.title}}</span></a>
 <!-- 			<table class="table">
 				<tbody>
 					<tr>
@@ -54,8 +55,11 @@
 
 			<ul class="indexChild" index-section ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
-					<span class="indexTitle" edit-item item="chapter">{{chapter.title}}</span>
+					<a href="#/guide/{{routeParams.guideIndex}}/book/{{$parent.$index}}/chapter/{{$index}}" class="indexTitle">
+						<span class="indexTitle">{{chapter.title}}</span></a>
 
+<!-- 					<span class="indexTitle" index-actions ng-click="editItem()" target="chapter">{{chapter.title}}</span>
+ -->
 <!-- 					<table class="table">
 						<tbody>
 							<tr>
@@ -108,7 +112,7 @@
 						<table class="table">
 							<tbody>
 								<tr>
-									<td edit-item item="page">{{$index+1}}) {{page.title}}</td>
+									<td index-actions ng-click="editItem()" target="page">{{$index+1}}) {{page.title}}</td>
 									<td class="dropdown">
 										<span class="dropdown-toggle">
 											&#9881;

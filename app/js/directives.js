@@ -1,10 +1,13 @@
 
-App.controller('actionsCtrl', function($scope, Catalogue, $dialog) {
+App.controller('actionsCtrl', function($scope, Catalogue, $dialog, $routeParams) {
 	$scope.catalogue = Catalogue;
+	$scope.routeParams = $routeParams;
 
 })
-App.controller('dialogCtrl', function($scope, Catalogue, dialog){
+App.controller('dialogCtrl', function($scope, $routeParams, Catalogue, dialog){
 	$scope.catalogue = Catalogue;
+	$scope.routeParams = $routeParams;
+
 	$scope.close = function(result){
 		dialog.close();
 	}
@@ -19,7 +22,8 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 			target:"=",
 		},
 		controller:'actionsCtrl',
-
+		transclude:true,
+		template:'<span ng-transclude></span>',
 		link: function(scope, element, attrs){
 			scope.addGroupTo = function() {
 				if(scope.type == 'paste') {
@@ -58,16 +62,17 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 
 
 
-			scope.opts = {
-				backdrop: true,
-				keyboard: true,
-				backdropClick: true,
-			    templateUrl:'app/view/templates/directives/modals/page-modal.html', // OR: templateUrl: 'path/to/view.html',
-			    controller: 'dialogCtrl'
-			};
+
 			scope.openDialog = function(type){
-				scope.opts.templateUrl = 'app/view/templates/directives/modals/'+type+'-modal.html'
-				var d = $dialog.dialog(scope.opts);
+				var opts = {
+					backdrop: true,
+					keyboard: true,
+					backdropClick: true,
+				    templateUrl:'app/view/templates/directives/modals/'+type+'-modal.html', // OR: templateUrl: 'path/to/view.html',
+				    controller: 'dialogCtrl'
+				};
+
+				var d = $dialog.dialog(opts);
 				d.open().then(function(result){
 					console.log(scope)
 					console.log(result)
@@ -88,30 +93,17 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 					alert('dialog closed with result: ' + result);
 				});
 			};
+			scope.editItem = function() {
+				Catalogue.saveGuide();
+				Catalogue.savePage();
+				Catalogue.edit = scope.target;
+				$rootScope.$broadcast('editItem');
+			}
 			
 
 		}
 	}
 })
-
-App.directive('editItem', function(Catalogue, $rootScope){
-	return {
-		scope: {
-			item:'='
-		},
-		transclude:true,
-		template:'<span ng-transclude></span>',
-		link: function(scope, element, attrs){
-			element.bind('click', function(){
-				Catalogue.saveGuide();
-				Catalogue.savePage();
-				Catalogue.edit = scope.item;
-				$rootScope.$broadcast('editItem');
-			});
-		}
-	}
-});
-
 
 
 

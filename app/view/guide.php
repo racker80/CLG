@@ -1,6 +1,9 @@
 
 
 <div class="container-fluid">
+	<global-nav></global-nav>
+
+	
 	<div class="row-fluid">
                 
 
@@ -15,7 +18,6 @@
 
 
 <div class="editor span10">
-	<global-nav></global-nav>
 
 	<div clg-editor></div>
 </div>
