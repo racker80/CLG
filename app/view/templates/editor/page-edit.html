@@ -1,109 +1,91 @@
-<form class="form-horizontal">
-	<fieldset>
-		<legend>Edit Page: {{catalogue.edit.title}}</legend>
-		<div class="control-group">
-			<label class="control-label" for="input01">Page Title</label>
-			<div class="controls">
-				<input type="text" class="input-xlarge" ng-model="catalogue.edit.title">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="textarea">Description</label>
-			<div class="controls">
-				<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
-			</div>
-		</div>	
-		<div class="control-group">
-			<label class="control-label" for="textarea">Content</label>
-			<div class="controls">
-				<textarea class="input-xlarge content-textarea" ng-model="catalogue.edit.content"></textarea>
-			</div>
-		</div>	
-		<div class="control-group">
-			<label class="control-label" for="textarea">Preview</label>
-			<div class="controls">
-				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
-			</div>
-		</div>
+<div class="row-fluid">
+	<div class="span8">
 
-
-		<div class="control-group">
-			<label class="control-label" for="select01">Code</label>
-			<div class="controls">
-				<div clg-item-browser="code-browser" items="catalogue.edit.code" ui-sortable="sortableOptions" ng-model="items" ></div>
-				<div code-adder>
-					<textarea ng-model="newcode"></textarea>
-					<button ng-click="add()" class="btn">add</button>
-				</div>
-			</div>
-		</div>
-
-
-<!-- 		<div class="control-group">
-			<label class="control-label" for="optionsCheckbox">Code</label>
-			<div class="controls">
-				<div code-browser="catalogue.edit.code">
-					<div ui-sortable="sortableOptions" ng-model="codeBrowser">
-							<table ng-repeat="code in codeBrowser" class="table codeTable">
-								<tbody>
-									<tr>
-										<td style="width:100%"><pre>{{code}}</pre></td>
-										<td><a class="btn btn-small btn-warning" remove-thing remove-from="codeBrowser" thing-index="$index">X</a></td>
-									</tr>
-								</body>
-							</table>
+		<form class="form-horizontal">
+			<fieldset>
+				<legend>Edit Page: {{catalogue.edit.title}}</legend>
+				<div class="control-group">
+					<label class="control-label" for="input01">Page Title</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" ng-model="catalogue.edit.title">
 					</div>
-
 				</div>
-				<div code-adder>
-					<textarea ng-model="newcode"></textarea>
-					<button ng-click="add()" class="btn">add</button>
+				<div class="control-group">
+					<label class="control-label" for="textarea">Description</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
+					</div>
+				</div>	
+				<div class="control-group">
+					<label class="control-label" for="textarea">Content</label>
+					<div class="controls">
+						<textarea class="input-xlarge content-textarea" ng-model="catalogue.edit.content"></textarea>
+					</div>
+				</div>	
+				<div class="control-group">
+					<label class="control-label" for="textarea">Preview</label>
+					<div class="controls">
+						<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
+					</div>
 				</div>
 
-			</div>
-		</div> -->
 
-
-
-		<div class="control-group">
-			<label class="control-label" for="select01">Upload Image</label>
-			<div class="controls">
-
-						<div clg-upload-container>
-
-							<input id="inputImage" 
-							type="file" 
-							accept="image/*" 
-							image="image" 
-							resize-max-height="50"
-							resize-max-width="50"
-							resize-quality="0.7" />
-
-		      		  </div>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<label class="control-label" for="select01">Images</label>
-			<div class="controls">
-				<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="items"></div>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<label class="control-label" for="select01">All Images</label>
-			<div class="controls">
-				<div clg-item-browser="image-browser" items="catalogue.imageBrowser" target="catalogue.edit.images"></div>
-			</div>
-		</div>
+				<div class="control-group">
+					<label class="control-label" for="select01">Code</label>
+					<div class="controls">
+						<div clg-item-browser="code-browser" items="catalogue.edit.code" ui-sortable="sortableOptions" ng-model="items" ></div>
+						<div code-adder>
+							<textarea ng-model="newcode"></textarea>
+							<button ng-click="add()" class="btn">add</button>
+						</div>
+					</div>
+				</div>
 
 
 
 
-		<div class="form-actions">
+				<div class="control-group">
+					<label class="control-label" for="select01">Upload Image</label>
+					<div class="controls">
 
-			<button type="submit" class="btn btn-primary" ng-click="catalogue.savePage()">Save changes</button>
-			<button class="btn">Cancel</button>
-		</div>
-	</fieldset>
-</form>
+								<div clg-upload-container>
+
+									<input id="inputImage" 
+									type="file" 
+									accept="image/*" 
+									image="image" 
+									resize-max-height="50"
+									resize-max-width="50"
+									resize-quality="0.7" />
+
+				      		  </div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="select01">Images</label>
+					<div class="controls">
+						<a class="btn btn-small btn-primary" index-actions ng-click="openDialog('images')">Add Images</a><br><br>
+						<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="items"></div>
+					</div>
+				</div>
+
+
+
+
+
+				<div class="form-actions">
+
+					<button type="submit" class="btn btn-primary" ng-click="catalogue.savePage()">Save changes</button>
+					<button class="btn">Cancel</button>
+				</div>
+			</fieldset>
+		</form>
+
+	</div>
+
+	<div class="span4">
+		
+		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy Page</button>
+	</div>
+</div>

@@ -21,7 +21,7 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates
 		}
 	})
-	.when('/:guideIndex', {
+	.when('/guide/:guideIndex', {
 		controller: 'AppCtrl',
 		templateUrl: 'app/view/guide.php',
 		resolve: {
@@ -29,6 +29,14 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates
 		}
 	})
+	.when('/content', {
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/content.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates
+		}
+	})	
 	.when('/reset', {
 		resolve: {
 			reset: function($http){
@@ -62,6 +70,7 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	    
 	};
 
+	console.log($scope.catalogue.pages)
 
 
 })
@@ -265,6 +274,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 
 		};		
 		this.saveGuide = function(){
+			if(this.guide) {
 			this.guide.id = this.guide._id.$id;
 			this.walkData();
 			$http.get('app/api/index.php', {
@@ -276,6 +286,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 			}).success(function(data){
 				// console.log(data);
 			});
+			}
 		};
 		this.newGuide = function(edit){
 			var newGuide = $q.defer();
