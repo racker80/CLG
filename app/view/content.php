@@ -10,7 +10,7 @@
 			<li><h3>Pages</h3></li>
 			<ul class="indexChild">
 				<li ng-repeat="page in catalogue.pages">
-					<span class="indexTitle" edit-item item="page">{{page.title}}</span>
+					<a href="#/content/{{page.id}}"><span  class="indexTitle" >{{page.title}}</span></a>
 				</li>	
 			</ul>
 		</ul>

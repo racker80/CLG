@@ -61,6 +61,14 @@ var appConfig = function($routeProvider) {
 			guides: appCtrl.loadData,
 			templates: appCtrl.loadTemplates
 		}
+	})
+	.when('/content/:contentId', {
+		controller: 'AppCtrl',
+		templateUrl: 'app/view/content.php',
+		resolve: {
+			guides: appCtrl.loadData,
+			templates: appCtrl.loadTemplates
+		}
 	})	
 	.when('/reset', {
 		resolve: {
@@ -124,6 +132,12 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 			console.log('guide')
 			return;
 		}
+		if(route.contentId) {
+			$scope.catalogue.edit = $scope.catalogue.pages[route.contentId];
+			$scope.$broadcast('editItem');
+			console.log('content')
+			return;
+		}		
 	}) 
 
 
