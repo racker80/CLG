@@ -103,7 +103,7 @@
 	</div>
 	<div class="span4 ">
 		<div class="well">
-			<h5>Books in {{catalogue.edit.title}}</h5>
+			<h5>In {{catalogue.edit.title}}</h5>
 			<div sortable-options ui-sortable="sortableOptions" ng-model="catalogue.edit.books">
 			<table ng-repeat="book in catalogue.edit.books" class="codeTable table">
 				<body>
@@ -115,6 +115,8 @@
 							</div>
 							<div ng-switch-default>
 								<a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.books" thing-index="$index">X</a>
+								<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="book">copy</a>
+
 							</div>
 						</td>
 					</tr>
@@ -122,6 +124,8 @@
 			</table>
 			</div>
 			<a index-actions type="book" location="catalogue.edit.books" ng-click="addGroupTo()">New Book</a>
+			<br>
+			<a index-actions type="paste" location="catalogue.edit.books" ng-click="addGroupTo()">Paste Book</a>
 		</div>
 
 		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy {{catalogue.edit.type}}</button>

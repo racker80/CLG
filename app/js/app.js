@@ -95,36 +95,36 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	    
 	};
 
-				$scope.$watch($scope.routeParams, function(){
-				var route = $scope.routeParams;
-				if(route.pageIndex) {
-					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex].pages[route.pageIndex];
-					$scope.$broadcast('editItem');
-					console.log('page')
-					return;
-				}
-				if(route.chapterIndex) {
-					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex];
-					$scope.$broadcast('editItem');
-					console.log('chapeter')
-					return;
-				}
-				if(route.bookIndex) {
-					$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex];
-					$scope.$broadcast('editItem');
-					console.log('book')
-					return;
-				}
-				if(route.guideIndex) {
+	$scope.$watch($scope.routeParams, function(){
+		var route = $scope.routeParams;
+		if(route.pageIndex) {
+			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex].pages[route.pageIndex];
+			$scope.$broadcast('editItem');
+			console.log('page')
+			return;
+		}
+		if(route.chapterIndex) {
+			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex];
+			$scope.$broadcast('editItem');
+			console.log('chapeter')
+			return;
+		}
+		if(route.bookIndex) {
+			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex];
+			$scope.$broadcast('editItem');
+			console.log('book')
+			return;
+		}
+		if(route.guideIndex) {
 
-					$scope.catalogue.guide = $scope.catalogue.guides[route.guideIndex];
-					$scope.catalogue.edit = $scope.catalogue.guides[route.guideIndex];
+			$scope.catalogue.guide = $scope.catalogue.guides[route.guideIndex];
+			$scope.catalogue.edit = $scope.catalogue.guides[route.guideIndex];
 
-					$scope.$broadcast('editItem');
-					console.log('guide')
-					return;
-				}
-			}) 
+			$scope.$broadcast('editItem');
+			console.log('guide')
+			return;
+		}
+	}) 
 
 
 
