@@ -28,10 +28,26 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 			scope.addGroupTo = function() {
 				if(scope.type == 'paste') {
 					scope.location.push(Catalogue.copy);
-				} else {
-					scope.location.push(Catalogue.structure[scope.type]);
+					scope.catalogue.copy = '';
+					Catalogue.saveGuide();
+
+				} 
+				else if(scope.type=="page") {
+					$http.post('app/api/post.php', {
+						collection:'content',
+						action:'addPage',
+						json:Catalogue.structure.page,
+					}).success(function(data){
+						Catalogue.pages[data.id] = data;
+						scope.location.push(Catalogue.pages[data.id]);
+						Catalogue.saveGuide();
+					});			
 				}
-				Catalogue.saveGuide();
+				else {
+					scope.location.push(Catalogue.structure[scope.type]);
+					Catalogue.saveGuide();
+
+				}
 
 				//TODO DELETE GUIDE!
 
@@ -41,12 +57,10 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				Catalogue.saveGuide();
 			}
 			scope.addNewPage = function() {
-				$http.get('app/api/index.php', {
-					params:{
+				$http.post('app/api/index.php', {
 						collection:'content',
 						action:'addPage',
-						json:angular.toJson(Catalogue.structure.page)
-					}
+						json:Catalogue.structure.page,
 				}).success(function(data){
 					data.id = data._id.$id;
 					data.type = 'page';

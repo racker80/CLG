@@ -355,27 +355,25 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		};		
 		this.saveGuide = function(){
 			if(this.guide) {
-			this.guide.id = this.guide._id.$id;
-			this.walkData();
-			$http.get('app/api/index.php', {
-				params:{
-					collection:'guides',
-					action:'saveGuide',
-					json:angular.toJson(this.guide)
-				}
-			}).success(function(data){
-				// console.log(data);
-			});
+				this.guide.id = this.guide._id.$id;
+				this.walkData();
+				$http.post('app/api/post.php', {
+						collection:'guides',
+						action:'saveGuide',
+						json:this.guide
+				}).success(function(data){
+					// console.log(data);
+				});
+
 			}
+
 		};
 		this.newGuide = function(edit){
 			var newGuide = $q.defer();
-			$http.get('app/api/index.php', {
-				params:{
+			$http.post('app/api/post.php', {
 					collection:'guides',
 					action:'addGuide',
-					json:angular.toJson(this.structure.guide)					
-				}
+					json:this.structure.guide					
 			}).success(function(data){
 				data.id = data._id.$id;
 				newGuide.resolve(data);
@@ -401,14 +399,12 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		};
 		this.savePage = function() {
 			if(this.edit.type ==  'page') {
-				$http.get('app/api/index.php', {
-					params:{
+				$http.post('app/api/post.php', {
 						collection:'content',
 						action:'savePage',
-						json:angular.toJson(this.edit)
-					}
+						json:this.edit
 				}).success(function(data){
-					// console.log(data)
+					console.log(data)
 				});
 			}
 		};

@@ -1,18 +1,21 @@
 <?php
 header('Content-Type: application/json');
 
+$data = file_get_contents("php://input");
+$postData = json_decode($data);
+
+
 $m = new MongoClient();
 $db = $m->selectDB('clg');
-if($_REQUEST['collection']) {
-	$c = $_REQUEST['collection'];
-	$json = json_decode( stripslashes( urldecode($_REQUEST['json']) ) );
+if($postData->collection) {
+	$c = $postData->collection;
+	$json = $postData->json;
 
 //content collection
 	$collection = new MongoCollection($db, $c);
 }
 
-
-switch ($_REQUEST['action']) {
+switch ($postData->action) {
 //+------------------------------------------------------------------------------------
 // GET EVERYTHING
 //+------------------------------------------------------------------------------------
@@ -139,8 +142,9 @@ switch ($_REQUEST['action']) {
 // ADD Page
 //+-----------------------------------------------------------------------------------
 	case 'addPage':
-
 		$collection->insert($json, array("safe" => false));
+		$json->id = $json->_id.$id;
+		$json->type = 'page';
 		$output = $json;
 	break;
 
