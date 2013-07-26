@@ -87,6 +87,7 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	$scope.catalogue = Catalogue;
 	$scope.routeParams = $routeParams;
 
+
 	$scope.sortableOptions = {
 		start: function(e, ui) {
 	    	// console.log(ui.item)
@@ -236,8 +237,10 @@ appCtrl.loadData = function($q, $http, $route, Catalogue) {
 	$http.get('app/api/index.php', {params:{
 		action:'getAll',
 	}}).success(function(data){
+		if(angular.isDefined(data.guides)) {
 		Catalogue.guides = data.guides;
 		Catalogue.guide = Catalogue.guides[$route.current.params.guideIndex];
+		}
 		if(angular.isDefined(data.pages)) {
 			Catalogue.pages = data.pages;
 		}
@@ -353,14 +356,12 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		this.saveGuide = function(){
 			if(this.guide) {
 				var ths = this;
-				this.guide.id = this.guide._id.$id;
 				this.walkData();
 				$http.post('app/api/post.php', {
 						collection:'guides',
 						action:'saveGuide',
 						json:this.guide
 				}).success(function(data){
-					ths.walkData();
 				});
 
 			}
@@ -467,165 +468,6 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 });
 
 
-
-// App.factory('Catalogue', function($rootScope, $http, $route, $routeParams, $location, $q){
-// 	return {
-// 		guides: [],
-// 		guide: [],
-// 		edit:[],
-// 		copy:[],
-// 		templates:[],		
-// 		pages:[],
-// 		codeBrowser:[],
-// 		structure: {
-// 			guide: {
-// 				title:"New Guide",
-// 				type: "guide",
-// 				id:{},
-// 				books:[],
-// 				images:[]
-// 			},
-// 			book: {
-// 				title:"New Book",
-// 				type:"book",
-// 				images:[],
-// 				chapters:[],
-// 			},
-// 			chapter: {
-// 				title:"New Chapter",
-// 				type:"chapter",
-// 				images:[],
-// 				pages:[],
-// 			},
-// 			page: {
-// 				title:"New Page",
-// 				type:"page",
-// 				code:[],
-// 				images:[],
-// 				meta:[]
-// 			}
-
-// 		},			
-// 		saveGuide: function(){
-// 			this.guide.id = this.guide._id.$id;
-// 			this.walkData();
-// 			$http.get('app/api/index.php', {
-// 				params:{
-// 					collection:'guides',
-// 					action:'saveGuide',
-// 					json:angular.toJson(this.guide)
-// 				}
-// 			}).success(function(data){
-// 				// console.log(data);
-// 			});
-// 		},
-// 		newGuide: function(edit){
-// 			var newGuide = $q.defer();
-// 			$http.get('app/api/index.php', {
-// 				params:{
-// 					collection:'guides',
-// 					action:'addGuide',
-// 					json:angular.toJson(this.structure.guide)					
-// 				}
-// 			}).success(function(data){
-// 				data.id = data._id.$id;
-// 				newGuide.resolve(data);
-// 			});
-
-// 			this.guides.push(newGuide.promise)
-// 			console.log(this.guides);
-			
-// 			if(edit == false) {
-// 				return
-// 			}
-
-// 			var index = this.guides.length-1;
-// 			$location.path('/'+index);
-
-// 		},
-// 		deleteGuide: function(){
-
-// 		},
-// 		copyItem: function(item){
-// 			this.copy = item;
-// 			$rootScope.$broadcast('itemCopied');
-// 		},
-// 		savePage: function() {
-// 			if(this.edit.type ==  'page') {
-// 				$http.get('app/api/index.php', {
-// 					params:{
-// 						collection:'content',
-// 						action:'savePage',
-// 						json:angular.toJson(this.edit)
-// 					}
-// 				}).success(function(data){
-// 					// console.log(data)
-// 				});
-// 			}
-// 		},
-// 		walkData: function(){
-// 			var ths = this;
-// 			if(this.guide) {
-// 			angular.forEach(ths.guide.books, function(book){
-// 				angular.forEach(book.chapters, function(chapter){
-// 					angular.forEach(chapter.pages, function(page, key, context){
-// 						if(angular.isDefined(page.id)) {
-// 							if (page.id = ths.pages[page.id].id) {
-// 								context[key] = ths.pages[page.id];
-// 							};
-// 						}
-// 					});
-// 				});
-// 			});
-// 			}
-// 		},
-// 		//************************************************************************
-// 		//IMAGES
-// 		//************************************************************************
-// 		imageBrowser:[],
-// 		updateImages: function() {
-// 			var images = this.imageBrowser;
-// 			var ths = this;
-// 			angular.forEach(this.guides, function(guide){
-// 				ths.updateImage(guide);
-
-// 				angular.forEach(guide.books, function(book){
-// 					ths.updateImage(book);
-
-// 					angular.forEach(book.chapters, function(chapter){
-// 						ths.updateImage(chapter);
-
-// 					});
-
-// 				});
-// 			});
-// 			angular.forEach(this.pages, function(page){
-// 				ths.updateImage(page);
-
-// 			});
-
-// 		},
-// 		updateImage: function(data){
-// 			var images = this.imageBrowser;
-
-// 			if(angular.isDefined(data.images)) {
-// 				angular.forEach(data.images, function(image){
-// 					for(i=0;i<images.length;i++) {
-// 						if(images[i].url == image.url){
-// 							return false;
-// 						};
-// 					}
-// 					images.push(image)
-
-// 				})
-// 			}
-
-// 		},
-
-// 	}
-// });
-
-
 /************************************************************************
 ************************************************************************
 THE CONTENT
@@ -673,11 +515,11 @@ App.directive('indexChild', function(Catalogue){
 
 App.directive('indexContainer', function($compile, Catalogue){
 	return {
+		conroller:"AppCtrl",
 		restrict:"A",
 		link:function(scope, element, attrs) {
 			scope.catalogue = Catalogue;
 			//RECOMPLE THE TEMPLATE ON NEW EDIT ITEM
-			
 			scope.$watch('catalogue.guide', function(){
 				var type = scope.catalogue.guide.type;
 

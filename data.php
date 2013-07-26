@@ -140,7 +140,7 @@ $guideContent = array(
 
 //batch insert
 $guideCollection->drop();
-$guideCollection->batchInsert($guideContent);
+// $guideCollection->batchInsert($guideContent);
 
 
 //Dupe a doc

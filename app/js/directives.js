@@ -38,6 +38,7 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 						action:'addPage',
 						json:Catalogue.structure.page,
 					}).success(function(data){
+						console.log(Catalogue.pages)
 						Catalogue.pages[data.id] = data;
 						scope.location.push(Catalogue.pages[data.id]);
 						Catalogue.saveGuide();
