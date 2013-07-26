@@ -319,7 +319,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		this.guides = [];
 		this.guide = [];
 		this.edit =[];
-		this.copy =[];
+		this.clipboard =[];
 		this.templates =[];
 		this.pages =[];
 		this.codeBrowser = [];
@@ -352,7 +352,56 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				meta:[]
 			}
 
-		};		
+		};
+
+		//ADD A NEW THING SOMEWHERE
+		this.addNew = function(location, type) {
+			var ths = this;
+			//Create a new thing
+			if(!type) {
+				location.push({});
+				this.saveGuide();
+				return;
+			}
+			//Create a new page
+			if(type == 'page') {
+				this.newPage(location);
+				return;	
+			}
+
+			//else do this
+			location.push(angular.copy(ths.structure[type]));
+			ths.saveGuide();
+			console.log('added new item');
+
+		}
+		//ADD AN EXISTING ITEM
+		this.addExisting = function(location, item) {
+			location.push(item);
+			this.saveGuide();
+			console.log('added existing item');
+		}
+		//REMOVE A THING FROM A PLACE
+		this.removeItem = function(location, key) {
+			location.splice(key, 1);
+			this.saveGuide();
+			console.log('removed item: '+key);
+		}
+		//COPY SOMETHING TO THE CLIPBOARD
+		this.copy = function(item){
+			this.clipboard = item;
+			$rootScope.$broadcast('itemCopied');
+			console.log('item copied: '+item);
+		};
+
+		//PASTE SOMETHING SOMEWHERE
+		this.paste = function(location) {
+			location.push(this.clipboard);
+			this.saveGuide();
+			console.log('pasted item: ');
+
+		}
+		//SAVE THE GUIDE
 		this.saveGuide = function(){
 			if(this.guide) {
 				var ths = this;
@@ -362,11 +411,13 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 						action:'saveGuide',
 						json:this.guide
 				}).success(function(data){
+					console.log('saved '+ths.guide.title);
 				});
 
 			}
 
 		};
+		//ADD A NEW GUIDE
 		this.newGuide = function(edit){
 			var ths = this;
 			var newGuide = $q.defer();
@@ -388,24 +439,70 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 			$location.path('/'+index);
 
 		};
-		this.deleteGuide = function(){
+		//DELETE THAT NAUGHTY GUIDE
+		this.deleteGuide = function(guideIndex){
+			var ths = this;
+			$http.post('app/api/post.php', {
+				collection:'guides',
+				action:'deleteGuide',
+				json:ths.guides[guideIndex],
+			}).success(function(data){
+				ths.guides.splice(guideIndex, 1);
+				ths.saveGuide();				
+				console.log('forever deleted that guide')
+			});	
+		};
 
-		};
-		this.copyItem = function(item){
-			this.copy = item;
-			$rootScope.$broadcast('itemCopied');
-		};
-		this.savePage = function() {
+		//CREATE A NEW PAGE - with optional structure!
+		this.newPage = function(location, page) {
+			var ths = this;
+			if(!page) {
+				page = ths.structure.page;
+			}
+			$http.post('app/api/post.php', {
+						collection:'content',
+						action:'addPage',
+						json:page,
+				}).success(function(data){
+					ths.pages[data.id] = data;
+					if(location) {
+						location.push(ths.pages[data.id]);
+					}
+					ths.saveGuide();
+					console.log('created page: '+data.title);			
+				});
+		}
+		//GET RID OF THAT PAGE!
+		this.deletePage = function(page) {
+			var ths = this;
+			$http.post('app/api/post.php', {
+				collection:'content',
+				action:'deletePage',
+				json:page,
+			}).success(function(data){
+				delete ths.pages[page.id];
+				ths.saveGuide();	
+				console.log('Seriously, really deleted page for good');
+			
+			});	
+		}
+		//SAVE THE PAGE!
+		this.savePage = function(page) {
+			if(!page) {
+				page = this.edit;
+			}
 			if(this.edit.type ==  'page') {
 				$http.post('app/api/post.php', {
 						collection:'content',
 						action:'savePage',
-						json:this.edit
+						json:page
 				}).success(function(data){
-					console.log(data)
+					console.log('saved page: '+data.title)
 				});
 			}
 		};
+
+		//WALK THE DATA!  BIND THE DATA!
 		this.walkData = function(){
 			var ths = this;
 			if(this.guide) {
@@ -607,55 +704,6 @@ App.directive('contentBrowser', function(){
 		}
 	}
 })
-
-// App.directive('thingContainer', function(){
-// 	return {
-// 		restrict:"A",		
-// 		link: function(scope, element, attrs){
-// 			scope.$on('thingAdded', function(){
-// 				scope.$apply();
-// 			})
-// 		}
-// 	}
-// })
-App.directive('addThingTo', function(Catalogue){
-	return {
-		restrict:"A",
-		scope: {
-			addToWhere:'=',
-			addWhat:'@'
-		},
-		
-		link: function(scope, element, attrs){
-			element.bind('click', function(){
-				if(!angular.isDefined(scope.addToWhere[scope.addWhat])) {
-					scope.addToWhere[scope.addWhat] = [];
-				}
-				console.log(scope.addToWhere)
-				scope.addToWhere[scope.addWhat].push({text:''});
-				scope.$emit('thingAdded');
-				Catalogue.saveGuide();
-			});
-		}
-	}
-});
-App.directive('removeThing', function(Catalogue){
-	return {
-		restrict:"A",
-		scope: {
-			removeFrom:'=',
-			thingIndex:'='
-		},
-		link: function(scope, element, attrs){
-			element.bind('click', function(){
-				scope.removeFrom.splice(scope.thingIndex, 1);
-				Catalogue.saveGuide();
-				Catalogue.savePage();
-
-			});
-		}
-	}
-});
 
 App.directive('codeAdder', function(Catalogue){
 	return {

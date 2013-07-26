@@ -5,10 +5,10 @@
  				<td class="itemTitle"><a href="{{urlBase}}/{{$index}}">{{item.title}}</td>
  				<td class="itemOptions" ng-switch on="copy">
  					<div ng-switch-when="true">
- 						<a class="btn btn-small btn-warning" index-actions ng-click="addItemTo()" location="local" target="item">+</a>
+ 						<a class="btn btn-small btn-warning" index-actions ng-click="addExisting()" location="local" target="item">+</a>
  					</div>
  					<div ng-switch-default>
- 						<a class="btn btn-small btn-warning" remove-thing remove-from="items" thing-index="$index">X</a>
+ 						<a class="btn btn-small btn-warning" index-actions location="items" target="$index" ng-click="removeItem()">X</a>
  						<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="item">copy</a>
 
  					</div>

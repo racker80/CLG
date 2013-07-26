@@ -25,80 +25,34 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 		transclude:true,
 		template:'<span ng-transclude></span>',
 		link: function(scope, element, attrs){
-			scope.addGroupTo = function() {
-
-				if(scope.type == 'paste') {
-					scope.location.push(Catalogue.copy);
-					Catalogue.saveGuide();
-
-				} 
-				else if(scope.type=="page") {
-					$http.post('app/api/post.php', {
-						collection:'content',
-						action:'addPage',
-						json:Catalogue.structure.page,
-					}).success(function(data){
-						console.log(Catalogue.pages)
-						Catalogue.pages[data.id] = data;
-						scope.location.push(Catalogue.pages[data.id]);
-						Catalogue.saveGuide();
-					});			
-				}
-				else {
-					console.log(scope.target)
-					scope.location.push(angular.copy(Catalogue.structure[scope.type]));
-					Catalogue.saveGuide();
-
-				}
-
-				//TODO DELETE GUIDE!
-
+			scope.addNew = function() {
+				Catalogue.addNew(scope.location, scope.type);
 			}
-			scope.addItemTo = function(){
-				scope.location.push(scope.target);
-				Catalogue.saveGuide();
+			scope.addExisting = function(){
+				Catalogue.addExisting(scope.location, scope.target);
+			}
+			scope.removeItem = function() {
+				Catalogue.removeItem(scope.location, scope.target);
+			}
+			scope.copy = function() {
+				Catalogue.copy(angular.copy(scope.target));
+			}
+			scope.paste = function() {
+				Catalogue.paste(scope.location);
+			}
 
-			}
-			scope.removeFromGroup = function() {
-				scope.location.splice(scope.target, 1);
-				Catalogue.saveGuide();
-			}
-			scope.addNewPage = function() {
-				$http.post('app/api/post.php', {
-						collection:'content',
-						action:'addPage',
-						json:Catalogue.structure.page,
-				}).success(function(data){
-					Catalogue.pages[data.id] = data;
-					scope.location.push(Catalogue.pages[data.id]);
-					Catalogue.saveGuide();				
-				});			
+
+
+			scope.addNewPage = function() {	
+				Catalogue.newPage(scope.location);	
 			}
 			scope.deletePage = function() {
-				$http.post('app/api/post.php', {
-						collection:'content',
-						action:'deletePage',
-						json:scope.target,
-				}).success(function(data){
-					console.log(scope.catalogue.pages);
-					delete scope.catalogue.pages[scope.target.id];
-					Catalogue.saveGuide();				
-				});			
+				Catalogue.deletePage(scope.target);
 			}
 			scope.deleteGuide = function() {
-				$http.post('app/api/post.php', {
-						collection:'guides',
-						action:'deleteGuide',
-						json:scope.catalogue.guides[scope.target],
-				}).success(function(data){
-					scope.location.splice(scope.target, 1);
-					Catalogue.saveGuide();				
-				});			
+				Catalogue.deleteGuide(scope.target)
 			}			
-			scope.copy = function() {
-				Catalogue.copy = angular.copy(scope.target);
-				console.log(Catalogue.copy)
-			}
+
 
 
 

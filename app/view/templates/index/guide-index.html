@@ -8,13 +8,13 @@
 							</span>
 							<ul class="dropdown-menu">
 								<li>
-									<a index-actions type="guide" location="catalogue.guides" target="routeParams.guideIndex" ng-click="removeFromGroup()">Delete Guide</a>
+									<a index-actions type="guide" location="catalogue.guides" target="routeParams.guideIndex" ng-click="removeItem()">Delete Guide</a>
 								</li>
 								<li>
-									<a index-actions type="book" location="catalogue.guide.books" ng-click="addGroupTo()">New Book</a>
+									<a index-actions type="book" location="catalogue.guide.books" ng-click="addNew()">New Book</a>
 								</li>
 								<li>
-									<a index-actions type="paste" location="catalogue.guide.books" ng-click="addGroupTo()">Paste Book</a>
+									<a index-actions type="paste" location="catalogue.guide.books" ng-click="addNew()">Paste Book</a>
 								</li>										
 							</ul>
 						</td> -->
@@ -39,13 +39,13 @@
 									<a index-actions ng-click="copy()" target="book">Copy Book</a>
 								</li>
 								<li>
-									<a index-actions location="catalogue.guide.books" target="$index" ng-click="removeFromGroup()">Delete Book</a>
+									<a index-actions location="catalogue.guide.books" target="$index" ng-click="removeItem()">Delete Book</a>
 								</li>
 								<li>
-									<a index-actions type="chapter" location="book.chapters" ng-click="addGroupTo()">New Chapter</a>
+									<a index-actions type="chapter" location="book.chapters" ng-click="addNew()">New Chapter</a>
 								</li>
 								<li>
-									<a index-actions type="paste" location="book.chapters" ng-click="addGroupTo()">Paste Chapter</a>
+									<a index-actions type="paste" location="book.chapters" ng-click="addNew()">Paste Chapter</a>
 								</li>										
 							</ul>
 						</td>
@@ -78,13 +78,13 @@
 											<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>
 										</li>
 										<li>
-											<a index-actions location="book.chapters" target="$index" ng-click="removeFromGroup()">Delete Chapter</a>
+											<a index-actions location="book.chapters" target="$index" ng-click="removeItem()">Delete Chapter</a>
 										</li>
 										<li>
 											<a index-actions type="page" location="chapter.pages" ng-click="addNewPage()">New Page</a>
 										</li>
 										<li>
-											<a index-actions type="paste" location="chapter.pages" ng-click="addGroupTo()">Paste Page</a>
+											<a index-actions type="paste" location="chapter.pages" ng-click="addNew()">Paste Page</a>
 										</li>										
 									</ul>
 								</td>
@@ -96,13 +96,13 @@
 							<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>
 						</li>
 						<li>
-							<a index-actions location="book.chapters" target="$index" ng-click="removeFromGroup()">Delete Chapter</a>
+							<a index-actions location="book.chapters" target="$index" ng-click="removeItem()">Delete Chapter</a>
 						</li>
 						<li>
 							<a index-actions type="page" location="chapter.pages" ng-click="addNewPage()">New Page</a>
 						</li>
 						<li>
-							<a index-actions type="paste" location="chapter.pages" ng-click="addGroupTo()">Paste Page</a>
+							<a index-actions type="paste" location="chapter.pages" ng-click="addNew()">Paste Page</a>
 						</li>										
 					</ul>					
 
@@ -122,7 +122,7 @@
 												<a index-actions ng-click="copy()" target="page">Copy</a>
 											</li>
 											<li>
-												<a index-actions location="chapter.pages" target="$index" ng-click="removeFromGroup()">Delete</a>
+												<a index-actions location="chapter.pages" target="$index" ng-click="removeItem()">Delete</a>
 											</li>											
 										</ul>
 									</td>
