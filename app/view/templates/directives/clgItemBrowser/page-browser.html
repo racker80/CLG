@@ -35,9 +35,8 @@
  		</body>
  	</table>
  </div>
-
- <a index-actions type="{{items[0].type}}" location="items" ng-click="addGroupTo()">New {{items[0].type}}</a>
+			<a index-actions type="{{type}}" location="items" ng-click="addGroupTo()">New {{type}}</a>
 			<br>
-			<a index-actions type="paste" location="items" ng-click="addGroupTo()">Paste {{items[0].type}}</a>
+			<a index-actions type="paste" location="items" ng-click="addGroupTo()">Paste {{type}}</a>
 			<br>
-			<a index-actions ng-click="openDialog(items[0].type)">Dialogue</a>
+			<a index-actions ng-click="openDialog(type)">Dialogue</a>

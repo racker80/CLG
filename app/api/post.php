@@ -77,6 +77,9 @@ switch ($postData->action) {
 	case 'addGuide':
 
 		$collection->insert($json, array("safe" => true));
+		$json->id = $json->_id.$id;
+		$json->type = 'guide';	
+		$collection->save($json);	
 		$output = $json;
 	break;	
 //+------------------------------------------------------------------------------------
@@ -102,7 +105,12 @@ switch ($postData->action) {
 // DELETE Guides
 //+-----------------------------------------------------------------------------------
 	case 'deleteGuide':
-
+		$collection->remove(array(
+			'_id' => new MongoId($json->id)
+			), 
+			array("justOne" => true)
+			);
+		$output = $json;
 
 	break;
 
@@ -145,6 +153,18 @@ switch ($postData->action) {
 		$collection->insert($json, array("safe" => false));
 		$json->id = $json->_id.$id;
 		$json->type = 'page';
+		$output = $json;
+	break;
+
+//+------------------------------------------------------------------------------------
+// DELETE Page
+//+-----------------------------------------------------------------------------------
+	case 'deletePage':
+		$collection->remove(array(
+			'_id' => new MongoId($json->id)
+			), 
+			array("justOne" => true)
+			);
 		$output = $json;
 	break;
 

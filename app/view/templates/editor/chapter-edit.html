@@ -104,7 +104,11 @@
 	<div class="span4 ">
 		<div class="well">
 			<h5>Pages in {{catalogue.edit.title}}</h5>
-			<div editor-sidebar items="catalogue.edit.pages" url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page"></div>
+			<div editor-sidebar 
+				items="catalogue.edit.pages" 
+				type="page"
+				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
+			</div>			
 		</div>
 
 		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy Chapter</button>

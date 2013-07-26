@@ -15,7 +15,7 @@
         				<h3><a href="#/guide/{{$index}}">{{guide.title}}</a></h3>
         			</td>
                     <td class="options">
-                        <button class="btn btn-small">delete</button>
+                        <button index-actions ng-click="deleteGuide()" location="catalogue.guides" target="$index" class="btn btn-small">delete</button>
                     </td>
         		</tr>
         	</tbody>

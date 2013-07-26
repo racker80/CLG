@@ -8109,6 +8109,7 @@ Your custom styles go here
 }
 .sidebar ul.indexContainer > li {
   background: #fff;
+  position: relative;
 }
 .sidebar ul.indexContainer > li > span.indexTitle {
   font-weight: 800;
@@ -8117,7 +8118,13 @@ Your custom styles go here
   border-top: 1px solid #eeeeee;
 }
 .sidebar ul.indexContainer ul.indexChild li {
+  position: relative;
   background: #fff;
+}
+.sidebar ul.indexContainer ul.indexChild li .option-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 .sidebar ul.indexContainer ul.indexChild li span.indexTitle {
   padding: 10px 20px;

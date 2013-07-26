@@ -140,10 +140,6 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 		}		
 	}) 
 
-
-
-
-
 })
 App.directive('sortableOptions', function(Catalogue){
 	return {
@@ -369,18 +365,17 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 
 		};
 		this.newGuide = function(edit){
+			var ths = this;
 			var newGuide = $q.defer();
 			$http.post('app/api/post.php', {
 					collection:'guides',
 					action:'addGuide',
 					json:this.structure.guide					
 			}).success(function(data){
-				data.id = data._id.$id;
+				console.log(data)
+				ths.guides.push(data)
 				newGuide.resolve(data);
 			});
-
-			this.guides.push(newGuide.promise)
-			console.log(this.guides);
 			
 			if(edit == false) {
 				return
@@ -411,7 +406,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		this.walkData = function(){
 			var ths = this;
 			if(this.guide) {
-			angular.forEach(ths.guide.books, function(book){
+			angular.forEach(ths.guide.books, function(book){				
 				angular.forEach(book.chapters, function(chapter){
 					angular.forEach(chapter.pages, function(page, key, context){
 						if(angular.isDefined(page.id)) {
@@ -738,7 +733,7 @@ App.directive('editorSidebar', function(){
 		require:'^clgEditor',
 		scope: {
 			items:'=',
-			sortableTarget:'=',
+			type:'@',
 			urlBase:'@'
 
 		},

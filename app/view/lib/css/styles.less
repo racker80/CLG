@@ -153,17 +153,24 @@ ul.indexContainer {
 
 	>li {
 		background:#fff;
+		position:relative;
 		>span.indexTitle{
 			font-weight:800;
 		}
+
 
 	}
 
 	ul.indexChild {
 		border-top:1px solid @grayLighter;
 		li {
-			background:#fff;
-
+				position:relative;
+				background:#fff;
+		.option-delete {
+			position:absolute;
+			top:0;
+			right:0;
+		}
 			span.indexTitle {
 				padding:10px 20px;
 

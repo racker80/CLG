@@ -11,6 +11,7 @@
 			<ul class="indexChild">
 				<li ng-repeat="page in catalogue.pages">
 					<a href="#/content/{{page.id}}"><span  class="indexTitle" >{{page.title}}</span></a>
+					<span class="btn btn-small option-delete" index-actions ng-click="deletePage()" target="page">x</span>
 				</li>	
 			</ul>
 		</ul>
