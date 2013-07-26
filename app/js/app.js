@@ -352,6 +352,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		};		
 		this.saveGuide = function(){
 			if(this.guide) {
+				var ths = this;
 				this.guide.id = this.guide._id.$id;
 				this.walkData();
 				$http.post('app/api/post.php', {
@@ -359,7 +360,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 						action:'saveGuide',
 						json:this.guide
 				}).success(function(data){
-					// console.log(data);
+					ths.walkData();
 				});
 
 			}

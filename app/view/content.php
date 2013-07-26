@@ -5,7 +5,7 @@
                 
 
 <div class="sidebar span2">
-<a index-actions type="page" location="catalogue.edit.pages" ng-click="addNewPage()">New Page</a>
+<a index-actions type="page" location="catalogue.edit.pages" ng-click="addGroupTo()">New Page</a>
 		<ul class="indexContainer">
 			<li><h3>Pages</h3></li>
 			<ul class="indexChild">
