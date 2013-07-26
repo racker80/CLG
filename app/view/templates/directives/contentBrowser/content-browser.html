@@ -1,0 +1,19 @@
+ <div sortable-options ui-sortable="sortableOptions" ng-model="items">
+ 	<table ng-repeat="item in items" class="codeTable table">
+ 		<body>
+ 			<tr>
+ 				<td class="itemTitle"><a href="{{urlBase}}/{{$index}}">{{item.title}}</td>
+ 				<td class="itemOptions" ng-switch on="copy">
+ 					<div ng-switch-when="true">
+ 						<a class="btn btn-small btn-warning" index-actions ng-click="addItemTo()" location="local" target="item">+</a>
+ 					</div>
+ 					<div ng-switch-default>
+ 						<a class="btn btn-small btn-warning" remove-thing remove-from="items" thing-index="$index">X</a>
+ 						<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="item">copy</a>
+
+ 					</div>
+ 				</td>
+ 			</tr>
+ 		</body>
+ 	</table>
+ </div>

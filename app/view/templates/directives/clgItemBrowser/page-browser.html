@@ -16,7 +16,7 @@
  -->
 
 
- <div sortable-options ui-sortable="sortableOptions" ng-model="items">
+<!--  <div sortable-options ui-sortable="sortableOptions" ng-model="items">
  	<table ng-repeat="item in items" class="codeTable table">
  		<body>
  			<tr>
@@ -34,9 +34,16 @@
  			</tr>
  		</body>
  	</table>
+ </div> -->
+ <div content-browser
+ 	items="items"
+ 	sortable="true"
+ 	type="{{type}}"
+ 	url-base="{{urlBase}}">
  </div>
+
 			<a index-actions type="{{type}}" location="items" ng-click="addGroupTo()">New {{type}}</a>
 			<br>
 			<a index-actions type="paste" location="items" ng-click="addGroupTo()">Paste {{type}}</a>
 			<br>
-			<a index-actions ng-click="openDialog(type)">Dialogue</a>
+			<a index-actions ng-click="openDialog()" type="{{type}}">Dialogue</a>

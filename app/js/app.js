@@ -35,7 +35,6 @@ var appConfig = function($routeProvider) {
 		resolve: {
 			guides: appCtrl.loadData,
 			templates: appCtrl.loadTemplates,
-			edit: appCtrl.edit
 		}
 	})
 	.when('/guide/:guideIndex/book/:bookIndex/chapter/:chapterIndex', {
@@ -133,6 +132,7 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 			return;
 		}
 		if(route.contentId) {
+			console.log(route)
 			$scope.catalogue.edit = $scope.catalogue.pages[route.contentId];
 			$scope.$broadcast('editItem');
 			console.log('content')
@@ -320,6 +320,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		this.templates =[];
 		this.pages =[];
 		this.codeBrowser = [];
+		this.imageBrowser = [];		
 		this.structure = {
 			guide: {
 				title:"New Guide",
@@ -409,10 +410,10 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 			angular.forEach(ths.guide.books, function(book){				
 				angular.forEach(book.chapters, function(chapter){
 					angular.forEach(chapter.pages, function(page, key, context){
-						if(angular.isDefined(page.id)) {
-							if (page.id = ths.pages[page.id].id) {
-								context[key] = ths.pages[page.id];
-							};
+						if(angular.isDefined(page.id) && angular.isDefined(ths.pages[page.id])) {
+							context[key] = ths.pages[page.id];
+						} else {
+							context.splice(key, 1);
 						}
 					});
 				});
@@ -422,7 +423,6 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		//************************************************************************
 		//IMAGES
 		//************************************************************************
-		this.imageBrowser = [];
 		this.updateImages = function() {
 			var images = this.imageBrowser;
 			var ths = this;
@@ -740,6 +740,27 @@ App.directive('editorSidebar', function(){
 		templateUrl:'app/view/templates/directives/clgItemBrowser/page-browser.html',
 		link: function(){
 
+		}
+	}
+})
+App.directive('contentBrowser', function(){
+	return {
+		controller:'actionsCtrl',
+		restrict:"AE",
+		scope: {
+			items:"=",
+			sortable:"=",
+			local:"=",
+			urlBase:"@",
+			type:"@",
+
+		},
+		templateUrl:'app/view/templates/directives/contentBrowser/content-browser.html',
+		link:function(scope, element, attrs) {
+			if(angular.isDefined(scope.local)) {
+				scope.copy = 'true';
+			}
+			console.log(scope)
 		}
 	}
 })

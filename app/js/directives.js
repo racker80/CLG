@@ -29,7 +29,6 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 
 				if(scope.type == 'paste') {
 					scope.location.push(Catalogue.copy);
-					scope.catalogue.copy = '';
 					Catalogue.saveGuide();
 
 				} 
@@ -46,12 +45,17 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				}
 				else {
 					console.log(scope.target)
-					scope.location.push(Catalogue.structure[scope.type]);
+					scope.location.push(angular.copy(Catalogue.structure[scope.type]));
 					Catalogue.saveGuide();
 
 				}
 
 				//TODO DELETE GUIDE!
+
+			}
+			scope.addItemTo = function(){
+				scope.location.push(scope.target);
+				Catalogue.saveGuide();
 
 			}
 			scope.removeFromGroup = function() {
@@ -103,7 +107,7 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 					backdrop: true,
 					keyboard: true,
 					backdropClick: true,
-				    templateUrl:'app/view/templates/directives/modals/'+type+'-modal.html', // OR: templateUrl: 'path/to/view.html',
+				    templateUrl:'app/view/templates/directives/modals/'+scope.type+'-modal.html', // OR: templateUrl: 'path/to/view.html',
 				    controller: 'dialogCtrl'
 				};
 
