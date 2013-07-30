@@ -6,95 +6,24 @@
 <form class="form-horizontal">
 	<fieldset>
 		<legend>Edit Book: {{catalogue.edit.title}}</legend>
-		<div class="control-group">
-			<label class="control-label" for="input01">Page Title</label>
-			<div class="controls">
-				<input type="text" class="input-xlarge" ng-model="catalogue.edit.title">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="textarea">Description</label>
-			<div class="controls">
-				<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
-			</div>
-		</div>		
-		<div class="control-group">
-			<label class="control-label" for="textarea">Intro Content</label>
-			<div class="controls">
-				<textarea class="input-xlarge content-textarea" ng-model="catalogue.edit.content"></textarea>
-			</div>
-		</div>
+				<div ng-include="'app/view/templates/editor/includes/title.html'"></div>
 
+				<div class="control-group">
+					<label class="control-label" for="textarea">Description</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
+					</div>
+				</div>	
 
+				<div ng-include="'app/view/templates/editor/includes/content.html'"></div>
 
-		<div class="control-group">
-			<label class="control-label" for="textarea">Additional Content</label>
-			<div class="controls">
-				<div ui-sortable="sortableOptions" ng-model="catalogue.edit.additionalContent">
+				<div ng-include="'app/view/templates/editor/includes/additional-content.html'"></div>
+				
+				<div ng-include="'app/view/templates/editor/includes/preview.html'"></div>
 
-					<table class="table codeTable" ng-repeat="content in catalogue.edit.additionalContent" >
-						<tbody>
-							<tr>
-								<td>
-									<textarea ng-model="content.text" class="input-xlarge content-textarea" style="height:80px;"></textarea></td>
-								<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="catalogue.edit.additionalContent" target="$index">X</a></td>
-							</tr>
-						</tbody>
-					</table>
-					
-				</div>
+				<div ng-include="'app/view/templates/editor/includes/image-upload.html'"></div>
 
-				<a class="btn" index-actions ng-click="addNew()" location="catalogue.edit.additionalContent">+ Add Content</a>
-			</div>
-		</div>
-
-
-
-
-		<div class="control-group">
-			<label class="control-label" for="textarea">Preview</label>
-			<div class="controls">
-				<div content-preview="catalogue.edit.content" ng-bind-html-unsafe="content">{{content}}</div>
-			</div>
-			<div class="controls">
-				<div ng-repeat="content in catalogue.edit.additionalContent" content-preview="content.text" ng-bind-html-unsafe="content">{{content}}</div>
-			</div>
-		</div>				
-
-
-
-		<div class="control-group">
-			<label class="control-label" for="select01">Upload Image</label>
-			<div class="controls">
-
-						<div clg-upload-container>
-
-							<input id="inputImage" 
-							type="file" 
-							accept="image/*" 
-							image="image" 
-							resize-max-height="50"
-							resize-max-width="50"
-							resize-quality="0.7" />
-
-		      		  </div>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<label class="control-label" for="select01">Images</label>
-			<div class="controls">
-				<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="images"></div>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<label class="control-label" for="select01">All Images</label>
-			<div class="controls">
-				<div clg-item-browser="image-browser" items="catalogue.imageBrowser" target="catalogue.edit.images"></div>
-			</div>
-		</div>
-
+				
 
 
 

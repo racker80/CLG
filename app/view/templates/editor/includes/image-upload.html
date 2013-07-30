@@ -1,0 +1,25 @@
+				<div class="control-group">
+					<label class="control-label" for="select01">Upload Image</label>
+					<div class="controls">
+
+								<div clg-upload-container>
+
+									<input id="inputImage" 
+									type="file" 
+									accept="image/*" 
+									image="image" 
+									resize-max-height="50"
+									resize-max-width="50"
+									resize-quality="0.7" />
+
+				      		  </div>
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="select01">Images</label>
+					<div class="controls">
+						<a class="btn btn-small btn-primary" index-actions ng-click="openDialog('images')">Add Images</a><br><br>
+						<div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="items"></div>
+					</div>
+				</div>
