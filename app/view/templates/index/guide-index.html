@@ -2,22 +2,7 @@
 				<tbody>
 					<tr>
 						<td><a href="#/guide/{{routeParams.guideIndex}}">{{catalogue.guide.title}}</a></td>
-						<!-- <td class="dropdown">
-							<span class="dropdown-toggle">
-								&#9881;
-							</span>
-							<ul class="dropdown-menu">
-								<li>
-									<a index-actions type="guide" location="catalogue.guides" target="routeParams.guideIndex" ng-click="removeItem()">Delete Guide</a>
-								</li>
-								<li>
-									<a index-actions type="book" location="catalogue.guide.books" ng-click="addNew()">New Book</a>
-								</li>
-								<li>
-									<a index-actions type="paste" location="catalogue.guide.books" ng-click="addNew()">Paste Book</a>
-								</li>										
-							</ul>
-						</td> -->
+
 					</tr>
 				</tbody>
 			</table>
@@ -26,71 +11,14 @@
 		<li ng-repeat="book in catalogue.guide.books">
 			<!-- <span class="indexTitle" index-actions ng-click="editItem()" target="book">{{book.title}}</span> -->
 			<a href="#/guide/{{routeParams.guideIndex}}/book/{{$index}}" class="indexTitle"><span class="indexTitle">{{book.title}}</span></a>
-<!-- 			<table class="table">
-				<tbody>
-					<tr>
-						<td edit-item item="book">{{book.title}}</td>
-						<td class="dropdown">
-							<span class="dropdown-toggle">
-								&#9881;
-							</span>
-							<ul class="dropdown-menu">
-								<li>
-									<a index-actions ng-click="copy()" target="book">Copy Book</a>
-								</li>
-								<li>
-									<a index-actions location="catalogue.guide.books" target="$index" ng-click="removeItem()">Delete Book</a>
-								</li>
-								<li>
-									<a index-actions type="chapter" location="book.chapters" ng-click="addNew()">New Chapter</a>
-								</li>
-								<li>
-									<a index-actions type="paste" location="book.chapters" ng-click="addNew()">Paste Chapter</a>
-								</li>										
-							</ul>
-						</td>
-					</tr>
-				</tbody>
-			</table> -->
+
 
 			<ul class="indexChild" index-section ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
 					<a href="#/guide/{{routeParams.guideIndex}}/book/{{$parent.$index}}/chapter/{{$index}}" class="indexTitle">
 						<span class="indexTitle">{{chapter.title}}</span></a>
 
-<!-- 					<span class="indexTitle" index-actions ng-click="editItem()" target="chapter">{{chapter.title}}</span>
- -->
-<!-- 					<table class="table">
-						<tbody>
-							<tr>
-								<td edit-item item="chapter">{{chapter.title}}</td>
-								<td class="options dropdown">
-									<span ng-click='toggleChildren()'>
-										&#9660;
-									</span>
-								</td>
-								<td class="options dropdown">
-									<span class="dropdown-toggle">
-										&#9881;
-									</span>
-									<ul class="dropdown-menu">
-										<li>
-											<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>
-										</li>
-										<li>
-											<a index-actions location="book.chapters" target="$index" ng-click="removeItem()">Delete Chapter</a>
-										</li>
-										<li>
-											<a index-actions type="page" location="chapter.pages" ng-click="addNewPage()">New Page</a>
-										</li>
-										<li>
-											<a index-actions type="paste" location="chapter.pages" ng-click="addNew()">Paste Page</a>
-										</li>										
-									</ul>
-								</td>
-							</tr>
-						</tbody>
-					</table> -->
+
 					<ul index-child ng-show="showOptions" class="">
 						<li>
 							<a index-actions ng-click="copy()" target="chapter">Copy Chapter</a>

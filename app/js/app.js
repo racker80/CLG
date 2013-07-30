@@ -357,9 +357,17 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		//ADD A NEW THING SOMEWHERE
 		this.addNew = function(location, type) {
 			var ths = this;
+			//Create the location
+			if(!angular.isDefined(location)) {
+					console.log('location doesnt exist, creating blank array');
+					location=[];
+				}
+
 			//Create a new thing
-			if(!type) {
-				location.push({});
+			if(!angular.isDefined(type)) {
+				console.log('No type is defined, creating empty object');
+				type = {};
+				location.push(type);
 				this.saveGuide();
 				return;
 			}
@@ -377,7 +385,10 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 		}
 		//ADD AN EXISTING ITEM
 		this.addExisting = function(location, item) {
-			location.push(item);
+			if(!angular.isDefined(location)) {
+				location = [];
+			}
+			location.push(item);			
 			this.saveGuide();
 			console.log('added existing item');
 		}

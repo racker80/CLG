@@ -30,19 +30,18 @@
 							<table class="table codeTable" ng-repeat="content in catalogue.edit.additionalContent" >
 								<tbody>
 									<tr>
-										<td><textarea ng-model="content.text" class="input-xlarge content-textarea" style="height:80px;"></textarea></td>
-										<td><a class="btn btn-small btn-warning" remove-thing remove-from="catalogue.edit.additionalContent" thing-index="$index">X</a></td>
-									</tr>
-								</tbody>
-							</table>
+										<td>
+											<textarea ng-model="content.text" class="input-xlarge content-textarea" style="height:80px;"></textarea></td>
+											<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="catalogue.edit.additionalContent" target="$index">X</a></td>
+										</tr>
+									</tbody>
+								</table>
+								
+							</div>
 
+							<a class="btn" index-actions ng-click="addNew()" location="catalogue.edit.additionalContent">+ Add Content</a>
 						</div>
-
-						<a class="btn" index-actions ng-click="addNew()" location="catalogue.edit.additionalContent">+ Add Content</a>
-
-
 					</div>
-				</div>
 
 				<div class="control-group">
 					<label class="control-label" for="textarea">Preview</label>

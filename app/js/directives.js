@@ -26,10 +26,21 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 		template:'<span ng-transclude></span>',
 		link: function(scope, element, attrs){
 			scope.addNew = function() {
+				//Create the location
+				if(!angular.isDefined(scope.location)) {
+					console.log('location doesnt exist, creating blank array');
+					scope.location=[];
+				}
+
+				//run the catalogue addNew
 				Catalogue.addNew(scope.location, scope.type);
+				console.log(scope.catalogue.edit)
+				console.log(scope.catalogue.guide)
+
 			}
 			scope.addExisting = function(){
 				Catalogue.addExisting(scope.location, scope.target);
+
 			}
 			scope.removeItem = function() {
 				Catalogue.removeItem(scope.location, scope.target);
