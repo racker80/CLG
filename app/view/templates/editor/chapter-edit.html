@@ -1,13 +1,13 @@
 <div class="row-fluid">
-	<div class="span8">
-		<form class="form-horizontal">
+	<div class="span9">
+		<form class="form">
 			<fieldset>
 				<legend>Edit Chapter: {{catalogue.edit.title}}</legend>
 
 				<div ng-include="'app/view/templates/editor/includes/title.html'"></div>
 
 				<div class="control-group">
-					<label class="control-label" for="textarea">Description</label>
+					<legend class="control-label" for="textarea">Description</legend>
 					<div class="controls">
 						<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
 					</div>
@@ -25,29 +25,31 @@
 
 
 
-				<div class="form-actions">
-
-					<button type="submit" class="btn btn-primary" ng-click="catalogue.savePage()">Save changes</button>
-					<button class="btn">Cancel</button>
-				</div>
 			</fieldset>
 		</form>
 	</div>
-	<div class="span4 ">
-		<div class="well">
-			<h5>Pages in {{catalogue.edit.title}}</h5>
+
+
+	<div class="span3">
+			<button type="submit" class="btn btn-primary btn-block" ng-click="catalogue.saveGuide()">Save changes</button>
+
+			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Copy {{catalogue.edit.type}}</button>
+			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Delete {{catalogue.edit.type}}</button>
+
+
+
+		<div class="bs-docs-example">
+			<h5>In {{catalogue.edit.title}}</h5>
 			<div editor-sidebar 
 				items="catalogue.edit.pages" 
 				type="page"
 				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
-			</div>			
+			</div>	
 		</div>
-
-		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy Chapter</button>
-
-
 		
 	</div>
+
+
 </div>
 
 

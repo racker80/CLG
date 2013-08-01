@@ -10,13 +10,13 @@
 	<ul class="indexContainer"  ui-sortable="sortableOptions" ng-model="catalogue.guide.books">
 		<li ng-repeat="book in catalogue.guide.books">
 			<!-- <span class="indexTitle" index-actions ng-click="editItem()" target="book">{{book.title}}</span> -->
-			<a href="#/guide/{{routeParams.guideIndex}}/book/{{$index}}" class="indexTitle"><span class="indexTitle">{{book.title}}</span></a>
+			<a ng-class="{selected: $index==routeParams.bookIndex}" href="#/guide/{{routeParams.guideIndex}}/book/{{$index}}" class="indexTitle"><span class="indexTitle">{{book.title}}</span></a>
 
 
 			<ul class="indexChild" index-section ui-sortable="sortableOptions" ng-model="book.chapters">
 				<li ng-repeat="chapter in book.chapters">
 					<a href="#/guide/{{routeParams.guideIndex}}/book/{{$parent.$index}}/chapter/{{$index}}" class="indexTitle">
-						<span class="indexTitle">{{chapter.title}}</span></a>
+						<span>{{chapter.title}}</span></a>
 
 
 					<ul index-child ng-show="showOptions" class="">
@@ -37,27 +37,9 @@
 					
 					<ul index-child ui-sortable="sortableOptions" ng-model="chapter.pages">
 						<li ng-repeat="page in chapter.pages">
-						<table class="table">
-							<tbody>
-								<tr>
-									<td index-actions ng-click="editItem()" target="page">{{$index+1}}) {{page.title}}</td>
-									<td class="dropdown">
-										<span class="dropdown-toggle">
-											&#9881;
-										</span>
-										<ul class="dropdown-menu">
-											<li>
-												<a index-actions ng-click="copy()" target="page">Copy</a>
-											</li>
-											<li>
-												<a index-actions location="chapter.pages" target="$index" ng-click="removeItem()">Delete</a>
-											</li>											
-										</ul>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
+							<a href="#/guide/{{routeParams.guideIndex}}/book/{{$parent.$parent.$index}}/chapter/{{$parent.$index}}/page/{{$index}}" class="indexTitle">
+							<span class="indexTitle">{{$index+1}}) {{page.title}}</span>
+							</a>
 					</li>
 					</ul>
 				</li>

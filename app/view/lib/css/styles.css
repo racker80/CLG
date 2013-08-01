@@ -7916,6 +7916,16 @@ textarea {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
+.bs-docs-example {
+  position: relative;
+  margin: 15px 5px;
+  padding: 14px 19px 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
 /*
 Your custom styles go here
 */
@@ -8101,6 +8111,17 @@ Your custom styles go here
 .sidebar ul.indexContainer ul li {
   margin: 0;
   padding: 0;
+}
+.sidebar ul.indexContainer .indexTitle.selected {
+  background-color: #f9f9f9;
+  background-image: -moz-linear-gradient(top, #ffffff, #f1f1f1);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f1f1f1));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f1f1f1);
+  background-image: -o-linear-gradient(top, #ffffff, #f1f1f1);
+  background-image: linear-gradient(to bottom, #ffffff, #f1f1f1);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff1f1f1', GradientType=0);
+  display: block;
 }
 .sidebar ul.indexContainer span.indexTitle {
   display: block;

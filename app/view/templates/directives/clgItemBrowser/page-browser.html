@@ -41,9 +41,7 @@
  	type="{{type}}"
  	url-base="{{urlBase}}">
  </div>
-
-			<a index-actions type="{{type}}" location="items" ng-click="addNew()">New {{type}}</a>
-			<br>
-			<a index-actions location="items" ng-click="paste()">Paste {{type}}</a>
-			<br>
-			<a index-actions ng-click="openDialog()" type="{{type}}">Dialogue</a>
+	<hr>
+			<button class="btn btn-small" index-actions type="{{type}}" location="items" ng-click="addNew()">New</button>
+			<button class="btn btn-small" index-actions location="items" ng-click="paste()">Paste</button>
+			<button class="btn btn-small" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>

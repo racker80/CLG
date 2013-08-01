@@ -1,5 +1,5 @@
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span9">
 
 		<form class="form-horizontal">
 			<fieldset>
@@ -18,34 +18,34 @@
 				<div ng-include="'app/view/templates/editor/includes/preview.html'"></div>
 
 				<div ng-include="'app/view/templates/editor/includes/code.html'"></div>
-				
+
 				<div ng-include="'app/view/templates/editor/includes/image-upload.html'"></div>
 
 
 
-				<div class="form-actions">
-
-					<button type="submit" class="btn btn-primary" ng-click="catalogue.savePage()">Save changes</button>
-					<button class="btn">Cancel</button>
-				</div>
 
 			</fieldset>
 		</form>
 
 	</div>
 
-	<div class="span4">
-		<div class="well">
-			<h5>Other Pages in <a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}">{{catalogue.guide.books[routeParams.bookIndex].chapters[routeParams.chapterIndex].title}}</a></h5>
 
+	<div class="span3">
+			<button type="submit" class="btn btn-primary btn-block" ng-click="catalogue.saveGuide()">Save changes</button>
+
+			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Copy {{catalogue.edit.type}}</button>
+			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Delete {{catalogue.edit.type}}</button>
+
+
+
+		<div class="bs-docs-example">
+			<h5>Other Pages in <a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}">{{catalogue.guide.books[routeParams.bookIndex].chapters[routeParams.chapterIndex].title}}</a></h5>
 			<div editor-sidebar 
 				items="catalogue.guide.books[routeParams.bookIndex].chapters[routeParams.chapterIndex].pages" 
 				type="page"
 				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
 			</div>	
-
-
 		</div>
-		<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy Page</button>
+		
 	</div>
 </div>
