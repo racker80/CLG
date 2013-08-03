@@ -25,6 +25,7 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 		transclude:true,
 		template:'<span ng-transclude></span>',
 		link: function(scope, element, attrs){
+
 			scope.addNew = function() {
 				//Create the location
 				if(!angular.isDefined(scope.location)) {
@@ -109,6 +110,90 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 		}
 	}
 })
+
+
+App.controller('IndexCtrl', function ($scope, Catalogue) {
+	$scope.tasks = Catalogue.guide;
+});
+
+App.directive('collection', function () {
+	return {
+		restrict: "E",
+		replace: true,
+		transclude: 'element',
+		scope: {
+			collection: '='
+		},
+		template: "<ul class='collection'><member ng-repeat='member in collection' member='member'></member></ul>",
+		link:function(scope, element) {
+		}
+	}
+})
+
+App.directive('member', function ($compile, Catalogue, $routeParams) {
+	return {
+		restrict: "E",
+		replace: true,
+		transclude:'element',
+		scope: {
+			member: '=',
+		},
+		template: '<li class="memeber" depth="{{$parent.$index}}" path="" ng-class="{minimized:member.minimized}">'+
+		'<a href="#/guide/{{routeParams.guideIndex}}/{{currentLocation}}">{{member.title}}</a></li>',
+		link: function (scope, element, attrs) {
+			scope.member.minimized = true;
+			scope.routeParams = $routeParams;
+			attrs.path = scope.$parent.$index+'/';
+
+			var parent = element[0].parentNode.parentNode;
+			function walk(parent){
+				if($(parent).attr('depth')) {
+					var a = $(parent).attr('depth');
+					attrs.path = a+'/'+attrs.path
+					walk(parent.parentNode.parentNode)
+				} else {
+					return;
+				}
+			}
+
+			walk(parent);
+
+			scope.currentLocation = attrs.path;
+
+
+			if (angular.isArray(scope.member.children)) {
+				element.prepend("<toggler parent='member'></toggler>");
+				element.append("<collection collection='member.children'></collection>"); 
+				$compile(element.contents())(scope)
+			}
+		}
+	}
+})
+App.directive('toggler', function($compile){
+	return {
+		restrict: "E",
+		replace: true,
+		transclude: 'element',
+		template:'<span class="toggle" ng-click="toggleMinimized(parent)" ng-switch on="parent.minimized">'+
+		'	<span ng-switch-when="true">&#x25B6;</span>'+
+		'	<span ng-switch-default>&#x25BC;</span>'+
+		'</span>',
+		scope: {
+			parent:"="
+		},
+		link: function (scope, element, attrs) {
+			scope.toggleMinimized = function (child) {
+				child.minimized = !child.minimized;
+			};
+
+		}
+	}
+})
+
+
+
+
+
 
 
 

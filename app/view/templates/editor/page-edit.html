@@ -39,9 +39,9 @@
 
 
 		<div class="bs-docs-example">
-			<h5>Other Pages in <a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}">{{catalogue.guide.books[routeParams.bookIndex].chapters[routeParams.chapterIndex].title}}</a></h5>
+			<h5>Other Pages in <a href="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}">{{catalogue.guide.children[routeParams.bookIndex].children[routeParams.chapterIndex].title}}</a></h5>
 			<div editor-sidebar 
-				items="catalogue.guide.books[routeParams.bookIndex].chapters[routeParams.chapterIndex].pages" 
+				items="catalogue.guide.children[routeParams.bookIndex].children[routeParams.chapterIndex].children" 
 				type="page"
 				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
 			</div>	

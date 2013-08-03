@@ -20,7 +20,21 @@ input, textarea {
     .box-sizing(content-box);
 }
 
+.ui-nested-sortable, .ui-nested-sortable ol {
+	list-style:none;
+}
+.ui-nested-sortable {
+	margin-left:0;
+}
+.minimized > ul > li { display:none; }
+ul.collection {
+	list-style:none;
+	&:first-child {
+		margin-left:0;
+	}
 
+
+}
 
 .bs-docs-example {
    position: relative;

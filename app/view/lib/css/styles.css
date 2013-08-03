@@ -7916,6 +7916,22 @@ textarea {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
+.ui-nested-sortable,
+.ui-nested-sortable ol {
+  list-style: none;
+}
+.ui-nested-sortable {
+  margin-left: 0;
+}
+.minimized > ul > li {
+  display: none;
+}
+ul.collection {
+  list-style: none;
+}
+ul.collection:first-child {
+  margin-left: 0;
+}
 .bs-docs-example {
   position: relative;
   margin: 15px 5px;

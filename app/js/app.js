@@ -29,7 +29,7 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates
 		}
 	})
-	.when('/guide/:guideIndex/book/:bookIndex', {
+	.when('/guide/:guideIndex/:bookIndex', {
 		controller: 'AppCtrl',
 		templateUrl: 'app/view/guide.php',
 		resolve: {
@@ -37,7 +37,7 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates,
 		}
 	})
-	.when('/guide/:guideIndex/book/:bookIndex/chapter/:chapterIndex', {
+	.when('/guide/:guideIndex/:bookIndex/:chapterIndex', {
 		controller: 'AppCtrl',
 		templateUrl: 'app/view/guide.php',
 		resolve: {
@@ -45,7 +45,7 @@ var appConfig = function($routeProvider) {
 			templates: appCtrl.loadTemplates
 		}
 	})
-	.when('/guide/:guideIndex/book/:bookIndex/chapter/:chapterIndex/page/:pageIndex', {
+	.when('/guide/:guideIndex/:bookIndex/:chapterIndex/:pageIndex', {
 		controller: 'AppCtrl',
 		templateUrl: 'app/view/guide.php',
 		resolve: {
@@ -85,7 +85,7 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	$scope.catalogue = Catalogue;
 	$scope.routeParams = $routeParams;
 
-	console.log($scope)
+	// console.log($scope)
 
 	$scope.sortableOptions = {
 		start: function(e, ui) {
@@ -105,21 +105,21 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, walkData, Catalogue
 	$scope.$watch($scope.routeParams, function(){
 		var route = $scope.routeParams;
 		if(route.pageIndex) {
-			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex].pages[route.pageIndex];
+			$scope.catalogue.edit = $scope.catalogue.guide.children[route.bookIndex].children[route.chapterIndex].children[route.pageIndex];
 			$scope.$broadcast('editItem');
 			console.log('page')
 			return;
 		}
 		if(route.chapterIndex) {
-			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex].chapters[route.chapterIndex];
+			$scope.catalogue.edit = $scope.catalogue.guide.children[route.bookIndex].children[route.chapterIndex];
 			$scope.$broadcast('editItem');
 			console.log('chapeter')
 			return;
 		}
 		if(route.bookIndex) {
-			$scope.catalogue.edit = $scope.catalogue.guide.books[route.bookIndex];
+			$scope.catalogue.edit = $scope.catalogue.guide.children[route.bookIndex];
 			$scope.$broadcast('editItem');
-			console.log('book')
+			// console.log('book')
 			return;
 		}
 		if(route.guideIndex) {
@@ -328,27 +328,27 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				title:"New Guide",
 				type: "guide",
 				id:{},
-				books:[],
+				children:[],
 				images:[]
 			},
 			book: {
 				title:"New Book",
 				type:"book",
 				images:[],
-				chapters:[],
+				children:[],
 			},
 			chapter: {
 				title:"New Chapter",
 				type:"chapter",
 				images:[],
-				pages:[],
+				children:[],
 			},
 			page: {
 				title:"New Page",
 				type:"page",
 				code:[],
 				images:[],
-				meta:[]
+				meta:[],
 			}
 
 		};
@@ -380,6 +380,7 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 			location.push(angular.copy(ths.structure[type]));
 			ths.saveGuide();
 			console.log('added new item');
+			console.log(ths.guide.children)
 
 		}
 		//ADD AN EXISTING ITEM
@@ -511,22 +512,60 @@ App.service('Catalogue', function($rootScope, $http, $route, $routeParams, $loca
 				});
 			}
 		};
+		this.setPage = function(page) {
+
+		}
+		this.walker = function(parent) {
+			var ths = this;
+			if(!angular.isDefined(parent.children)) {
+				return false;
+			}
+			angular.forEach(parent.children, function(child, key, context) {
+
+				//if it's a page, set it.
+				if(angular.isDefined(child.id) && angular.isDefined(ths.pages[child.id])) {
+					console.log('setting page')
+					context[key] = ths.pages[child.id];
+				}
+				//if it doesn't exist, remove it.
+				if(child.type==="page" && !angular.isDefined(ths.pages[child.id])){
+					console.log('splicing page')
+					context.splice(key, 1);
+				}
+
+				//if it has children, recurse it.
+				if(angular.isDefined(child.children)) {
+					console.log('this has children...')
+					ths.walker(child)
+				}
+
+			});
+		}
 
 		//WALK THE DATA!  BIND THE DATA!
 		this.walkData = function(){
 			var ths = this;
+			// if(this.guide) {
+			// angular.forEach(ths.guide.books, function(book){				
+			// 	angular.forEach(book.chapters, function(chapter){
+			// 		angular.forEach(chapter.pages, function(page, key, context){
+			// 			if(angular.isDefined(page.id) && angular.isDefined(ths.pages[page.id])) {
+			// 				context[key] = ths.pages[page.id];
+			// 			} else {
+			// 				context.splice(key, 1);
+			// 			}
+			// 		});
+			// 	});
+			// });
+			// }
+
 			if(this.guide) {
-			angular.forEach(ths.guide.books, function(book){				
-				angular.forEach(book.chapters, function(chapter){
-					angular.forEach(chapter.pages, function(page, key, context){
-						if(angular.isDefined(page.id) && angular.isDefined(ths.pages[page.id])) {
-							context[key] = ths.pages[page.id];
-						} else {
-							context.splice(key, 1);
-						}
-					});
-				});
-			});
+				//does it have children
+				//if so what type are they?
+				//pass the children back to the walker
+
+				console.log('starting walker...')
+				ths.walker(this.guide);
 			}
 		};
 		//************************************************************************
@@ -710,7 +749,7 @@ App.directive('contentBrowser', function(){
 			if(angular.isDefined(scope.local)) {
 				scope.copy = 'true';
 			}
-			console.log(scope)
+			// console.log(scope)
 		}
 	}
 })
