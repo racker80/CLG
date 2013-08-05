@@ -1,18 +1,18 @@
 
-App.controller('actionsCtrl', function($scope, Catalogue, $dialog, $routeParams) {
-	$scope.catalogue = Catalogue;
+App.controller('actionsCtrl', function($scope, DataService, $dialog, $routeParams) {
+	$scope.catalogue = DataService;
 	$scope.routeParams = $routeParams;
 
 })
-App.controller('dialogCtrl', function($scope, $routeParams, Catalogue, dialog){
-	$scope.catalogue = Catalogue;
+App.controller('dialogCtrl', function($scope, $routeParams, DataService, dialog){
+	$scope.catalogue = DataService;
 	$scope.routeParams = $routeParams;
 
 	$scope.close = function(result){
 		dialog.close();
 	}
 })
-App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compile, $dialog){
+App.directive('indexActions', function(DataService, $q, $http, $state, $stateParams, $rootScope, $compile, $dialog){
 	return {
 		restrict:"A",
 		scope: {
@@ -34,35 +34,35 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				}
 
 				//run the catalogue addNew
-				Catalogue.addNew(scope.location, scope.type);
+				DataService.addNew(scope.location, scope.type);
 				console.log(scope.catalogue.edit)
 				console.log(scope.catalogue.guide)
 
 			}
 			scope.addExisting = function(){
-				Catalogue.addExisting(scope.location, scope.target);
+				DataService.addExisting(scope.location, scope.target);
 
 			}
 			scope.removeItem = function() {
-				Catalogue.removeItem(scope.location, scope.target);
+				DataService.removeItem(scope.location, scope.target);
 			}
 			scope.copy = function() {
-				Catalogue.copy(angular.copy(scope.target));
+				DataService.copy(angular.copy(scope.target));
 			}
 			scope.paste = function() {
-				Catalogue.paste(scope.location);
+				DataService.paste(scope.location);
 			}
 
 
 
 			scope.addNewPage = function() {	
-				Catalogue.newPage(scope.location);	
+				DataService.newPage(scope.location);	
 			}
 			scope.deletePage = function() {
-				Catalogue.deletePage(scope.target);
+				DataService.deletePage(scope.target);
 			}
 			scope.deleteGuide = function() {
-				Catalogue.deleteGuide(scope.target)
+				DataService.deleteGuide(scope.target)
 			}			
 
 
@@ -100,9 +100,14 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 				});
 			};
 			scope.editItem = function() {
-				Catalogue.saveGuide();
-				Catalogue.savePage();
-				Catalogue.edit = scope.target;
+
+				DataService.saveGuide();
+				DataService.savePage();
+
+				DataService.edit = scope.target;
+				$state.transitionTo('guides.detail.edit', {index:$stateParams.index, type:scope.target.type, editId:scope.target.$location}, true);
+
+				// DataService.edit = scope.target;
 				$rootScope.$broadcast('editItem');
 			}
 			
@@ -112,8 +117,8 @@ App.directive('indexActions', function(Catalogue, $q, $http, $rootScope, $compil
 })
 
 
-App.controller('IndexCtrl', function ($scope, Catalogue) {
-	$scope.tasks = Catalogue.guide;
+App.controller('IndexCtrl', function ($scope, DataService) {
+	$scope.tasks = DataService.guide;
 });
 
 App.directive('collection', function () {
@@ -132,7 +137,7 @@ App.directive('collection', function () {
 App.service('indexState', function(){
 	this.minimized = [];
 })
-App.directive('member', function ($compile, Catalogue, indexState, $routeParams) {
+App.directive('member', function ($compile, DataService, indexState, $routeParams) {
 	return {
 		restrict: "E",
 		replace: true,

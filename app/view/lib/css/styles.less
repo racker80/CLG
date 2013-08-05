@@ -25,8 +25,35 @@ input, textarea {
 }
 .ui-nested-sortable {
 	margin-left:0;
+
 }
+.treeBranch.active > div {
+	#gradient > .vertical(#eaeaea, #d2d2d2);
+	.ez-title {
+		color:#000;
+	}
+}
+span.toggle {
+	width:15px;
+	display:inline-block;
+	cursor:pointer;
+}
+.ez-title {
+	cursor:pointer;
+	color:#666;
+	&:hover {
+		color:#000;
+	}
+}
+li.nochildren {
+		.toggle {
+			span {
+				display:none;
+			}
+		}
+	}
 .minimized > ul > li { display:none; }
+.minimized > ol > li { display:none; }
 ul.collection {
 	list-style:none;
 	&:first-child {

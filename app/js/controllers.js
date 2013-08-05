@@ -21,7 +21,6 @@ App.directive('ezTree', function ($compile, $timeout) {
       return function link(scope, element, attrs) {
         var rootElement = element[0].parentNode,
           cache = [];
-
         // Reverse lookup
         function lookup(child) {
           var i = cache.length;
@@ -45,6 +44,7 @@ App.directive('ezTree', function ($compile, $timeout) {
               cached,
               cursor,
               grandchildren;
+          
 
             // Iterate the children at the current level
             for (; i < n; ++i) {
@@ -60,6 +60,7 @@ App.directive('ezTree', function ($compile, $timeout) {
               // be used as the parentNode in the next level of recursion
               if (!cached) {
                 transclude(scope.$new(), function (clone, childScope) {
+                  child.$minimized = true;
                   childScope[childExpr] = child;
                   cached = {
                     scope: childScope,
@@ -72,7 +73,6 @@ App.directive('ezTree', function ($compile, $timeout) {
               // Store the current depth on the scope in case you want 
               // to use it (for good or evil, no judgment).
               cached.scope.$depth = depth;
-              cached.scope.$current = i;
 
 
               // We will compare the cached element to the element in 
@@ -90,6 +90,7 @@ App.directive('ezTree', function ($compile, $timeout) {
               // If the child has children of its own, recurse 'em.             
               grandchildren = child[childrenExpr];
               if (grandchildren && grandchildren.length) {
+                child.$children = true;
                 walk(grandchildren, cached.branch, depth + 1);
               }
             }
@@ -115,7 +116,6 @@ App.directive('ezTree', function ($compile, $timeout) {
 
 App.controller('TreeController', function ($scope, $timeout, $state, $stateParams, DataService) {
 
-  var map = []
   var makeLocation = function(parent, parentLocation){
       if(!parent.children) {
         return;
@@ -124,22 +124,54 @@ App.controller('TreeController', function ($scope, $timeout, $state, $stateParam
         parentLocation = '';
       }
       _.each(parent.children, function(value, key, list){
+              if(!value.childtype) {
+                value.childtype = angular.copy(DataService.structure[value.type].childtype);
+              }
+
               list[key].$location = parentLocation+key+'/';
               if(value.children) {
                 makeLocation(value, list[key].$location);
               }
+
        });
   }
   makeLocation(DataService.guide)
+  $scope.guide = DataService.guide;
+  $scope.$on('somethingChanged', function() {
 
+    console.log('Doing object context location...')
+    makeLocation(DataService.guide)
+  })
+
+
+    $scope.sortableOptions = {
+      // listType: 'ol',
+      // items: 'li',
+    start: function(e, ui) {
+         console.log(ui.item)
+
+    },
+    stop: function(e, ui) {
+      // console.log()
+        DataService.saveGuide();
+
+    },
+      update: function(e, ui) {
+      },
+      
+  };
 
   $scope.edit = function(child) {
+    DataService.edit.$active = false;
     DataService.edit = child;
+    child.$active = true;
+    child.$minimized = false;
+    console.log($state.current)
     $state.transitionTo('guides.detail.edit', {index:$stateParams.index, type:child.type, editId:child.$location}, true);
   }
 
   $scope.toggleMinimized = function (child) {
-    child.minimized = !child.minimized;
+    child.$minimized = !child.$minimized;
   };
   $scope.addChild = function (child) {
     child.children.push({
@@ -209,26 +241,26 @@ App.directive('uiNestedSortable', ['$parse', function ($parse) {
     restrict: 'A',
     link: function (scope, element, attrs) {
 
-      var options = attrs.uiNestedSortable ? $parse(attrs.uiNestedSortable)() : {};
-      angular.forEach(eventTypes, function (eventType) {
+      // var options = attrs.uiNestedSortable ? $parse(attrs.uiNestedSortable)() : {};
+      // angular.forEach(eventTypes, function (eventType) {
 
-        var attr = attrs['uiNestedSortable' + eventType],
-          callback;
+      //   var attr = attrs['uiNestedSortable' + eventType],
+      //     callback;
 
-        if (attr) {
-          callback = $parse(attr);
-          options[eventType.charAt(0).toLowerCase() + eventType.substr(1)] = function (event, ui) {
-            scope.$apply(function () {
+      //   if (attr) {
+      //     callback = $parse(attr);
+      //     options[eventType.charAt(0).toLowerCase() + eventType.substr(1)] = function (event, ui) {
+      //       scope.$apply(function () {
 
-              callback(scope, {
-                $event: event,
-                $ui: ui
-              });
-            });
-          };
-        }
+      //         callback(scope, {
+      //           $event: event,
+      //           $ui: ui
+      //         });
+      //       });
+      //     };
+      //   }
 
-      });
+      // });
       // console.log(element)
       // element.nestedSortable(options);
 

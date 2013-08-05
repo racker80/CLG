@@ -7923,7 +7923,38 @@ textarea {
 .ui-nested-sortable {
   margin-left: 0;
 }
+.treeBranch.active > div {
+  background-color: #e0e0e0;
+  background-image: -moz-linear-gradient(top, #eaeaea, #d2d2d2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eaeaea), to(#d2d2d2));
+  background-image: -webkit-linear-gradient(top, #eaeaea, #d2d2d2);
+  background-image: -o-linear-gradient(top, #eaeaea, #d2d2d2);
+  background-image: linear-gradient(to bottom, #eaeaea, #d2d2d2);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffeaeaea', endColorstr='#ffd2d2d2', GradientType=0);
+}
+.treeBranch.active > div .ez-title {
+  color: #000;
+}
+span.toggle {
+  width: 15px;
+  display: inline-block;
+  cursor: pointer;
+}
+.ez-title {
+  cursor: pointer;
+  color: #666;
+}
+.ez-title:hover {
+  color: #000;
+}
+li.nochildren .toggle span {
+  display: none;
+}
 .minimized > ul > li {
+  display: none;
+}
+.minimized > ol > li {
   display: none;
 }
 ul.collection {

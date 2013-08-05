@@ -33,18 +33,36 @@
 	<div class="span3">
 			<button type="submit" class="btn btn-primary btn-block" ng-click="catalogue.saveGuide()">Save changes</button>
 
-			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Copy {{catalogue.edit.type}}</button>
-			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Delete {{catalogue.edit.type}}</button>
-
+			<button index-actions ng-click="copy()" target="edit" class="btn btn-block">Copy {{edit.type}}</button>
 
 
 		<div class="bs-docs-example">
-			<h5>In {{catalogue.edit.title}}</h5>
-	<!-- 		<div editor-sidebar 
-				items="catalogue.edit.children" 
-				type="page"
-				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
-			</div> -->	
+			<h5>In {{edit.title}}</h5>
+			
+			 <div sortable-options ui-sortable="sortableOptions" ng-model="edit.children">
+			 	<table ng-repeat="item in edit.children" class="codeTable table">
+			 		<body>
+			 			<tr>
+			 				<td class="itemTitle"><a index-actions ng-click="editItem()" target="item">{{item.title}}</a></td>
+			 				<td class="itemOptions" ng-switch on="copy">
+			 					<div ng-switch-when="true">
+			 						<a class="btn btn-small btn-warning" index-actions ng-click="addExisting()" location="local" target="item">+</a>
+			 					</div>
+			 					<div ng-switch-default>
+			 						<a class="btn btn-small btn-warning" index-actions location="edit.children" target="$index" ng-click="removeItem()">X</a>
+			 						<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="item">copy</a>
+
+			 					</div>
+			 				</td>
+			 			</tr>
+			 		</body>
+			 	</table>
+			 </div>
+	
+			<hr>
+			<button class="btn btn-small" index-actions type="{{edit.childtype}}" location="edit.children" ng-click="addNew()">New</button>
+			<button class="btn btn-small" index-actions location="edit.children" ng-click="paste()">Paste</button>
+			<button class="btn btn-small" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>
 		</div>
 		
 	</div>
