@@ -26,7 +26,9 @@
 
         <script src="app/js/vendor/bootstrap-gh-pages/ui-bootstrap-tpls-0.4.0.js"></script>
         <script src="app/js/vendor/sortable.js"></script>
+        <script src="app/js/vendor/angular-ui-router.js"></script>
       
+        <script src="app/js/vendor/underscore.js"></script>
         <script src="app/js/vendor/showdown.js"></script>
         <script src="app/js/vendor/imageupload.js"></script>
         <script src="app/js/vendor/uploader.js"></script>
@@ -38,7 +40,7 @@
 
     <body>
 
-        <ng-view></ng-view>
-
+        <!-- <ng-view></ng-view> -->
+        <section ui-view></section>
     </body>
 </html>

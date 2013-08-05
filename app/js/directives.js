@@ -129,8 +129,10 @@ App.directive('collection', function () {
 		}
 	}
 })
-
-App.directive('member', function ($compile, Catalogue, $routeParams) {
+App.service('indexState', function(){
+	this.minimized = [];
+})
+App.directive('member', function ($compile, Catalogue, indexState, $routeParams) {
 	return {
 		restrict: "E",
 		replace: true,
@@ -142,6 +144,18 @@ App.directive('member', function ($compile, Catalogue, $routeParams) {
 		'<a href="#/guide/{{routeParams.guideIndex}}/{{currentLocation}}">{{member.title}}</a></li>',
 		link: function (scope, element, attrs) {
 			scope.member.minimized = true;
+
+
+			scope.indexState = indexState;
+			console.log(scope.member)
+			// if(angular.isDefined(scope.indexState.minimied[scope.$id])) {
+			// 	scope.member.minimized = true;
+			// } else {
+			// 	scope.member.minimized = false;
+			// }		
+			// scope.$watch('indexState.minimized', function(){
+			// 	scope.member.minimized = scope.indexState.minimied[scope.$id];
+			// })
 			scope.routeParams = $routeParams;
 			attrs.path = scope.$parent.$index+'/';
 
@@ -160,7 +174,6 @@ App.directive('member', function ($compile, Catalogue, $routeParams) {
 
 			scope.currentLocation = attrs.path;
 
-
 			if (angular.isArray(scope.member.children)) {
 				element.prepend("<toggler parent='member'></toggler>");
 				element.append("<collection collection='member.children'></collection>"); 
@@ -169,7 +182,7 @@ App.directive('member', function ($compile, Catalogue, $routeParams) {
 		}
 	}
 })
-App.directive('toggler', function($compile){
+App.directive('toggler', function($compile, indexState){
 	return {
 		restrict: "E",
 		replace: true,
@@ -184,6 +197,8 @@ App.directive('toggler', function($compile){
 		link: function (scope, element, attrs) {
 			scope.toggleMinimized = function (child) {
 				child.minimized = !child.minimized;
+				console.log(child)
+
 			};
 
 		}

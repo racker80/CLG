@@ -2,14 +2,14 @@
 	<div class="span9">
 		<form class="form">
 			<fieldset>
-				<legend>Edit Chapter: {{catalogue.edit.title}}</legend>
+				<legend>Edit Chapter: {{edit.title}}</legend>
 
 				<div ng-include="'app/view/templates/editor/includes/title.html'"></div>
 
 				<div class="control-group">
 					<legend class="control-label" for="textarea">Description</legend>
 					<div class="controls">
-						<input type="text" class="input-xlarge" ng-model="catalogue.edit.description">
+						<input type="text" class="input-xlarge" ng-model="edit.description">
 					</div>
 				</div>	
 
@@ -40,11 +40,11 @@
 
 		<div class="bs-docs-example">
 			<h5>In {{catalogue.edit.title}}</h5>
-			<div editor-sidebar 
+	<!-- 		<div editor-sidebar 
 				items="catalogue.edit.children" 
 				type="page"
 				url-base="#/guide/{{routeParams.guideIndex}}/book/{{routeParams.bookIndex}}/chapter/{{routeParams.chapterIndex}}/page">
-			</div>	
+			</div> -->	
 		</div>
 		
 	</div>
