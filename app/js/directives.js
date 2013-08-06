@@ -35,8 +35,8 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 
 				//run the catalogue addNew
 				DataService.addNew(scope.location, scope.type);
-				console.log(scope.catalogue.edit)
-				console.log(scope.catalogue.guide)
+				// console.log(scope.catalogue.edit)
+				// console.log(scope.catalogue.guide)
 
 			}
 			scope.addExisting = function(){
@@ -53,7 +53,9 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 				DataService.paste(scope.location);
 			}
 
-
+			scope.save = function() {
+				DataService.saveGuide();
+			}
 
 			scope.addNewPage = function() {	
 				DataService.newPage(scope.location);	

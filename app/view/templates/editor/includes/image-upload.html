@@ -20,9 +20,9 @@
 					<label class="control-label" for="select01">Images</label>
 					<div class="controls">
 						<a class="btn btn-small btn-primary" index-actions ng-click="openDialog('images')">Add Images</a><br><br>
-						<!-- <div clg-item-browser="image-browser" items="catalogue.edit.images" ui-sortable="sortableOptions" ng-model="items"></div> -->
+						<!-- <div clg-item-browser="image-browser" items="edit.images" ui-sortable="sortableOptions" ng-model="items"></div> -->
 
-						<table ng-repeat="image in catalogue.edit.images" class="codeTable table">
+						<table ng-repeat="image in edit.images" class="codeTable table">
 							<tbody>
 								<tr>
 									<td class="itemIndex">[image {{$index}}]</td>
@@ -37,7 +37,7 @@
 											<a class="btn btn-small btn-warning" ng-click="addItem(image)">+</a>
 										</div>
 										<div ng-switch-default>
-											<a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="catalogue.edit.images" target="$index">X</a>
+											<a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="edit.images" target="$index">X</a>
 										</div>
 									</td>
 								</tr>

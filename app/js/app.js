@@ -34,31 +34,16 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 	.state('guides.index', {
 		url:':type/:index/',
 		templateUrl:"app/view/guides.detail.html",
-		controller: function($scope, $state, $stateParams, DataService) {
-			console.log('guides.index: setting guide')
-			DataService.guide = DataService.guides[$stateParams.index]
-			$scope.guide = DataService.guide;
+		controller: function($scope, $state, $stateParams, DataService, PrepData) {
+			console.log('running guides.index state controller:')
 			
-			// var item = DataService.guide;
+			DataService.guide = DataService.guides[$stateParams.index]
+			
+			$scope.guide = DataService.guide;
 
-			// if($stateParams.editId) {
-			// 	//get the location from stateparams
-			// 	var location = $stateParams.editId.split('/');
-			// 	location.splice(-1, 1)[0]
-			// 	var item = DataService.guide;
-			// 	if(location.length > 0) {
-			// 		_.each(location, function(value, key, list){
-			// 			item = item.children[value]
+			console.log(DataService.guide)
 
-			// 		});
-			// 	} else {
-			// 		item = DataService.guide;
-			// 	}
-			// }
-			// //drop the proper thing in the editor
-			// DataService.edit = item;
-			// $scope.edit = DataService.edit;
-			// console.log(DataService)
+			PrepData.bindPages(DataService.guide);
 
 		}
 	})
@@ -77,37 +62,14 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 				return data.data;
 			});
 		},
-		controller: function($scope, $state, $stateParams, DataService) {
+		controller: function($scope, $state, $stateParams, DataService, PrepData) {
+			console.log('running guides.index.edit controller:')
 			//Set the current guide
-			console.log('guides.index.edit: setting edit param')			
 
-			//set the base item to edit
-			var item = DataService.guide;
+			PrepData.indexLocationState();
 
 
-			//get the location from stateparams
-			var location = $stateParams.editId.split('/');
-			//prep it
-			location.splice(-1, 1)[0]
-
-			console.log('ABOUT TO DO THE CONTROLLER THING')
-			if(location.length > 0) {
-				var i = 0;
-				_.each(location, function(value, key, list){
-					item = item.children[value]
-					item.$minimized = false;
-					// console.log(item)
-
-					if(i === list.length-1) {
-						// item.children[value].$active = true;
-					}
-					i++;
-				});
-			} else {
-				item = DataService.guide;
-			}
-			//drop the proper thing in the editor
-			DataService.edit = item;
+			//SET EDIT ON THE SCOPE
 			$scope.edit = DataService.edit;
 
 		}
@@ -127,14 +89,111 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 };
 var App = angular.module('App', ['ui.bootstrap', 'ui.sortable', 'ui.state', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
+App.factory('PrepData', function(DataService, $stateParams){
+
+	return {
+		currentLocation: function() {
+			//get the location from stateparams
+			var location = $stateParams.editId.split('/');
+			//prep it
+			location.splice(-1, 1)[0]
+			return location;
+		},
+		indexLocationState: function() {
+			console.log('PREPDATA PrepData.indexLocationState')
+
+			//set the base item to edit
+			var item = DataService.guide;
+
+			//get the location from stateparams
+			var location = this.currentLocation();
+
+			console.log('setting minimized state for index')
+			if(location.length > 0) {
+				var i = 0;
+				_.each(location, function(value, key, list){
+					item = item.children[value]
+					item.$minimized = false;
+					// console.log(item)
+
+					if(i === list.length-1) {
+						// item.children[value].$active = true;
+					}
+					i++;
+				});
+			} else {
+				item = DataService.guide;
+			}
+			//drop the proper thing in the editor
+			DataService.edit = item;
+
+			console.log('setting the edit object')
+			console.log(DataService.edit)
+
+			return true;
+		},
+		pageIds: function() {
+			var idList = [];
+			_.each(DataService.pages, function(value, key, list) {
+				idList.push(value.id);
+			})
+			return idList;
+
+		},
+		bindPages: function(parent) {
+			console.log('PREPDATA: Binding Pages')
+			var ths = DataService;
+
+			if(!angular.isDefined(parent.children)) {
+				return false;
+			}
+			
+			var idList = this.pageIds();
+
+			angular.forEach(parent.children, function(child, key, context) {
+				if(child.type==='page') {
+					
+					var pageKey = idList.indexOf(child.id)
+					var page = ths.pages[pageKey];
+
+					//if it's a page, set it.
+					if(angular.isDefined(child.id) && angular.isDefined(page)) {
+						// console.log('setting page')
+						context[key] = page;
+					}
+					//if it doesn't exist, remove it.
+					if(!angular.isDefined(page)){
+						// console.log('splicing page')
+						context.splice(key, 1);
+					}											
+
+				}
+
+				//if it has children, recurse it.
+				if(angular.isDefined(child.children)) {
+					// console.log('this has children...')
+					ths.walker(child)
+				}
+
+				return true;
+			});
+		}
+	}
+})
+
 
 
 var stateCtrl = App.controller('StateCtrl', function($scope, $state, guides, pages, templates, DataService){
+			console.log('running guides root controller:')
+
 			DataService.guides = guides;
 			DataService.pages = pages;
 			DataService.templates = templates;
-
-			DataService.walkData();
+			
+			//is everything where it should be?
+			console.log(DataService.guides)			
+			console.log(DataService.pages)			
+			console.log(DataService.templates)			
 
 });
 stateCtrl.loadGuides = function($q, $http) {
@@ -309,19 +368,28 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 		}
 		//SAVE THE GUIDE
 		this.saveGuide = function(){
+			if(this.edit.type === "page") {
+				this.savePage();
+				console.log('saving page')
+
+			}
 			if(this.guide) {
 				var ths = this;
 				this.walkData();
 				$rootScope.$broadcast('somethingChanged');
+				var defer = $q.defer();
 				$http.post('app/api/post.php', {
 						collection:'guides',
 						action:'saveGuide',
 						json:this.guide
 				}).success(function(data){
-					console.log('saved '+ths.guide.title);
+					console.log('saved '+data.title);
+					console.log(data)
+					defer.resolve(data);
 				});
-
+				return defer.promise;
 			}
+
 
 		};
 		//ADD A NEW GUIDE
@@ -399,13 +467,15 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				page = this.edit;
 			}
 			if(this.edit.type ==  'page') {
+				var defer = $q.defer();
 				$http.post('app/api/post.php', {
 						collection:'content',
 						action:'savePage',
 						json:page
 				}).success(function(data){
-					console.log('saved page: '+data.title)
+					defer.resolve(data.title);
 				});
+				return 'saved page: '+defer.promise;
 			}
 		};
 		this.setPage = function(page) {
@@ -431,12 +501,12 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 
 					//if it's a page, set it.
 					if(angular.isDefined(child.id) && angular.isDefined(page)) {
-						console.log('setting page')
+						// console.log('setting page')
 						context[key] = page;
 					}
 					//if it doesn't exist, remove it.
 					if(!angular.isDefined(page)){
-						console.log('splicing page')
+						// console.log('splicing page')
 						context.splice(key, 1);
 					}											
 
@@ -446,11 +516,13 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 
 				//if it has children, recurse it.
 				if(angular.isDefined(child.children)) {
-					console.log('this has children...')
+					// console.log('this has children...')
 					ths.walker(child)
 				}
 
 			});
+
+			return true;
 
 		}
 
@@ -464,7 +536,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				//pass the children back to the walker
 
 				console.log('starting walker...')
-				ths.walker(this.guide);
+				return ths.walker(this.guide);
 			}
 		};
 		//************************************************************************
@@ -601,115 +673,11 @@ App.directive('sortableOptions', function(DataService){
 
 
 
-/************************************************************************
-************************************************************************
-DATA LOADING
-************************************************************************
-************************************************************************/
-appCtrl.edit = function($q, $http, $route, DataService) {
-	return true;
-}
-
-appCtrl.loadData = function($q, $http, $route, DataService) {
-	var defer = $q.defer();
-
-	if(DataService.guides.length > 0) {
-		return true;
-	}
-	// $http.get('app/api/index.php', {params:{
-	// 	action:'getAll',
-	// }})
-	$http.get('/db.json')
-	.success(function(data){
-		if(angular.isDefined(data.guides)) {
-		DataService.guides = data.guides;
-		DataService.guide = DataService.guides[$route.current.params.guideIndex];
-		}
-		if(angular.isDefined(data.pages)) {
-			DataService.pages = data.pages;
-		}
-		DataService.walkData();
-		DataService.updateImages();
-
-		defer.resolve();
-	})
-	return defer.promise;
-}
-
-appCtrl.loadTemplates = function($q, $http, $route, DataService) {
-	if(DataService.templates.length > 0) {
-		return true;
-	}
-
-	var chapter = $q.defer();
-	$http.get('app/view/templates/editor/chapter-edit.html').success(function(data){
-		DataService.templates['chapter'] = data;
-		chapter.resolve(data);
-	});
-
-	var book = $q.defer();
-	$http.get('app/view/templates/editor/book-edit.html').success(function(data){
-		DataService.templates['book'] = data;
-		chapter.resolve(data);
-	});
-	
-	var page = $q.defer();
-	$http.get('app/view/templates/editor/page-edit.html').success(function(data){
-		DataService.templates['page'] = data;
-		page.resolve(data);
-	});	
-
-	var guide = $q.defer();
-	$http.get('app/view/templates/editor/guide-edit.html').success(function(data){
-		DataService.templates['guide'] = data;
-		page.resolve(data);
-	});		
-	var guideIndex = $q.defer();
-	$http.get('app/view/templates/index/guide-index.html').success(function(data){
-		DataService.templates['guideIndex'] = data;
-		page.resolve(data);
-	});		
-
-	var flatIndex = $q.defer();
-	$http.get('app/view/templates/index/flat-index.html').success(function(data){
-		DataService.templates['flatIndex'] = data;
-		page.resolve(data);
-	});		
-
-	return {
-		none:'',
-		page: page.promise,
-		chapter: chapter.promise,
-		book: book.promise,
-		guide: guide.promise,
-		guideIndex:guideIndex.promise,
-		flatIndex:flatIndex.promise
-	}
-}
 
 
 
 
 
-
-
-
-
-/************************************************************************
-************************************************************************
-THE CONTENT
-************************************************************************
-************************************************************************/
-App.directive('contentContainer', function(DataService, $q, $http) {
-	return {
-		restrict:"A",
-		scope:{},
-		templateUrl:'app/view/templates/index/content-index.html',
-		link: function(scope, element, attrs) {
-			scope.catalogue = DataService;
-		}
-	}
-});
 
 /************************************************************************
 ************************************************************************
@@ -727,33 +695,17 @@ EDITOR STUFF
 App.directive('clgEditor', function($templateCache, $compile, $routeParams, DataService) {
 	return {
 		scope: {},
-		templateUrl:'app/view/templates/editor/chapter-edit.html',
+		// templateUrl:'app/view/templates/editor/chapter-edit.html',
 		controller: function($scope, $element, $attrs, $state, $stateParams, DataService) {
-			$scope.catalogue = [];
-			$scope.catalogue = DataService;
-
-			// var type = DataService.edit.type;
-
-			// var templates = $scope.catalogue.templates;
-			// $element.html(templates[type]);
-
-			// $compile($element.contents())($scope);
-				// $scope.$apply();
-		}
-
-		// controller: function($scope, $element, $attrs, $http) {
-		// 	$scope.catalogue = DataService;
-		// 	$scope.routeParams = $routeParams;
-
-
-		// },
+			$scope.edit = DataService.edit;
+			// console.log($scope.edit)
 		// link: function($scope, $element, $attrs, controller) {
 			
 		// 	//RECOMPLE THE TEMPLATE ON NEW EDIT ITEM
 			
 		// 	$scope.$on('editItem', function(){
 
-		// 		var type = $scope.catalogue.edit.type;
+		// 		var type = $scope.edit.type;
 
 		// 		var templates = $scope.catalogue.templates;
 		// 		$element.html(templates[type]);
@@ -764,6 +716,7 @@ App.directive('clgEditor', function($templateCache, $compile, $routeParams, Data
 		// 	});
 
 		// }
+		}
 	}
 });
 App.directive('editorSidebar', function(){

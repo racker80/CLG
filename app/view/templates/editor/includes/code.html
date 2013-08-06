@@ -5,13 +5,13 @@
 					<div class="controls">
 						<div ui-sortable="sortableOptions" ng-model="atalogue.edit.code">
 
-							<table class="table codeTable" ng-repeat="code in catalogue.edit.code" >
+							<table class="table codeTable" ng-repeat="code in edit.code" >
 								<tbody>
 									<tr>
 										<td>
 											<pre>{{code}}</pre>
 										</td>
-										<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="catalogue.edit.code" target="$index">X</a>
+										<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="edit.code" target="$index">X</a>
 										</td>
 									</tr>
 								</tbody>
@@ -19,6 +19,6 @@
 
 						</div>
 						<textarea ng-model="newcode"></textarea>
-						<a class="btn" index-actions ng-click="addExisting()" target="newcode" location="catalogue.edit.code">+ Add Content</a>
+						<a class="btn" index-actions ng-click="addExisting()" target="newcode" location="edit.code">+ Add Content</a>
 					</div>
 				</div>				
