@@ -7,7 +7,7 @@
         	<tbody>
         		<tr ng-repeat="guide in guides">
         			<td>
-        				<h3><a href="#/guide/{{$index}}">{{guide.title}}</a></h3>
+        				<h3><a href="#/guide/{{$index}}/">{{guide.title}}</a></h3>
         			</td>
                     <td class="options">
                         <button index-actions ng-click="deleteGuide()" target="$index" class="btn btn-small">delete</button>

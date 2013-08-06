@@ -60,7 +60,11 @@ App.directive('ezTree', function ($compile, $timeout) {
               // be used as the parentNode in the next level of recursion
               if (!cached) {
                 transclude(scope.$new(), function (clone, childScope) {
-                  child.$minimized = true;
+                  if(!angular.isDefined(child.$minimized)) {
+                    child.$minimized = true;
+
+                  }
+
                   childScope[childExpr] = child;
                   cached = {
                     scope: childScope,
@@ -127,7 +131,6 @@ App.controller('TreeController', function ($scope, $timeout, $state, $stateParam
               if(!value.childtype) {
                 value.childtype = angular.copy(DataService.structure[value.type].childtype);
               }
-
               list[key].$location = parentLocation+key+'/';
               if(value.children) {
                 makeLocation(value, list[key].$location);
@@ -136,7 +139,13 @@ App.controller('TreeController', function ($scope, $timeout, $state, $stateParam
        });
   }
   makeLocation(DataService.guide)
+
+
+
+
   $scope.guide = DataService.guide;
+
+
   $scope.$on('somethingChanged', function() {
 
     console.log('Doing object context location...')
@@ -167,7 +176,9 @@ App.controller('TreeController', function ($scope, $timeout, $state, $stateParam
     child.$active = true;
     child.$minimized = false;
     console.log($state.current)
-    $state.transitionTo('guides.detail.edit', {index:$stateParams.index, type:child.type, editId:child.$location}, true);
+    var loc = $stateParams;
+    loc.editId = child.$location;
+    $state.transitionTo('guides.index.edit', loc, true);
   }
 
   $scope.toggleMinimized = function (child) {

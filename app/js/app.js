@@ -31,20 +31,43 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 			$scope.guides = DataService.guides;
 		}
 	})
-	.state('guides.detail', {
-		url:'guide/:index',
+	.state('guides.index', {
+		url:':type/:index/',
 		templateUrl:"app/view/guides.detail.html",
 		controller: function($scope, $state, $stateParams, DataService) {
+			console.log('guides.index: setting guide')
 			DataService.guide = DataService.guides[$stateParams.index]
 			$scope.guide = DataService.guide;
+			
+			// var item = DataService.guide;
+
+			// if($stateParams.editId) {
+			// 	//get the location from stateparams
+			// 	var location = $stateParams.editId.split('/');
+			// 	location.splice(-1, 1)[0]
+			// 	var item = DataService.guide;
+			// 	if(location.length > 0) {
+			// 		_.each(location, function(value, key, list){
+			// 			item = item.children[value]
+
+			// 		});
+			// 	} else {
+			// 		item = DataService.guide;
+			// 	}
+			// }
+			// //drop the proper thing in the editor
+			// DataService.edit = item;
+			// $scope.edit = DataService.edit;
+			// console.log(DataService)
+
 		}
 	})
-	.state('guides.detail.edit', {
-		url:'/edit/:type/*editId',
-		// templateUrl:"app/view/guides.detail.edit.html",
-		templateProvider: function ($stateParams, $http, DataService) {		
-
-			return $http.get('app/view/templates/editor/'+$stateParams.type+'-edit.html')
+	.state('guides.index.edit', {
+		url:'*editId',
+		templateProvider: function ($stateParams, $http, DataService) {				
+			// var type = DataService.edit.type;
+			var type="chapter";
+			return $http.get('app/view/templates/editor/'+type+'-edit.html')
 			.then(function(data){
 				// console.log(data)
 				// DataService.templates[$stateParams.type] = data.data;
@@ -52,20 +75,75 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 			});
 		},
 		controller: function($scope, $state, $stateParams, DataService) {
-			var location = $stateParams.editId.split('/');
-			location.splice(-1, 1)[0]
+			//Set the current guide
+			console.log('guides.index.edit: setting edit param')			
+
+			//set the base item to edit
 			var item = DataService.guide;
+
+
+			//get the location from stateparams
+			var location = $stateParams.editId.split('/');
+			//prep it
+			location.splice(-1, 1)[0]
+
+			console.log('ABOUT TO DO THE CONTROLLER THING')
 			if(location.length > 0) {
+				var i = 0;
 				_.each(location, function(value, key, list){
 					item = item.children[value]
+					item.$minimized = false;
+					// console.log(item)
 
+					if(i === list.length-1) {
+						// item.children[value].$active = true;
+					}
+					i++;
 				});
+			} else {
+				item = DataService.guide;
 			}
+			//drop the proper thing in the editor
 			DataService.edit = item;
 			$scope.edit = DataService.edit;
-			$scope.catalogue = DataService;
+
 		}
 	})
+	// .state('guides.detail', {
+	// 	url:'guide/:index',
+	// 	templateUrl:"app/view/guides.detail.html",
+	// 	controller: function($scope, $state, $stateParams, DataService) {
+	// 		DataService.guide = DataService.guides[$stateParams.index]
+	// 		$scope.guide = DataService.guide;
+	// 	}
+	// })
+	// .state('guides.detail.edit', {
+	// 	url:'/edit/:type/*editId',
+	// 	// templateUrl:"app/view/guides.detail.edit.html",
+	// 	templateProvider: function ($stateParams, $http, DataService) {		
+
+	// 		return $http.get('app/view/templates/editor/'+$stateParams.type+'-edit.html')
+	// 		.then(function(data){
+	// 			// console.log(data)
+	// 			// DataService.templates[$stateParams.type] = data.data;
+	// 			return data.data;
+	// 		});
+	// 	},
+	// 	controller: function($scope, $state, $stateParams, DataService) {
+	// 		var location = $stateParams.editId.split('/');
+	// 		location.splice(-1, 1)[0]
+	// 		var item = DataService.guide;
+	// 		if(location.length > 0) {
+	// 			_.each(location, function(value, key, list){
+	// 				item = item.children[value]
+
+	// 			});
+	// 		}
+	// 		DataService.edit = item;
+	// 		$scope.edit = DataService.edit;
+	// 		$scope.catalogue = DataService;
+	// 	}
+	// })
 	.state('guides.content', {
 		url:'content',
 		templateUrl:"app/view/guides.detail.html",
@@ -86,6 +164,8 @@ var stateCtrl = App.controller('StateCtrl', function($scope, $state, guides, pag
 			DataService.guides = guides;
 			DataService.pages = pages;
 			DataService.templates = templates;
+
+			DataService.walkData();
 
 });
 stateCtrl.loadGuides = function($q, $http) {
@@ -252,6 +332,8 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 		//PASTE SOMETHING SOMEWHERE
 		this.paste = function(location) {
 			location.push(this.clipboard);
+			//link pages
+			this.walkData();
 			this.saveGuide();
 			console.log('pasted item: ');
 

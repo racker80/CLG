@@ -22,7 +22,7 @@ switch ($_REQUEST['action']) {
 		$collection = new MongoCollection($db, $c);
 
 		foreach($collection->find() as $item) : 
-			$item['id'] = $item['_id']['$id'];
+			$item['id'] = $item['_id'].$id;
 			$item['type'] = "page";
 			// $output['pages'][$item['_id'].$id] = (array)$item;
 			$output['pages'][] = (array)$item;
