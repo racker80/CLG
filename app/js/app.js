@@ -64,9 +64,12 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 	})
 	.state('guides.index.edit', {
 		url:'*editId',
-		templateProvider: function ($stateParams, $http, DataService) {				
-			// var type = DataService.edit.type;
-			var type="chapter";
+		templateProvider: function ($stateParams, $state, $http, DataService) {				
+			var type = DataService.edit.type;
+			// var type="chapter";
+			if(!type) {
+				type = "chapter"
+			}
 			return $http.get('app/view/templates/editor/'+type+'-edit.html')
 			.then(function(data){
 				// console.log(data)
@@ -109,41 +112,7 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 
 		}
 	})
-	// .state('guides.detail', {
-	// 	url:'guide/:index',
-	// 	templateUrl:"app/view/guides.detail.html",
-	// 	controller: function($scope, $state, $stateParams, DataService) {
-	// 		DataService.guide = DataService.guides[$stateParams.index]
-	// 		$scope.guide = DataService.guide;
-	// 	}
-	// })
-	// .state('guides.detail.edit', {
-	// 	url:'/edit/:type/*editId',
-	// 	// templateUrl:"app/view/guides.detail.edit.html",
-	// 	templateProvider: function ($stateParams, $http, DataService) {		
 
-	// 		return $http.get('app/view/templates/editor/'+$stateParams.type+'-edit.html')
-	// 		.then(function(data){
-	// 			// console.log(data)
-	// 			// DataService.templates[$stateParams.type] = data.data;
-	// 			return data.data;
-	// 		});
-	// 	},
-	// 	controller: function($scope, $state, $stateParams, DataService) {
-	// 		var location = $stateParams.editId.split('/');
-	// 		location.splice(-1, 1)[0]
-	// 		var item = DataService.guide;
-	// 		if(location.length > 0) {
-	// 			_.each(location, function(value, key, list){
-	// 				item = item.children[value]
-
-	// 			});
-	// 		}
-	// 		DataService.edit = item;
-	// 		$scope.edit = DataService.edit;
-	// 		$scope.catalogue = DataService;
-	// 	}
-	// })
 	.state('guides.content', {
 		url:'content',
 		templateUrl:"app/view/guides.detail.html",

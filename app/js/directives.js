@@ -100,15 +100,44 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 				});
 			};
 			scope.editItem = function() {
+				//unselect current edited item;
+			    DataService.edit.$active = false;
+			    //add the new item
+			    DataService.edit = scope.target;
+			    scope.target.$active = true;
+			    scope.target.$minimized = false;
+			    
+			    var loc = $stateParams;
+			    loc.editId = scope.target.$location;
+			    $state.transitionTo('guides.index.edit', loc, true);
 
-				DataService.saveGuide();
-				DataService.savePage();
 
-				DataService.edit = scope.target;
-				$state.transitionTo('guides.detail.edit', {index:$stateParams.index, type:scope.target.type, editId:scope.target.$location}, true);
+				// DataService.saveGuide();
+				// DataService.savePage();
 
 				// DataService.edit = scope.target;
-				$rootScope.$broadcast('editItem');
+				// $state.transitionTo('guides.detail.edit', {index:$stateParams.index, type:scope.target.type, editId:scope.target.$location}, true);
+
+				// // DataService.edit = scope.target;
+				// $rootScope.$broadcast('editItem');
+			}
+
+			scope.backButton = function() {
+				//get the location from stateparams
+				var location = $stateParams.editId.split('/');
+				//prep it
+				location.splice(-2, 1)[0]
+				location = location.join('/');
+				var loc = $stateParams;
+				loc.editId = location;
+
+				//unselect current edited item;
+			    DataService.edit.$active = false;
+			    DataService.edit.$minimized = true;
+
+
+				$state.transitionTo('guides.index.edit', loc, true);
+
 			}
 			
 

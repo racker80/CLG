@@ -39,10 +39,13 @@
 			<button type="submit" class="btn btn-primary btn-block" ng-click="catalogue.saveGuide()">Save changes</button>
 
 			<button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-block">Copy {{edit.type}}</button>
+						<button index-actions ng-click="backButton()" class="btn btn-block">Back</button>
 
 
 
 		<div class="bs-docs-example">
+						<hr>
+
 			<h5>In {{edit.title}}</h5>
 			 <div sortable-options ui-sortable="sortableOptions" ng-model="edit.children">
 			 	<table ng-repeat="item in edit.children" class="codeTable table">
@@ -51,11 +54,11 @@
 			 				<td class="itemTitle"><a index-actions ng-click="editItem()" target="item">{{item.title}}</a></td>
 			 				<td class="itemOptions" ng-switch on="copy">
 			 					<div ng-switch-when="true">
-			 						<a class="btn btn-small btn-warning" index-actions ng-click="addExisting()" location="local" target="item">+</a>
+			 						<a class="btn btn-small btn-warning" index-actions ng-click="addExisting()" location="local" target="item">&#8689;</a>
 			 					</div>
 			 					<div ng-switch-default>
-			 						<a class="btn btn-small btn-warning" index-actions location="edit.children" target="$index" ng-click="removeItem()">X</a>
-			 						<a class="btn btn-small btn-warning" index-actions ng-click="copy()" target="item">copy</a>
+			 						<a class="label" index-actions location="edit.children" target="$index" ng-click="removeItem()">&#10008;</a>
+			 						<a class="label" index-actions ng-click="copy()" target="item">&#9113;</a>
 
 			 					</div>
 			 				</td>
@@ -63,11 +66,10 @@
 			 		</body>
 			 	</table>
 			 </div>
-	
-			<hr>
-			<button class="btn btn-small" index-actions type="{{edit.childtype}}" location="edit.children" ng-click="addNew()">New</button>
-			<button class="btn btn-small" index-actions location="edit.children" ng-click="paste()">Paste</button>
-			<button class="btn btn-small" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>
+			<br>
+			<button class="btn btn-small btn-block" index-actions type="{{edit.childtype}}" location="edit.children" ng-click="addNew()">Cretae new {{edit.childtype}}</button>
+			<button class="btn btn-small btn-block" index-actions location="edit.children" ng-click="paste()">Paste</button>
+			<button class="btn btn-small btn-block" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>
 		</div>
 
 
