@@ -49,19 +49,20 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 	})
 	.state('guides.index.edit', {
 		url:'*editId',
-		templateProvider: function ($stateParams, $state, $http, DataService) {				
-			var type = DataService.edit.type;
-			// var type="chapter";
-			if(!type) {
-				type = "chapter"
-			}
-			return $http.get('app/view/templates/editor/'+type+'-edit.html')
-			.then(function(data){
-				// console.log(data)
-				// DataService.templates[$stateParams.type] = data.data;
-				return data.data;
-			});
-		},
+		// templateProvider: function ($stateParams, $state, $http, DataService) {				
+		// 	var type = DataService.edit.type;
+		// 	// var type="chapter";
+		// 	if(!type) {
+		// 		type = "chapter"
+		// 	}
+		// 	return $http.get('app/view/templates/editor/'+type+'-edit.html')
+		// 	.then(function(data){
+		// 		// console.log(data)
+		// 		// DataService.templates[$stateParams.type] = data.data;
+		// 		return data.data;
+		// 	});
+		// },
+		templateUrl:"app/view/guides.detail.edit.html",
 		controller: function($scope, $state, $stateParams, DataService, PrepData) {
 			console.log('running guides.index.edit controller:')
 			//Set the current guide
@@ -352,7 +353,8 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 		}
 		//COPY SOMETHING TO THE CLIPBOARD
 		this.copy = function(item){
-			this.clipboard = item;
+			var copy = angular.copy(item);
+			this.clipboard = copy;
 			$rootScope.$broadcast('itemCopied');
 			console.log('item copied: '+item);
 		};
@@ -361,7 +363,6 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 		this.paste = function(location) {
 			location.push(this.clipboard);
 			//link pages
-			this.walkData();
 			this.saveGuide();
 			console.log('pasted item: ');
 
@@ -692,30 +693,36 @@ THE INDEX
 EDITOR STUFF
 ************************************************************************
 ************************************************************************/
-App.directive('clgEditor', function($templateCache, $compile, $routeParams, DataService) {
+App.directive('clgEditor', function($compile, $stateParams, $http, DataService) {
 	return {
 		scope: {},
 		// templateUrl:'app/view/templates/editor/chapter-edit.html',
 		controller: function($scope, $element, $attrs, $state, $stateParams, DataService) {
 			$scope.edit = DataService.edit;
-			// console.log($scope.edit)
-		// link: function($scope, $element, $attrs, controller) {
 			
-		// 	//RECOMPLE THE TEMPLATE ON NEW EDIT ITEM
-			
-		// 	$scope.$on('editItem', function(){
+			this.templateCompiler = function() {
+				var type = $scope.edit.type;
+				var templates = DataService.templates;
+				console.log('compiling template...')
+				$http.get('app/view/templates/editor/'+type+'-edit.html').success(function(data){
+						DataService.templates[type] = data;
+						$element.html(data);
+						$compile($element.contents())($scope);
+					});
 
-		// 		var type = $scope.edit.type;
+				
+			}
+			//RECOMPLE THE TEMPLATE ON NEW EDIT ITEM
+			this.templateCompiler();
+		},
+		link: function(scope, element, attrs, controller) {
 
-		// 		var templates = $scope.catalogue.templates;
-		// 		$element.html(templates[type]);
+			// scope.$on('editItem', function(){
 
-		// 		$compile($element.contents())($scope);
-		// 		// $scope.$apply();
+			// 	controller.templateCompiler();
 
-		// 	});
+			// });
 
-		// }
 		}
 	}
 });

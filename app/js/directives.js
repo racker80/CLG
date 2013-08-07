@@ -25,7 +25,9 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 		transclude:true,
 		template:'<span ng-transclude></span>',
 		link: function(scope, element, attrs){
-
+			scope.newGuide = function(edit) {
+				DataService.newGuide(edit);
+			}
 			scope.addNew = function() {
 				//Create the location
 				if(!angular.isDefined(scope.location)) {
@@ -35,8 +37,6 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 
 				//run the catalogue addNew
 				DataService.addNew(scope.location, scope.type);
-				// console.log(scope.catalogue.edit)
-				// console.log(scope.catalogue.guide)
 
 			}
 			scope.addExisting = function(){
@@ -47,7 +47,7 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 				DataService.removeItem(scope.location, scope.target);
 			}
 			scope.copy = function() {
-				DataService.copy(angular.copy(scope.target));
+				DataService.copy(scope.target);
 			}
 			scope.paste = function() {
 				DataService.paste(scope.location);
