@@ -118,27 +118,34 @@ App.directive('ezTree', function ($compile, $timeout) {
 });
 
 
-App.controller('TreeController', function ($scope, $timeout, $state, $stateParams, DataService) {
+App.controller('TreeController', function ($scope, $state, $stateParams, DataService, PrepData) {
 
-  var makeLocation = function(parent, parentLocation){
-      if(!parent.children) {
-        return;
-      }
-      if(!parentLocation) {
-        parentLocation = '';
-      }
-      _.each(parent.children, function(value, key, list){
-              if(!value.childtype) {
-                value.childtype = angular.copy(DataService.structure[value.type].childtype);
-              }
-              list[key].$location = parentLocation+key+'/';
-              if(value.children) {
-                makeLocation(value, list[key].$location);
-              }
+  // var makeLocation = function(parent, parentLocation){
+  //     if(!parent.children) {
+  //       return;
+  //     }
+  //     if(!parentLocation) {
+  //       parentLocation = '';
+  //     }
+  //     _.each(parent.children, function(value, key, list){
+  //             //if no childtype, then get it from the structure
+  //             //this is to account for legacy code that didn't have childtype
+  //             if(!value.childtype) {
+  //               value.childtype = angular.copy(DataService.structure[value.type].childtype);
+  //             }
 
-       });
-  }
-  makeLocation(DataService.guide)
+  //             //set the current location as a combo of parentLocation and key
+  //             list[key].$location = parentLocation+key+'/';
+
+  //             //look for children
+  //             if(value.children) {
+  //               //pass in the current location as the parent value
+  //               makeLocation(value, list[key].$location);
+  //             }
+
+  //      });
+  // }
+  // makeLocation(DataService.guide)
 
 
 
@@ -146,11 +153,11 @@ App.controller('TreeController', function ($scope, $timeout, $state, $stateParam
   $scope.guide = DataService.guide;
 
 
-  $scope.$on('somethingChanged', function() {
+  // $scope.$on('somethingChanged', function() {
 
-    console.log('Doing object context location...')
-    makeLocation(DataService.guide)
-  })
+  //   console.log('TreeController: starting Prepdata.MakeLocation...')
+  //   PrepData.makeLocation(DataService.guide)
+  // });
 
 
     $scope.sortableOptions = {
@@ -277,4 +284,4 @@ App.directive('uiNestedSortable', ['$parse', function ($parse) {
 
     }
   };
-}]);
+  }]);

@@ -37,38 +37,35 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 		controller: function($scope, $state, $stateParams, DataService, PrepData) {
 			console.log('running guides.index state controller:')
 			
+			//set current guide
 			DataService.guide = DataService.guides[$stateParams.index]
 			
+			//scope it
 			$scope.guide = DataService.guide;
 
-			console.log(DataService.guide)
-
+			//bind pages to page object on guide
 			PrepData.bindPages(DataService.guide);
 
-		}
+
+			//create the location index on the guide object
+			PrepData.makeLocation(DataService.guide);
+
+			//Set the edit object in the service
+			DataService.edit = DataService.guide;
+
+			//SET EDIT ON THE SCOPE
+			$scope.edit = DataService.edit;
+
+		},
 	})
 	.state('guides.index.edit', {
 		url:'*editId',
-		// templateProvider: function ($stateParams, $state, $http, DataService) {				
-		// 	var type = DataService.edit.type;
-		// 	// var type="chapter";
-		// 	if(!type) {
-		// 		type = "chapter"
-		// 	}
-		// 	return $http.get('app/view/templates/editor/'+type+'-edit.html')
-		// 	.then(function(data){
-		// 		// console.log(data)
-		// 		// DataService.templates[$stateParams.type] = data.data;
-		// 		return data.data;
-		// 	});
-		// },
 		templateUrl:"app/view/guides.detail.edit.html",
 		controller: function($scope, $state, $stateParams, DataService, PrepData) {
 			console.log('running guides.index.edit controller:')
-			//Set the current guide
 
+			//set the index state
 			PrepData.indexLocationState();
-
 
 			//SET EDIT ON THE SCOPE
 			$scope.edit = DataService.edit;
@@ -93,12 +90,48 @@ var App = angular.module('App', ['ui.bootstrap', 'ui.sortable', 'ui.state', 'ngR
 App.factory('PrepData', function(DataService, $stateParams){
 
 	return {
+		prep: function(guide) {
+			this.makeLocation(guide);
+			this.bindPages(guide);
+		},
 		currentLocation: function() {
 			//get the location from stateparams
 			var location = $stateParams.editId.split('/');
 			//prep it
 			location.splice(-1, 1)[0]
 			return location;
+		},
+		makeLocation: function(parent, parentLocation){
+			console.log('PREPDATA PrepData.makeLocation: creating object index')
+
+			if(!parent.children) {
+				return;
+			}
+			if(!parentLocation) {
+				parentLocation = '';
+			}
+			//Walk the structure
+			(function walk(parent, parentLocation){
+				_.each(parent.children, function(value, key, list){
+		              //if no childtype, then get it from the structure
+		              //this is to account for legacy code that didn't have childtype
+		              if(!value.childtype) {
+		              	value.childtype = angular.copy(DataService.structure[value.type].childtype);
+		              }
+
+		              //set the current location as a combo of parentLocation and key
+		              list[key].$location = parentLocation+key+'/';
+
+		              //look for children
+		              if(value.children) {
+		                //pass in the current location as the parent value
+		                walk(value, list[key].$location);
+		          	  }
+	       		});
+	       		return;
+			})(parent, parentLocation);
+			
+			return;	
 		},
 		indexLocationState: function() {
 			console.log('PREPDATA PrepData.indexLocationState')
@@ -131,7 +164,7 @@ App.factory('PrepData', function(DataService, $stateParams){
 			console.log('setting the edit object')
 			console.log(DataService.edit)
 
-			return true;
+			return;
 		},
 		pageIds: function() {
 			var idList = [];
@@ -186,15 +219,15 @@ App.factory('PrepData', function(DataService, $stateParams){
 
 var stateCtrl = App.controller('StateCtrl', function($scope, $state, guides, pages, templates, DataService){
 			console.log('running guides root controller:')
-
+			console.log('setting guides, pages, and templates...')
 			DataService.guides = guides;
 			DataService.pages = pages;
 			DataService.templates = templates;
 			
 			//is everything where it should be?
-			console.log(DataService.guides)			
+			// console.log(DataService.guides)			
 			console.log(DataService.pages)			
-			console.log(DataService.templates)			
+			// console.log(DataService.templates)			
 
 });
 stateCtrl.loadGuides = function($q, $http) {
@@ -320,20 +353,21 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				console.log('No type is defined, creating empty object');
 				type = {};
 				location.push(type);
-				this.saveGuide();
+				// this.saveGuide();
 				return;
 			}
 			//Create a new page
 			if(type == 'page') {
-				this.newPage(location);
-				return;	
+				return this.newPage(location);
 			}
 
 			//else do this
 			location.push(angular.copy(ths.structure[type]));
-			ths.saveGuide();
 			console.log('added new item');
-			console.log(ths.guide.children)
+			return;
+			
+			// ths.saveGuide();
+			// console.log(ths.guide.children)
 
 		}
 		//ADD AN EXISTING ITEM
@@ -342,13 +376,13 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				location = [];
 			}
 			location.push(item);			
-			this.saveGuide();
+			// this.saveGuide();
 			console.log('added existing item');
 		}
 		//REMOVE A THING FROM A PLACE
 		this.removeItem = function(location, key) {
 			location.splice(key, 1);
-			this.saveGuide();
+			// this.saveGuide();
 			console.log('removed item: '+key);
 		}
 		//COPY SOMETHING TO THE CLIPBOARD
@@ -363,21 +397,20 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 		this.paste = function(location) {
 			location.push(this.clipboard);
 			//link pages
-			this.saveGuide();
+			// this.saveGuide();
 			console.log('pasted item: ');
 
 		}
 		//SAVE THE GUIDE
 		this.saveGuide = function(){
 			if(this.edit.type === "page") {
+				console.log('saving page...')
 				this.savePage();
-				console.log('saving page')
-
 			}
 			if(this.guide) {
 				var ths = this;
-				this.walkData();
-				$rootScope.$broadcast('somethingChanged');
+				// this.walkData();
+				// $rootScope.$broadcast('somethingChanged');
 				var defer = $q.defer();
 				$http.post('app/api/post.php', {
 						collection:'guides',
@@ -435,18 +468,28 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 			if(!page) {
 				page = ths.structure.page;
 			}
-			$http.post('app/api/post.php', {
+			
+			var promise = $http.post('app/api/post.php', {
 						collection:'content',
 						action:'addPage',
 						json:page,
-				}).success(function(data){
-					ths.pages[data.id] = data;
+				}).then(function(data){
+					console.log(data.data)
+					ths.pages.push(data.data);
 					if(location) {
-						location.push(ths.pages[data.id]);
+						_.each(ths.pages, function(value,key,list){
+							if(value.id === data.data.id) {
+								console.log('DataService.newPage: adding page to location');
+								location.push(list[key])
+							}
+						})
 					}
-					ths.saveGuide();
-					console.log('created page: '+data.title);			
+					console.log('created page: '+data.data.title);
+					return data.data;
 				});
+
+			return promise;
+				
 		}
 		//GET RID OF THAT PAGE!
 		this.deletePage = function(page) {
@@ -457,7 +500,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				json:page,
 			}).success(function(data){
 				delete ths.pages[page.id];
-				ths.saveGuide();	
+				// ths.saveGuide();	
 				console.log('Seriously, really deleted page for good');
 			
 			});	
@@ -474,6 +517,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 						action:'savePage',
 						json:page
 				}).success(function(data){
+					console.log('saved page '+data.title)
 					defer.resolve(data.title);
 				});
 				return 'saved page: '+defer.promise;
@@ -702,6 +746,7 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService) 
 			
 			this.templateCompiler = function() {
 				var type = $scope.edit.type;
+				console.log($scope.edit)
 				var templates = DataService.templates;
 				console.log('compiling template...')
 				$http.get('app/view/templates/editor/'+type+'-edit.html').success(function(data){

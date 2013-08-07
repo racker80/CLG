@@ -12,7 +12,7 @@ App.controller('dialogCtrl', function($scope, $routeParams, DataService, dialog)
 		dialog.close();
 	}
 })
-App.directive('indexActions', function(DataService, $q, $http, $state, $stateParams, $rootScope, $compile, $dialog){
+App.directive('indexActions', function(DataService, PrepData, $q, $http, $state, $stateParams, $rootScope, $compile, $dialog){
 	return {
 		restrict:"A",
 		scope: {
@@ -34,37 +34,70 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 					console.log('location doesnt exist, creating blank array');
 					scope.location=[];
 				}
-
-				//run the catalogue addNew
+				
+				//if it's a page, you get a promise back.
+				if(scope.type === "page") {
+					//run the catalogue addNew
+					DataService.addNew(scope.location, scope.type).then(function(d){
+						//save the guide
+						scope.save();
+					});
+					return;
+				}
+				
+				//if it's adding an object just do it and save
 				DataService.addNew(scope.location, scope.type);
-
+				scope.save();
+				
 			}
 			scope.addExisting = function(){
 				DataService.addExisting(scope.location, scope.target);
-
+				//save the guide
+				scope.save();
 			}
 			scope.removeItem = function() {
 				DataService.removeItem(scope.location, scope.target);
+				//save the guide
+				scope.save();
 			}
 			scope.copy = function() {
 				DataService.copy(scope.target);
+				//save the guide
+				scope.save();
 			}
 			scope.paste = function() {
 				DataService.paste(scope.location);
+				//save the guide
+				scope.save();				
 			}
 
-			scope.save = function() {
+			scope.save = function(guide) {
+				if(!guide) {
+					guide = DataService.guide;
+				}
+				PrepData.prep(guide);
 				DataService.saveGuide();
+				return;
 			}
 
-			scope.addNewPage = function() {	
-				DataService.newPage(scope.location);	
-			}
+			// scope.addNewPage = function() {	
+			// 	console.log(DataService.newPage(scope.location))
+			// 	DataService.newPage(scope.location)
+			// 	.then(function(d){
+			// 		//save the guide
+			// 		console.log('ARGHT!')
+			// 		console.log(d)
+			// 		scope.save();		
+			// 	});	
+						
+			// }
 			scope.deletePage = function() {
 				DataService.deletePage(scope.target);
+				//save the guide
+				scope.save();				
 			}
 			scope.deleteGuide = function() {
-				DataService.deleteGuide(scope.target)
+				DataService.deleteGuide(scope.target)				
 			}			
 
 
@@ -102,6 +135,9 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 				});
 			};
 			scope.editItem = function() {
+				//save the guide before edit new thing
+				scope.save();
+
 				//unselect current edited item;
 			    DataService.edit.$active = false;
 			    //add the new item
@@ -146,6 +182,26 @@ App.directive('indexActions', function(DataService, $q, $http, $state, $statePar
 		}
 	}
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 App.controller('IndexCtrl', function ($scope, DataService) {
