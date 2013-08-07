@@ -99,7 +99,7 @@ $collection->drop();
 foreach($guides as $guide) {
 	$guide->_id = new MongoId($guide->id);
 	$collection->insert($guide, array("safe" => false));
-// }	
+}	
 
 
 ?>
