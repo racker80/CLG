@@ -31,7 +31,7 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 			
 			//is everything where it should be?
 			// console.log(DataService.guides)			
-			console.log(DataService.pages)			
+			// console.log(DataService.pages)			
 			// console.log(DataService.templates)	
 		}
 	})
@@ -134,8 +134,8 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 	})
 
 	.state('guides.content', {
-		url:'content',
-		templateUrl:"app/view/guides.detail.html",
+		url:'content/',
+		templateUrl:"app/view/guides.content.html",
 		controller: function($scope, $state, $stateParams, DataService) {
 			DataService.guide = {
 				children:DataService.pages,
@@ -144,10 +144,29 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 			$scope.guide = DataService.guide;
 		}
 	})
+	.state('guides.content.edit', {
+		url:'*editId',
+		views: {
+			'editor': {
+				templateUrl:"app/view/guides.detail.edit.html",
+				controller: function($scope, $state, $stateParams, DataService, PrepData) {
+					console.log('running guides.index.edit controller:')
+
+					//set the index state
+					PrepData.indexLocationState();
+
+					//SET EDIT ON THE SCOPE
+					$scope.edit = DataService.edit;
+
+				}
+			}
+		}
+		
+	})
 };
 var App = angular.module('App', ['ui.bootstrap', 'ui.sortable', 'ui.state', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
-App.factory('PrepData', function(DataService, $stateParams){
+App.factory('PrepData', function(DataService, $stateParams, $state){
 
 	return {
 		prep: function(guide) {
@@ -180,7 +199,14 @@ App.factory('PrepData', function(DataService, $stateParams){
 		              }
 
 		              //set the current location as a combo of parentLocation and key
+		              // list[key].$location = parentLocation+value.type+'/'+key+'/';
+		              if(value.type === 'page') {
+		              	list[key].$location = parentLocation+value.id+'/';
+		              } else {
+		              	list[key].$location = parentLocation+key+'/';
+		              }
 		              list[key].$location = parentLocation+key+'/';
+
 
 		              //look for children
 		              if(value.children) {
@@ -517,7 +543,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				json:ths.guides[guideIndex],
 			}).success(function(data){
 				ths.guides.splice(guideIndex, 1);
-				ths.saveGuide();				
+				// ths.saveGuide();				
 				console.log('forever deleted that guide')
 			});	
 		};

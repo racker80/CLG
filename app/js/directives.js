@@ -137,7 +137,7 @@ App.directive('indexActions', function(DataService, PrepData, $q, $http, $state,
 			scope.editItem = function() {
 				//save the guide before edit new thing
 				scope.save();
-
+				
 				//unselect current edited item;
 			    DataService.edit.$active = false;
 			    //add the new item
