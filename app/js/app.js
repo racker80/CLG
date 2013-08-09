@@ -22,13 +22,15 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 			pages:stateCtrl.loadPages,
 			templates:stateCtrl.loadTemplates,
 		},
+
 		controller:function($scope, $state, guides, pages, templates, DataService){
 			console.log('running guides root controller:')
 			console.log('setting guides, pages, and templates...')
 			DataService.guides = guides;
 			DataService.pages = pages;
 			DataService.templates = templates;
-			
+
+
 			//is everything where it should be?
 			// console.log(DataService.guides)			
 			// console.log(DataService.pages)			
@@ -40,10 +42,11 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 		templateUrl:"app/view/guides.list.html",
 		controller: function($scope, $state, DataService) {
 			$scope.guides = DataService.guides;
+			$scope.pages = DataService.pages;
 		}
 	})
 	.state('guides.index', {
-		url:':type/:index/',
+		url:'edit/:type/',
 		views: {
 			'': {
 				templateUrl:"app/view/guides.index.html",
@@ -51,23 +54,27 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 					console.log('running guides.index state controller:')
 					
 					//set current guide
-					DataService.guide = DataService.guides[$stateParams.index]
+					// DataService.guide = DataService.guides[$stateParams.index]
+					DataService.guide.children = DataService[$stateParams.type]
 					
 					//scope it
 					$scope.guide = DataService.guide;
 
-					//bind pages to page object on guide
+					// PrepData.prep(DataService.guide);
+
+
+					// //bind pages to page object on guide
 					PrepData.bindPages(DataService.guide);
 
 
-					//create the location index on the guide object
+					// //create the location index on the guide object
 					PrepData.makeLocation(DataService.guide);
 
 					//Set the edit object in the service
-					DataService.edit = DataService.guide;
+					// DataService.edit = DataService.guide;
 
 					//SET EDIT ON THE SCOPE
-					$scope.edit = DataService.edit;
+					// $scope.edit = DataService.edit;
 
 				},
 			},
@@ -75,25 +82,19 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 				templateUrl:"app/view/templates/index/tree.html",
 				controller: function($scope, $state, $stateParams, DataService, PrepData) {
 					console.log('running guides.index.tree controller:')
-					
-					//set current guide
-					DataService.guide = DataService.guides[$stateParams.index]
-					
-					//scope it
-					$scope.guide = DataService.guide;
 
 					//bind pages to page object on guide
-					PrepData.bindPages(DataService.guide);
+					// PrepData.bindPages(DataService.guide);
 
 
 					//create the location index on the guide object
-					PrepData.makeLocation(DataService.guide);
+					// PrepData.makeLocation(DataService.guide);
 
 					//Set the edit object in the service
-					DataService.edit = DataService.guide;
+					// DataService.edit = DataService.guide;
 
 					//SET EDIT ON THE SCOPE
-					$scope.edit = DataService.edit;
+					// $scope.edit = DataService.edit;
 
 				},
 			},
@@ -103,10 +104,10 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 					console.log('running guides.index.edit controller:')
 
 					//set the index state
-					//PrepData.indexLocationState();
+					// PrepData.indexLocationState();
 
 					//SET EDIT ON THE SCOPE
-					$scope.edit = DataService.edit;
+					// $scope.edit = DataService.edit;
 
 				}
 			}
@@ -122,8 +123,9 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 					console.log('running guides.index.edit controller:')
 
 					//set the index state
+					// PrepData.indexLocationState();
+					PrepData.prep(DataService.guide);
 					PrepData.indexLocationState();
-
 					//SET EDIT ON THE SCOPE
 					$scope.edit = DataService.edit;
 
@@ -133,36 +135,36 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 		
 	})
 
-	.state('guides.content', {
-		url:'content/',
-		templateUrl:"app/view/guides.content.html",
-		controller: function($scope, $state, $stateParams, DataService) {
-			DataService.guide = {
-				children:DataService.pages,
-			};
-			console.log(DataService)
-			$scope.guide = DataService.guide;
-		}
-	})
-	.state('guides.content.edit', {
-		url:'*editId',
-		views: {
-			'editor': {
-				templateUrl:"app/view/guides.detail.edit.html",
-				controller: function($scope, $state, $stateParams, DataService, PrepData) {
-					console.log('running guides.index.edit controller:')
+	// .state('guides.content', {
+	// 	url:'content/',
+	// 	templateUrl:"app/view/guides.content.html",
+	// 	controller: function($scope, $state, $stateParams, DataService) {
+	// 		DataService.guide = {
+	// 			children:DataService.pages,
+	// 		};
+	// 		console.log(DataService.pages)
+	// 		$scope.guide = DataService.guide;
+	// 	}
+	// })
+	// .state('guides.content.edit', {
+	// 	url:'*editId',
+	// 	views: {
+	// 		'editor': {
+	// 			templateUrl:"app/view/guides.detail.edit.html",
+	// 			controller: function($scope, $state, $stateParams, DataService, PrepData) {
+	// 				console.log('running guides.index.edit controller:')
 
-					//set the index state
-					PrepData.indexLocationState();
+	// 				//set the index state
+	// 				PrepData.indexLocationState();
 
-					//SET EDIT ON THE SCOPE
-					$scope.edit = DataService.edit;
+	// 				//SET EDIT ON THE SCOPE
+	// 				$scope.edit = DataService.edit;
 
-				}
-			}
-		}
+	// 			}
+	// 		}
+	// 	}
 		
-	})
+	// })
 };
 var App = angular.module('App', ['ui.bootstrap', 'ui.sortable', 'ui.state', 'ngResource', 'ngSanitize', 'imageupload']).config(appConfig);
 
@@ -170,11 +172,24 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 
 	return {
 		prep: function(guide) {
+			this.setCurrentIndex();
 			this.makeLocation(guide);
 			this.bindPages(guide);
+			return;
+		},
+		setCurrentIndex: function() {
+			var location = this.currentLocation();
+			if(!location) {
+				return;
+			}
+			console.log('SET CURRENT INDEX')
+			DataService.currentIndex = DataService[$stateParams.type][location[0]];
 		},
 		currentLocation: function() {
 			//get the location from stateparams
+			if(!$stateParams.editId) {
+				return false;
+			}
 			var location = $stateParams.editId.split('/');
 			//prep it
 			location.splice(-1, 1)[0]
@@ -200,11 +215,11 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 
 		              //set the current location as a combo of parentLocation and key
 		              // list[key].$location = parentLocation+value.type+'/'+key+'/';
-		              if(value.type === 'page') {
-		              	list[key].$location = parentLocation+value.id+'/';
-		              } else {
-		              	list[key].$location = parentLocation+key+'/';
-		              }
+		              // if(value.type === 'page') {
+		              // 	list[key].$location = parentLocation+value.id+'/';
+		              // } else {
+		              // 	list[key].$location = parentLocation+key+'/';
+		              // }
 		              list[key].$location = parentLocation+key+'/';
 
 
@@ -385,6 +400,7 @@ THE CATALOGUE
 App.service('DataService', function($rootScope, $http, $route, $routeParams, $location, $q){
 
 		this.guides = [];
+		this.currentIndex = [];
 		this.guide = [];
 		this.edit =[];
 		this.clipboard =[];
@@ -492,16 +508,23 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 			if(this.edit.type === "page") {
 				console.log('saving page...')
 				this.savePage();
+
+				//FIX ME!!!!!
+				if(this.currentIndex.type ==='page'){
+					return;
+				}
 			}
 			if(this.guide) {
 				var ths = this;
 				// this.walkData();
 				// $rootScope.$broadcast('somethingChanged');
 				var defer = $q.defer();
+				console.log(this.currentIndex)
 				$http.post('app/api/post.php', {
 						collection:'guides',
 						action:'saveGuide',
-						json:this.guide
+						// json:this.guide
+						json:ths.currentIndex
 				}).success(function(data){
 					console.log('saved '+data.title);
 					console.log(data)
@@ -781,7 +804,7 @@ var appCtrl = App.controller('AppCtrl', function($scope, $q, DataService, $route
 	}) 
 
 })
-App.directive('sortableOptions', function(DataService){
+App.directive('sortableOptions', function(DataService, PrepData){
 	return {
 		link:function(scope) {
 			scope.sortableOptions = {
@@ -791,6 +814,7 @@ App.directive('sortableOptions', function(DataService){
 				},
 				stop: function(e, ui) {
 					// console.log()
+					PrepData.prep(DataService.guide)
 			    	DataService.saveGuide();
 
 				},
@@ -823,7 +847,7 @@ THE INDEX
 EDITOR STUFF
 ************************************************************************
 ************************************************************************/
-App.directive('clgEditor', function($compile, $stateParams, $http, DataService) {
+App.directive('clgEditor', function($compile, $stateParams, $http, DataService, PrepData) {
 	return {
 		scope: {},
 		// templateUrl:'app/view/templates/editor/chapter-edit.html',
@@ -847,12 +871,6 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService) 
 			this.templateCompiler();
 		},
 		link: function(scope, element, attrs, controller) {
-
-			// scope.$on('editItem', function(){
-
-			// 	controller.templateCompiler();
-
-			// });
 
 		}
 	}

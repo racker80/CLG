@@ -60,6 +60,8 @@ App.directive('ezTree', function ($compile, $timeout) {
               // be used as the parentNode in the next level of recursion
               if (!cached) {
                 transclude(scope.$new(), function (clone, childScope) {
+
+                  //ADD OUR STATE ATTRIBUTE
                   if(!angular.isDefined(child.$minimized)) {
                     child.$minimized = true;
 
@@ -169,6 +171,7 @@ App.controller('TreeController', function ($scope, $state, $stateParams, DataSer
     },
     stop: function(e, ui) {
       // console.log()
+        PrepData.prep(DataService.guide);
         DataService.saveGuide();
 
     },

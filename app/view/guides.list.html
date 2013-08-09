@@ -7,7 +7,7 @@
         	<tbody>
         		<tr ng-repeat="guide in guides">
         			<td>
-        				<h3><a href="#/guide/{{$index}}/">{{guide.title}}</a></h3>
+        				<a href="#/edit/{{guide.type}}s/{{$index}}/">{{guide.title}}</a>
         			</td>
                     <td class="options">
                         <button index-actions ng-click="deleteGuide()" target="$index" class="btn btn-small">delete</button>
@@ -17,3 +17,27 @@
         </table>
     
     	<a class="btn btn-primary" index-actions ng-click="newGuide(false)">+ New Guide</a>
+
+
+<hr>
+
+<h2>Content</h2>
+        <table class="table table-striped table-bordered">
+            <thead>
+                
+            </thead>
+            <tbody>
+                <tr ng-repeat="page in pages">
+                    <td>
+                        <a href="#/edit/{{page.type}}s/{{$index}}/">{{page.title}}</a>
+                    </td>
+                    <td class="options">
+                        <button index-actions ng-click="deletePage()" target="page" class="btn btn-small">delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <a class="btn btn-primary" index-actions ng-click="addNew()" type="page" location="pages">+ New Page</a>
+
+<br><br><br>

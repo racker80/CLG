@@ -94,7 +94,8 @@ App.directive('indexActions', function(DataService, PrepData, $q, $http, $state,
 			scope.deletePage = function() {
 				DataService.deletePage(scope.target);
 				//save the guide
-				scope.save();				
+				scope.save();
+		
 			}
 			scope.deleteGuide = function() {
 				DataService.deleteGuide(scope.target)				
@@ -137,7 +138,7 @@ App.directive('indexActions', function(DataService, PrepData, $q, $http, $state,
 			scope.editItem = function() {
 				//save the guide before edit new thing
 				scope.save();
-				
+
 				//unselect current edited item;
 			    DataService.edit.$active = false;
 			    //add the new item

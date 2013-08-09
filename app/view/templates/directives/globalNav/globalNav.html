@@ -17,10 +17,10 @@
 							<li><a ng-click="catalogue.newGuide()">New Guide</a></li>
 							<li class="divider"></li>
 							<li class="nav-header">All Guides</li>
-							<li ng-repeat="guide in catalogue.guides"><a href="#/guide/{{$index}}">{{guide.title}}</a></li>
+							<li ng-repeat="guide in catalogue.guides"><a href="#/edit/guides/{{$index}}">{{guide.title}}</a></li>
 						</ul>
 					</li>
-					<li><a href="#/content/">Content</a></li>
+					<li><a href="#/edit/pages/">Content</a></li>
 				</ul>
 
 			</div><!-- /.nav-collapse -->
