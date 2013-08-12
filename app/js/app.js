@@ -195,6 +195,16 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 			location.splice(-1, 1)[0]
 			return location;
 		},
+		makeSlug: function(item) {
+			if(!angular.isDefined(item.slug)) {
+					item.slug = angular.lowercase(item.title).replace(/[^a-zA-Z ]/g, "").split(' ').join('-');
+					console.log('added slug: '+item.slug);
+					if(item.type === "page") {
+						DataService.savePage(item);
+					}
+					return;
+			}
+		},
 		makeLocation: function(parent, parentLocation){
 			console.log('PREPDATA PrepData.makeLocation: creating object index')
 
@@ -204,6 +214,7 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 			if(!parentLocation) {
 				parentLocation = '';
 			}
+			var ths = this;
 			//Walk the structure
 			(function walk(parent, parentLocation){
 				_.each(parent.children, function(value, key, list){
@@ -221,7 +232,7 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 		              // 	list[key].$location = parentLocation+key+'/';
 		              // }
 		              list[key].$location = parentLocation+key+'/';
-
+		              ths.makeSlug(list[key]);
 
 		              //look for children
 		              if(value.children) {
@@ -619,7 +630,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 			if(!page) {
 				page = this.edit;
 			}
-			if(this.edit.type ==  'page') {
+			
 				var defer = $q.defer();
 				$http.post('app/api/post.php', {
 						collection:'content',
@@ -630,7 +641,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 					defer.resolve(data.title);
 				});
 				return 'saved page: '+defer.promise;
-			}
+			
 		};
 		this.setPage = function(page) {
 
@@ -853,7 +864,7 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 		// templateUrl:'app/view/templates/editor/chapter-edit.html',
 		controller: function($scope, $element, $attrs, $state, $stateParams, DataService) {
 			$scope.edit = DataService.edit;
-			
+
 			this.templateCompiler = function() {
 				var type = $scope.edit.type;
 				console.log($scope.edit)
