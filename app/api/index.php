@@ -162,7 +162,11 @@ switch ($_REQUEST['action']) {
 		
 	break;
 }
+if($_REQUEST['jsonp']==true) {
+	echo $_GET['callback'].'('.json_encode($output).')';
+} else {
+	echo json_encode($output);
+}
 
-echo json_encode($output);
 
 ?>
