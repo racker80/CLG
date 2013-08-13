@@ -50,6 +50,49 @@ App.directive('indexActions', function(DataService, PrepData, $q, $http, $state,
 				scope.save();
 				
 			}
+
+			scope.versionPage = function(){
+				var ths = this;
+
+
+				//set the base item to edit
+				var item = DataService.guide;
+
+				//get the location from stateparams
+				var location = PrepData.currentLocation();
+
+				//need to find the original item in context
+				//and splice it out of the list
+				if(location.length > 0) {
+					var i = 0;
+					_.each(location, function(value, key, list){
+						if(i === location.length-1) {
+							console.log(value)
+							item.children.splice(value, 1);
+							return;
+						} else {
+							item = item.children[value]		
+							i++;
+						}
+
+					});
+				} else {
+					// item = DataService.guide;
+					console.log('retunring...')
+					return;
+				}
+
+				var test = DataService.versionPage(scope.target).then(function(data){
+					//push the new versioned page up 
+					item.children.push(data);
+					scope.target = data;
+
+					//prep and save
+					PrepData.prep(DataService.guide);
+					ths.save(DataService.guide);
+				});
+				
+			}
 			scope.addExisting = function(){
 				DataService.addExisting(scope.location, scope.target);
 				//save the guide

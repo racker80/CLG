@@ -611,6 +611,39 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 			return promise;
 				
 		}
+
+		//VERSION PAGE
+		this.versionPage = function(item) {
+			var ths = this;
+			var page = angular.copy(item);
+			console.log('--------ORIGINAL PAGE-------')
+			console.log(item);
+			page.version = page.id;
+
+			delete page._id;
+			delete page.id;
+
+			//create a new page
+			var defer = $q.defer();
+			$http.post('app/api/post.php', {
+				collection:'content',
+				action:'addPage',
+				json:page,
+			}).success(function(data){
+				console.log('--------NEW PAGE-------')
+				console.log(data);
+
+				ths.pages.push(data);
+				
+				console.log('created versioned page: '+data.title);
+				defer.resolve(data);
+			});
+
+			return defer.promise;
+
+		}
+
+
 		//GET RID OF THAT PAGE!
 		this.deletePage = function(page) {
 			var ths = this;
