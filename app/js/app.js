@@ -224,6 +224,31 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 		              	value.childtype = angular.copy(DataService.structure[value.type].childtype);
 		              }
 
+		              //fix how i'm doing code to include a type
+		              if(value.code) {
+		              	_.each(value.code, function(code, key, list){
+		              		// console.log(code)
+		              		if(!angular.isObject(code)) {
+
+		              			var tmp = code;
+
+		              			code = {
+		              				text: tmp,
+		              				type:''
+		              			}
+
+		              			list[key] = code;
+
+		              			if(value.type === 'page') {
+		              				DataService.savePage(value);
+		              			}
+
+		              		}
+
+		              	})
+
+		              }
+
 		              //set the current location as a combo of parentLocation and key
 		              // list[key].$location = parentLocation+value.type+'/'+key+'/';
 		              // if(value.type === 'page') {
@@ -898,6 +923,13 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 		controller: function($scope, $element, $attrs, $state, $stateParams, DataService) {
 			$scope.edit = DataService.edit;
 
+			$scope.options = {
+				code: [
+				'terminal',
+				'cp'
+				],
+			}
+
 			this.templateCompiler = function() {
 				var type = $scope.edit.type;
 				console.log($scope.edit)
@@ -994,7 +1026,8 @@ App.directive('contentPreview', function(DataService){
 
 				//REPLACE THE CODE
 				angular.forEach(DataService.edit.code, function(value, key) {
-					scope.content = scope.content.replace('[code '+key+']', '<pre>'+value+'</pre>');
+					// console.log(value)
+					scope.content = scope.content.replace('[code '+key+']', '<pre>'+value.text+'</pre>');
 				});
                 //REPLACE THE IMAGES
                 angular.forEach(DataService.edit.images, function(value, key) {

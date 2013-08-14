@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	<div class="span9">
-		<form class="form-horizontal">
+		<form class="form">
 			<fieldset>
 				<legend>Edit Chapter: {{edit.title}}</legend>
 				<div ng-include="'app/view/templates/editor/includes/title.html'"></div>
@@ -57,9 +57,9 @@
 			 </div>
 	
 			<hr>
-			<button class="btn btn-small" index-actions type="{{edit.childtype}}" location="edit.children" ng-click="addNew()">Cretae new {{edit.childtype}}</button>
-			<button class="btn btn-small" index-actions location="edit.children" ng-click="paste()">Paste</button>
-			<button class="btn btn-small" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>
+			<button class="btn btn-small btn-block" index-actions type="{{edit.childtype}}" location="edit.children" ng-click="addNew()">Cretae new {{edit.childtype}}</button>
+			<button class="btn btn-small btn-block" index-actions location="edit.children" ng-click="paste()">Paste</button>
+			<button class="btn btn-small btn-block" index-actions ng-click="openDialog()" type="{{type}}">Dialogue</button>
 		</div>		
 
 		<!-- <button index-actions ng-click="copy()" target="catalogue.edit" class="btn btn-small">Copy {{edit.type}}</button> -->

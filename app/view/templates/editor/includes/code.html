@@ -9,7 +9,10 @@
 								<tbody>
 									<tr>
 										<td>
-											<pre>{{code}}</pre>
+											<pre>{{code.text}}</pre>
+										</td>
+										<td>
+											<select ng-model="code.type" ng-options="code for code in options.code"></select>
 										</td>
 										<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="edit.code" target="$index">X</a>
 										</td>
@@ -18,7 +21,8 @@
 							</table>
 
 						</div>
-						<textarea ng-model="newcode"></textarea>
-						<a class="btn" index-actions ng-click="addExisting()" target="newcode" location="edit.code">+ Add Content</a>
+						<textarea ng-model="newcode.text"></textarea>
+						<select ng-model="newcode.type" ng-options="code for code in options.code"></select>
+						<a class="btn" index-actions ng-click="addExisting()" target="newcode" location="edit.code">+ Add Code</a>
 					</div>
 				</div>				
