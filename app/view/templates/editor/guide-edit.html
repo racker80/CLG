@@ -5,12 +5,9 @@
 				<legend>Edit Chapter: {{edit.title}}</legend>
 				<div ng-include="'app/view/templates/editor/includes/title.html'"></div>
 
-				<div class="control-group">
-					<label class="control-label" for="textarea">Description</label>
-					<div class="controls">
-						<input type="text" class="input-xlarge" ng-model="edit.description">
-					</div>
-				</div>	
+				<div ng-include="'app/view/templates/editor/includes/description.html'"></div>
+
+				<div ng-include="'app/view/templates/editor/includes/time.html'"></div>
 
 				<div ng-include="'app/view/templates/editor/includes/content.html'"></div>
 

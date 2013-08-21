@@ -31,6 +31,9 @@
 											<img src="{{image.url}}">
 										</div>
 									</td>
+									<td>
+										<select ng-model="image.type" ng-options="type for type in options.image"></select>
+									</td>
 									<td class="itemTitle">{{image.title}}</td>
 									<td class="itemOptions" ng-switch on="options">
 										<div ng-switch-when="copy">

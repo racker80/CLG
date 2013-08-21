@@ -928,6 +928,12 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 				'terminal',
 				'cp'
 				],
+				image: [
+				'thumbnail',
+				'overview',
+				'heading',
+				'screenshot',
+				],				
 			}
 
 			this.templateCompiler = function() {
