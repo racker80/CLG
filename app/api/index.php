@@ -18,7 +18,7 @@ switch ($_REQUEST['action']) {
 //+------------------------------------------------------------------------------------
 	case 'getAll':
 
-			$c = 'content';
+		$c = 'content';
 		$collection = new MongoCollection($db, $c);
 
 		foreach($collection->find() as $item) : 
@@ -63,17 +63,46 @@ switch ($_REQUEST['action']) {
 // GET Guides
 //+------------------------------------------------------------------------------------
 	case 'getGuides':
-
+		$c = 'guides';
+		$collection = new MongoCollection($db, $c);
 		foreach($collection->find() as $item) : 
 			$output[] = $item;
 		endforeach;
 
 	break;
+
+//+------------------------------------------------------------------------------------
+// GET Guides Overview
+//+------------------------------------------------------------------------------------
+	case 'getGuidesOverview':
+		$c = 'guides';
+		$collection = new MongoCollection($db, $c);
+		foreach($collection->find() as $item) : 
+			unset($item['children']);
+			$output[] = $item;
+		endforeach;
+
+	break;	
+//+------------------------------------------------------------------------------------
+// GET Guide by slug
+//+------------------------------------------------------------------------------------
+	case 'getGuideBySlug':
+		$c = 'guides';
+		$collection = new MongoCollection($db, $c);
+		foreach($collection->find() as $item) :
+			if($item['slug'] === $_REQUEST['slug']) {
+				$output = $item;
+			} 
+		endforeach;
+
+	break;
+
 //+------------------------------------------------------------------------------------
 // ADD Guide
 //+-----------------------------------------------------------------------------------
 	case 'addGuide':
-
+		$c = 'guides';
+		$collection = new MongoCollection($db, $c);
 		$collection->insert($json, array("safe" => true));
 		$output = $json;
 	break;	
