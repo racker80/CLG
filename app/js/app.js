@@ -248,6 +248,17 @@ App.factory('PrepData', function(DataService, $stateParams, $state){
 		              	})
 
 		              }
+		              //fix how i'm doing meta to include a type
+		              if(value.meta && angular.isArray(value.meta)) {
+		              	value.meta = {
+		              		'contentNotes':[]
+		              	}
+		              	if(value.type === 'page') {
+		              		DataService.savePage(value);
+		              	}
+
+		              }
+	              
 
 		              //set the current location as a combo of parentLocation and key
 		              // list[key].$location = parentLocation+value.type+'/'+key+'/';
@@ -472,7 +483,9 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 				type:"page",
 				code:[],
 				images:[],
-				meta:[],
+				meta:{
+					'contentNotes':[]
+				},
 			}
 
 		};
@@ -933,7 +946,11 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 				'overview',
 				'heading',
 				'screenshot',
-				],				
+				],
+				notes: [
+					'tip',
+					'warning',
+				]			
 			}
 
 			this.templateCompiler = function() {

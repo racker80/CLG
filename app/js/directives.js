@@ -94,6 +94,10 @@ App.directive('indexActions', function(DataService, PrepData, $q, $http, $state,
 				
 			}
 			scope.addExisting = function(){
+				if(!angular.isDefined(scope.location)) {
+					scope.location = [];
+				}
+				
 				DataService.addExisting(scope.location, scope.target);
 				//save the guide
 				scope.save();

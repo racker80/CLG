@@ -1,0 +1,25 @@
+				<div class="control-group">
+					<label class="control-label" for="textarea">Content Notes</label>
+					<div class="controls">
+						<div ui-sortable="sortableOptions" ng-model="edit.meta.contentNotes">
+							<table class="table codeTable" ng-repeat="note in edit.meta.contentNotes">
+								<tbody>
+									<tr>
+										<td>
+											<pre>{{note.text}}</pre>
+										</td>
+										<td>
+											<select ng-model="note.type" ng-options="note for note in options.notes"></select>
+										</td>
+										<td><a class="btn btn-small btn-warning" index-actions ng-click="removeItem()" location="edit.meta.contentNotes" target="$index">X</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+						<textarea ng-model="newcontentNotes.text"></textarea>
+						<select ng-model="newcontentNotes.type" ng-options="note for note in options.notes"></select>
+						<a class="btn" index-actions ng-click="addExisting()" target="newcontentNotes" location="edit.meta.contentNotes">+ Add Code</a>
+					</div>
+				</div>
