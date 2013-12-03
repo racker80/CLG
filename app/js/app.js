@@ -102,7 +102,11 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 				templateUrl:"app/view/guides.detail.edit.html",
 				controller: function($scope, $state, $stateParams, DataService, PrepData) {
 					console.log('running guides.index.edit controller:')
-
+					$scope.guideTypes = [
+						'draft',
+						'build',
+						'optimize'
+					];
 					//set the index state
 					// PrepData.indexLocationState();
 
@@ -459,6 +463,7 @@ App.service('DataService', function($rootScope, $http, $route, $routeParams, $lo
 			guide: {
 				title:"New Guide",
 				type: "guide",
+				guideCategory:"",
 				childtype:"book",
 				id:{},
 				children:[],
@@ -950,8 +955,12 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 				notes: [
 					'tip',
 					'warning',
-				]			
-			}
+				],
+				guideCategories: [
+					'draft',
+					'build'
+				]	
+			};
 
 			this.templateCompiler = function() {
 				var type = $scope.edit.type;
