@@ -962,8 +962,14 @@ App.directive('clgEditor', function($compile, $stateParams, $http, DataService, 
 					'warning',
 				],
 				guideCategories: [
-					'draft',
-					'build'
+				'unpublished',
+				'getting_started',
+				'unbox',
+				'discover',
+				'build',
+				'scale',
+				'optimize',
+				'coming_soon'
 				]	
 			};
 
