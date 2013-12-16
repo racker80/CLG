@@ -103,9 +103,14 @@ var appConfig = function($routeProvider, $stateProvider, $urlRouterProvider) {
 				controller: function($scope, $state, $stateParams, DataService, PrepData) {
 					console.log('running guides.index.edit controller:')
 					$scope.guideTypes = [
-						'draft',
+						'unpublished',
+						'getting_started',
+						'unbox',
+						'discover',
 						'build',
-						'optimize'
+						'scale',
+						'optimize',
+						'coming_soon'
 					];
 					//set the index state
 					// PrepData.indexLocationState();
