@@ -33,7 +33,7 @@ $obj->Create(
 
 
 $output = array(
-	'url'=>$obj->PublicUrl(),
+	'url'=>$obj->PublicUrl('ssl'),
 	'title'=>$obj->Name()
 	);
 echo json_encode($output);
